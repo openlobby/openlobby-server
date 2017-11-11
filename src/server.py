@@ -17,9 +17,9 @@ ReportDoc.init(using=es_client)
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route('/')
 def hello():
-    return "OpenLobby server. Continue at: /graphql"
+    return 'Open Lobby Server\n\nAPI is at: /graphql', 200, {'Content-Type': 'text/plain; charset=utf-8'}
 
 
 app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
