@@ -8,7 +8,7 @@ test:
 	pytest
 
 run:
-	FLASK_DEBUG=1 FLASK_APP=./src/server.py flask run -p 8010
+	FLASK_DEBUG=1 FLASK_APP=./openlobby/server.py flask run -p 8010
 
 build:
 	docker build -t openlobby/openlobby-server:latest .
