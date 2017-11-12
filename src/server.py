@@ -3,18 +3,16 @@ from flask import Flask
 from flask_graphql import GraphQLView
 from elasticsearch import Elasticsearch
 
+from .bootstrap import bootstrap_es
 from .schema import schema
-from .documents import AuthorDoc, ReportDoc
 
+
+app = Flask(__name__)
 
 es_dsn = os.environ.get('ELASTICSEARCH_DSN', 'http://localhost:9200')
 es_client = Elasticsearch(es_dsn)
 
-
-AuthorDoc.init(using=es_client)
-ReportDoc.init(using=es_client)
-
-app = Flask(__name__)
+bootstrap_es(es_client)
 
 
 @app.route('/')

@@ -4,7 +4,7 @@ from .constants import ES_INDEX
 
 
 class AuthorDoc(DocType):
-    name = Text()
+    name = Text(analyzer='czech')
     extra = Object()
 
     class Meta:
@@ -16,10 +16,10 @@ class ReportDoc(DocType):
     author_id = Keyword()
     date = Date()
     published = Date()
-    title = Text()
-    body = Text()
-    received_benefit = Text()
-    provided_benefit = Text()
+    title = Text(analyzer='czech')
+    body = Text(analyzer='czech')
+    received_benefit = Text(analyzer='czech')
+    provided_benefit = Text(analyzer='czech')
     extra = Object()
 
     class Meta:
