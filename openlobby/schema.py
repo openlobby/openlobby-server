@@ -1,3 +1,4 @@
+import re
 from elasticsearch import NotFoundError
 import graphene
 from graphene import relay
@@ -64,6 +65,7 @@ class Query(graphene.ObjectType):
     def resolve_reports(self, info, query=''):
         s = ReportDoc.search(using=info.context['es'])
         if query != '':
+            query = ' '.join(re.findall(r'(\b\w+)', query))
             s = s.query('multi_match', query=query, fields=['title', 'body', 'received_benefit', 'provided_benefit'])
         s = s.sort('-published')
         s = s[:20]
