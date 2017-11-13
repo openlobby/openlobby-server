@@ -1,5 +1,4 @@
 from elasticsearch import NotFoundError
-from elasticsearch_dsl.query import Q
 import graphene
 from graphene import relay
 from graphene.types.json import JSONString
@@ -60,13 +59,12 @@ class Report(graphene.ObjectType):
 
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
-    reports = graphene.List(Report)
+    reports = graphene.List(Report, query=graphene.String())
 
-    def resolve_reports(self, info):
+    def resolve_reports(self, info, query=''):
         s = ReportDoc.search(using=info.context['es'])
-        # s = s.query('match', received_benefit='káva kafe kava')
-        # s = s.exclude('multi_match', query='čaj káva kafe kava', fields=['received_benefit', 'provided_benefit'])
-        # s = s.query(Q('wildcard', received_benefit='*') | Q('wildcard', provided_benefit='*'))
+        if query != '':
+            s = s.query('multi_match', query=query, fields=['title', 'body', 'received_benefit', 'provided_benefit'])
         s = s.sort('-published')
         s = s[:20]
         results = s.execute()
