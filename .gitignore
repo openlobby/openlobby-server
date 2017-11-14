@@ -1,3 +1,5 @@
 __pycache__/
 *.py[cod]
 .env
+.cache/
+*.egg-info/
