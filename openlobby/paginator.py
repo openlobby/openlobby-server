@@ -15,7 +15,7 @@ def decode_cursor(cursor):
 
 class Paginator:
 
-    def __init__(self, *, first=None, after=None, last=None, before=None, per_page=PER_PAGE):
+    def __init__(self, *, first=None, after=None, last=None, before=None, per_page=PER_PAGE, **kwargs):
         self.per_page = per_page
 
         slice_from = 0

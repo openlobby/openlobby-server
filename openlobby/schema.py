@@ -54,6 +54,13 @@ class ReportConnection(relay.Connection):
         node = Report
 
 
+class SearchReportsConnection(relay.Connection):
+    total_count = graphene.Int()
+
+    class Meta:
+        node = Report
+
+
 class Author(graphene.ObjectType):
     name = graphene.String()
     extra = JSONString()
@@ -95,20 +102,40 @@ class Author(graphene.ObjectType):
         return ReportConnection(page_info=page_info, edges=edges, total_count=total)
 
 
+def get_authors(es, ids):
+    response = AuthorDoc.mget(ids, using=es)
+    return {a.meta.id: Author.from_es(a) for a in response}
+
+
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
-    reports = graphene.List(Report, query=graphene.String())
+    search_reports = relay.ConnectionField(SearchReportsConnection, query=graphene.String())
 
-    def resolve_reports(self, info, query=''):
+    def resolve_search_reports(self, info, **kwargs):
+        paginator = Paginator(**kwargs)
+        query = kwargs.get('query', '')
+        query = ' '.join(re.findall(r'(\b\w+)', query))
+
         s = ReportDoc.search(using=info.context['es'])
         if query != '':
-            query = ' '.join(re.findall(r'(\b\w+)', query))
             s = s.query('multi_match', query=query, fields=['title', 'body', 'received_benefit', 'provided_benefit'])
         s = s.sort('-published')
-        s = s[:20]
-        results = s.execute()
+        s = s[paginator.slice_from:paginator.slice_to]
+        response = s.execute()
 
-        return [Report.get_node(info, report.meta.id) for report in results]
+        total = response.hits.total
+        page_info = paginator.get_page_info(total)
+
+        edges = []
+
+        if total > 0:
+            authors = get_authors(info.context['es'], ids=[r.author_id for r in response])
+            for i, report in enumerate(response):
+                cursor = paginator.get_edge_cursor(i + 1)
+                node = Report.from_es(report, author=authors[report.author_id])
+                edges.append(SearchReportsConnection.Edge(node=node, cursor=cursor))
+
+        return SearchReportsConnection(page_info=page_info, edges=edges, total_count=total)
 
 
 schema = graphene.Schema(query=Query, types=[Author, Report])
