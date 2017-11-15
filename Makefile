@@ -12,3 +12,7 @@ build:
 
 push:
 	docker push openlobby/openlobby-server:latest
+
+release:
+	make build
+	make push
