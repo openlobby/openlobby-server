@@ -128,7 +128,7 @@ class Query(graphene.ObjectType):
 
         edges = []
 
-        if total > 0:
+        if len(response) > 0:
             authors = get_authors(info.context['es'], ids=[r.author_id for r in response])
             for i, report in enumerate(response):
                 cursor = paginator.get_edge_cursor(i + 1)
