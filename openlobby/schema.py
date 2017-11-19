@@ -4,12 +4,12 @@ import graphene
 from graphene import relay
 from graphene.types.json import JSONString
 
-from .documents import AuthorDoc, ReportDoc
+from .documents import UserDoc, ReportDoc
 from .paginator import Paginator
 
 
 class Report(graphene.ObjectType):
-    author = graphene.Field(lambda: Author)
+    author = graphene.Field(lambda: User)
     date = graphene.String()
     published = graphene.String()
     title = graphene.String()
@@ -61,7 +61,7 @@ class SearchReportsConnection(relay.Connection):
         node = Report
 
 
-class Author(graphene.ObjectType):
+class User(graphene.ObjectType):
     name = graphene.String()
     extra = JSONString()
     reports = relay.ConnectionField(ReportConnection)
@@ -70,16 +70,16 @@ class Author(graphene.ObjectType):
         interfaces = (relay.Node, )
 
     @classmethod
-    def from_es(cls, author):
-        return cls(id=author.meta.id, name=author.name, extra=author.extra._d_)
+    def from_es(cls, user):
+        return cls(id=user.meta.id, name=user.name, extra=user.extra._d_)
 
     @classmethod
     def get_node(cls, info, id):
         try:
-            author = AuthorDoc.get(id, using=info.context['es'])
+            user = UserDoc.get(id, using=info.context['es'])
         except NotFoundError:
             return None
-        return cls.from_es(author)
+        return cls.from_es(user)
 
     def resolve_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
@@ -103,8 +103,8 @@ class Author(graphene.ObjectType):
 
 
 def get_authors(es, ids):
-    response = AuthorDoc.mget(ids, using=es)
-    return {a.meta.id: Author.from_es(a) for a in response}
+    response = UserDoc.mget(ids, using=es)
+    return {a.meta.id: User.from_es(a) for a in response}
 
 
 class Query(graphene.ObjectType):
@@ -138,4 +138,4 @@ class Query(graphene.ObjectType):
         return SearchReportsConnection(page_info=page_info, edges=edges, total_count=total)
 
 
-schema = graphene.Schema(query=Query, types=[Author, Report])
+schema = graphene.Schema(query=Query, types=[User, Report])

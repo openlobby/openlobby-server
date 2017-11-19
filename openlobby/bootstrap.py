@@ -1,7 +1,7 @@
 import json
 
 from .settings import ES_INDEX
-from .documents import AuthorDoc, ReportDoc
+from .documents import UserDoc, ReportDoc
 
 
 INDEX_SETTINGS = {
@@ -47,5 +47,5 @@ def bootstrap_es(client):
 
     client.indices.create(ES_INDEX, body=json.dumps(INDEX_SETTINGS))
 
-    AuthorDoc.init(using=client)
+    UserDoc.init(using=client)
     ReportDoc.init(using=client)
