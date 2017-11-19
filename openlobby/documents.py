@@ -1,6 +1,6 @@
 from elasticsearch_dsl import DocType, Text, Date, Object, Keyword
 
-from .constants import ES_INDEX
+from .settings import ES_INDEX
 
 
 class AuthorDoc(DocType):

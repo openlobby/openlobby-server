@@ -1,6 +1,6 @@
 import json
 
-from .constants import ES_INDEX
+from .settings import ES_INDEX
 from .documents import AuthorDoc, ReportDoc
 
 

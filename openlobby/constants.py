@@ -1,1 +1,0 @@
-ES_INDEX = 'openlobby'
