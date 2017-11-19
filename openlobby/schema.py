@@ -6,6 +6,7 @@ from graphene.types.json import JSONString
 
 from .documents import UserDoc, ReportDoc
 from .paginator import Paginator
+from .mutations import Mutations
 
 
 class Report(graphene.ObjectType):
@@ -63,6 +64,8 @@ class SearchReportsConnection(relay.Connection):
 
 class User(graphene.ObjectType):
     name = graphene.String()
+    openid_uid = graphene.String()
+    email = graphene.String()
     extra = JSONString()
     reports = relay.ConnectionField(ReportConnection)
 
@@ -138,4 +141,4 @@ class Query(graphene.ObjectType):
         return SearchReportsConnection(page_info=page_info, edges=edges, total_count=total)
 
 
-schema = graphene.Schema(query=Query, types=[User, Report])
+schema = graphene.Schema(query=Query, mutation=Mutations, types=[User, Report])
