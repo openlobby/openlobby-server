@@ -7,6 +7,7 @@ from graphene.types.json import JSONString
 from .documents import UserDoc, ReportDoc
 from .paginator import Paginator
 from .mutations import Mutation
+from . import search
 
 
 class Report(graphene.ObjectType):
@@ -86,13 +87,7 @@ class User(graphene.ObjectType):
 
     def resolve_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
-
-        s = ReportDoc.search(using=info.context['es'])
-        s = s.filter('term', author_id=self.id)
-        s = s.sort('-published')
-        s = s[paginator.slice_from:paginator.slice_to]
-        response = s.execute()
-
+        response = search.reports_by_author(info.context['es'], self.id, paginator)
         total = response.hits.total
         page_info = paginator.get_page_info(total)
 
@@ -113,24 +108,17 @@ def get_authors(es, ids):
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
     search_reports = relay.ConnectionField(SearchReportsConnection, query=graphene.String())
+    viewer = graphene.Field(User)
 
     def resolve_search_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
         query = kwargs.get('query', '')
         query = ' '.join(re.findall(r'(\b\w+)', query))
-
-        s = ReportDoc.search(using=info.context['es'])
-        if query != '':
-            s = s.query('multi_match', query=query, fields=['title', 'body', 'received_benefit', 'provided_benefit'])
-        s = s.sort('-published')
-        s = s[paginator.slice_from:paginator.slice_to]
-        response = s.execute()
-
+        response = search.query_reports(info.context['es'], query, paginator)
         total = response.hits.total
         page_info = paginator.get_page_info(total)
 
         edges = []
-
         if len(response) > 0:
             authors = get_authors(info.context['es'], ids=[r.author_id for r in response])
             for i, report in enumerate(response):
@@ -139,6 +127,9 @@ class Query(graphene.ObjectType):
                 edges.append(SearchReportsConnection.Edge(node=node, cursor=cursor))
 
         return SearchReportsConnection(page_info=page_info, edges=edges, total_count=total)
+
+    def resolve_viewer(self, info, **kwargs):
+        pass
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation, types=[User, Report])
