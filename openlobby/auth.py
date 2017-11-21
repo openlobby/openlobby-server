@@ -1,8 +1,9 @@
+import json
 import jwt
+import re
 import time
-from oic.oic import Client
-from oic.oic.message import RegistrationResponse, ClaimsRequest, Claims
-from oic.utils.authn.client import CLIENT_AUTHN_METHOD
+from flask import request
+from flask_graphql import GraphQLView
 
 from .settings import (
     SECRET_KEY,
@@ -10,63 +11,6 @@ from .settings import (
     LOGIN_ATTEMPT_EXPIRATION,
     SESSION_EXPIRATION,
 )
-
-
-def init_client_for_uid(openid_uid):
-    client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
-    issuer = client.discover(openid_uid)
-    client.provider_config(issuer)
-    return client
-
-
-def register_client(client, redirect_uri):
-    params = {'redirect_uris': [redirect_uri]}
-    client.register(client.provider_info['registration_endpoint'], **params)
-    return client
-
-
-def get_authorization_url(client, state, nonce):
-    claims_request = ClaimsRequest(
-        userinfo=Claims(
-            email={'essential': True},
-            name={'essential': True},
-        )
-    )
-
-    args = {
-        'client_id': client.client_id,
-        'response_type': 'code',
-        'scope': ['openid'],
-        'nonce': nonce,
-        'state': state,
-        'redirect_uri': client.registration_response['redirect_uris'][0],
-        'claims': claims_request,
-    }
-
-    auth_req = client.construct_AuthorizationRequest(request_args=args)
-    url = auth_req.request(client.authorization_endpoint)
-    return url
-
-
-def set_registration_info(client, client_id, client_secret, redirect_uri):
-    info = {
-        'client_id': client_id,
-        'client_secret': client_secret,
-        'redirect_uris': [redirect_uri],
-    }
-    client_reg = RegistrationResponse(**info)
-    client.store_registration_info(client_reg)
-    return client
-
-
-def do_access_token_request(client, code, state):
-    args = {
-        'code': code,
-        'client_id': client.client_id,
-        'client_secret': client.client_secret,
-        'redirect_uri': client.registration_response['redirect_uris'][0],
-    }
-    client.do_access_token_request(state=state, request_args=args)
 
 
 def get_login_attempt_expiration_time():
@@ -89,3 +33,35 @@ def create_access_token(session_id, expiration):
 def parse_access_token(token):
     payload = jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])
     return payload['sub']
+
+
+def graphql_error_response(message, code=400):
+    error = {'message': message}
+    return json.dumps({'errors': [error]}), code, {'Content-Type': 'application/json'}
+
+
+class AuthGraphQLView(GraphQLView):
+    """
+    GraphQLView which sets session_id into 'context' if authorization token is
+    provided in Authorization header.
+    """
+
+    def dispatch_request(self):
+        session_id = None
+        auth_header = request.headers.get('Authorization')
+        if auth_header is not None:
+            m = re.match(r'Bearer (?P<token>.+)', auth_header)
+            if m:
+                token = m.group('token')
+            else:
+                return graphql_error_response('Wrong Authorization header. Expected: "Bearer <token>"')
+
+            try:
+                session_id = parse_access_token(token)
+            except jwt.ExpiredSignatureError:
+                return graphql_error_response('Session has expired.', 401)
+            except Exception:
+                return graphql_error_response('Wrong Authorization token.', 401)
+
+        self.context['session_id'] = session_id
+        return super(AuthGraphQLView, self).dispatch_request()

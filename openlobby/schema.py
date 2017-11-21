@@ -4,7 +4,7 @@ import graphene
 from graphene import relay
 from graphene.types.json import JSONString
 
-from .documents import UserDoc, ReportDoc
+from .documents import UserDoc, ReportDoc, SessionDoc
 from .paginator import Paginator
 from .mutations import Mutation
 from . import search
@@ -75,7 +75,13 @@ class User(graphene.ObjectType):
 
     @classmethod
     def from_es(cls, user):
-        return cls(id=user.meta.id, name=user.name, extra=user.extra._d_)
+        return cls(
+            id=user.meta.id,
+            name=user.name,
+            openid_uid=user.openid_uid,
+            email=user.email,
+            extra=user.extra._d_,
+        )
 
     @classmethod
     def get_node(cls, info, id):
@@ -129,7 +135,13 @@ class Query(graphene.ObjectType):
         return SearchReportsConnection(page_info=page_info, edges=edges, total_count=total)
 
     def resolve_viewer(self, info, **kwargs):
-        pass
+        session_id = info.context.get('session_id', None)
+        if session_id is None:
+            return None
+        session = SessionDoc.get_active(info.context['es'], session_id)
+        if session is None:
+            return None
+        return User.get_node(info, session.user_id)
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation, types=[User, Report])

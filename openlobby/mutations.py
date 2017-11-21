@@ -6,16 +6,18 @@ import time
 import urllib.parse
 
 from .auth import (
-    init_client_for_uid,
-    register_client,
-    get_authorization_url,
-    set_registration_info,
-    do_access_token_request,
     get_login_attempt_expiration_time,
     get_session_expiration_time,
     create_access_token,
 )
 from .documents import UserDoc, LoginAttemptDoc, SessionDoc
+from .openid import (
+    init_client_for_uid,
+    register_client,
+    get_authorization_url,
+    set_registration_info,
+    do_access_token_request,
+)
 
 
 class Login(relay.ClientIDMutation):

@@ -1,4 +1,5 @@
 from elasticsearch_dsl import DocType, Text, Date, Object, Keyword, Integer
+import time
 
 from .settings import ES_INDEX, ES_TEXT_ANALYZER
 
@@ -60,3 +61,10 @@ class SessionDoc(DocType):
     class Meta:
         index = ES_INDEX
         doc_type = 'session'
+
+    @classmethod
+    def get_active(cls, using, session_id):
+        session = cls.get(session_id, using=using)
+        if session and session.expiration > time.time():
+            return session
+        return None
