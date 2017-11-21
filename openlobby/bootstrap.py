@@ -1,7 +1,7 @@
 import json
 
 from .settings import ES_INDEX
-from .documents import UserDoc, ReportDoc
+from .documents import UserDoc, ReportDoc, LoginAttemptDoc
 
 
 INDEX_SETTINGS = {
@@ -49,3 +49,4 @@ def bootstrap_es(client):
 
     UserDoc.init(using=client)
     ReportDoc.init(using=client)
+    LoginAttemptDoc.init(using=client)

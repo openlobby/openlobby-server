@@ -1,6 +1,15 @@
+import jwt
+import time
 from oic.oic import Client
-from oic.oic.message import RegistrationResponse
+from oic.oic.message import RegistrationResponse, ClaimsRequest, Claims
 from oic.utils.authn.client import CLIENT_AUTHN_METHOD
+
+from .settings import (
+    SECRET_KEY,
+    JWT_ALGORITHM,
+    LOGIN_ATTEMPT_EXPIRATION,
+    SESSION_EXPIRATION,
+)
 
 
 def init_client_for_uid(openid_uid):
@@ -17,6 +26,13 @@ def register_client(client, redirect_uri):
 
 
 def get_authorization_url(client, state, nonce):
+    claims_request = ClaimsRequest(
+        userinfo=Claims(
+            email={'essential': True},
+            name={'essential': True},
+        )
+    )
+
     args = {
         'client_id': client.client_id,
         'response_type': 'code',
@@ -24,7 +40,9 @@ def get_authorization_url(client, state, nonce):
         'nonce': nonce,
         'state': state,
         'redirect_uri': client.registration_response['redirect_uris'][0],
+        'claims': claims_request,
     }
+
     auth_req = client.construct_AuthorizationRequest(request_args=args)
     url = auth_req.request(client.authorization_endpoint)
     return url
@@ -49,3 +67,25 @@ def do_access_token_request(client, code, state):
         'redirect_uri': client.registration_response['redirect_uris'][0],
     }
     client.do_access_token_request(state=state, request_args=args)
+
+
+def get_login_attempt_expiration_time():
+    return int(time.time() + LOGIN_ATTEMPT_EXPIRATION)
+
+
+def get_session_expiration_time():
+    return int(time.time() + SESSION_EXPIRATION)
+
+
+def create_access_token(session_id, expiration):
+    payload = {
+        'sub': session_id,
+        'exp': expiration,
+    }
+    token = jwt.encode(payload, SECRET_KEY, algorithm=JWT_ALGORITHM)
+    return token.decode('utf-8')
+
+
+def parse_access_token(token):
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])
+    return payload['sub']

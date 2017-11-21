@@ -5,7 +5,7 @@ install:
 	pip install -r requirements.txt
 
 run:
-	FLASK_DEBUG=1 FLASK_APP=./openlobby/server.py flask run -p 8010
+	SECRET_KEY=local FLASK_DEBUG=1 FLASK_APP=./openlobby/server.py flask run -p 8010
 
 build:
 	docker build -t openlobby/openlobby-server:latest .
