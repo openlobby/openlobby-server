@@ -1,4 +1,3 @@
-import re
 import graphene
 from graphene import relay
 
@@ -6,6 +5,7 @@ from .types import Report, User
 from .documents import UserDoc
 from .paginator import Paginator
 from .mutations import Mutation
+from .sanitizers import extract_text
 from .utils import get_viewer
 from . import search
 
@@ -30,7 +30,7 @@ class Query(graphene.ObjectType):
     def resolve_search_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
         query = kwargs.get('query', '')
-        query = ' '.join(re.findall(r'(\b\w+)', query))
+        query = extract_text(query)
         response = search.query_reports(info.context['es'], query, paginator)
         total = response.hits.total
         page_info = paginator.get_page_info(total)

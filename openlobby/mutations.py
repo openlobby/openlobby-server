@@ -1,4 +1,4 @@
-from datetime import datetime
+import arrow
 import graphene
 from graphene import relay
 from graphene.types.datetime import DateTime
@@ -22,6 +22,7 @@ from .openid import (
 )
 from .types import Report
 from .utils import get_viewer
+from .sanitizers import strip_all_tags
 
 
 class Login(relay.ClientIDMutation):
@@ -137,8 +138,17 @@ class NewReport(relay.ClientIDMutation):
         viewer = get_viewer(info)
         if viewer is None:
             raise Exception('User must be logged in to perform this mutation.')
-        now = datetime.utcnow()
-        report = ReportDoc(published=now, author_id=viewer.id, **input)
+
+        data = {
+            'author_id': viewer.id,
+            'published': arrow.utcnow().isoformat(),
+            'title': strip_all_tags(input.get('title', '')),
+            'body': strip_all_tags(input.get('body', '')),
+            'received_benefit': strip_all_tags(input.get('received_benefit', '')),
+            'provided_benefit': strip_all_tags(input.get('provided_benefit', '')),
+            'date': input.get('date'),
+        }
+        report = ReportDoc(**data)
         report.save(using=info.context['es'])
         return NewReport(report=Report.from_es(report, author=viewer))
 
