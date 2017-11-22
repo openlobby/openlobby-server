@@ -1,5 +1,7 @@
+from datetime import datetime
 import graphene
 from graphene import relay
+from graphene.types.datetime import DateTime
 from oic.oic import rndstr
 from oic.oic.message import AuthorizationResponse
 import time
@@ -10,7 +12,7 @@ from .auth import (
     get_session_expiration_time,
     create_access_token,
 )
-from .documents import UserDoc, LoginAttemptDoc, SessionDoc
+from .documents import UserDoc, LoginAttemptDoc, SessionDoc, ReportDoc
 from .openid import (
     init_client_for_uid,
     register_client,
@@ -18,6 +20,8 @@ from .openid import (
     set_registration_info,
     do_access_token_request,
 )
+from .types import Report
+from .utils import get_viewer
 
 
 class Login(relay.ClientIDMutation):
@@ -117,6 +121,29 @@ class LoginRedirect(relay.ClientIDMutation):
         return LoginRedirect(access_token=token)
 
 
+class NewReport(relay.ClientIDMutation):
+
+    class Input:
+        title = graphene.String(required=True)
+        body = graphene.String(required=True)
+        received_benefit = graphene.String()
+        provided_benefit = graphene.String()
+        date = DateTime(required=True)
+
+    report = graphene.Field(Report)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        viewer = get_viewer(info)
+        if viewer is None:
+            raise Exception('User must be logged in to perform this mutation.')
+        now = datetime.utcnow()
+        report = ReportDoc(published=now, author_id=viewer.id, **input)
+        report.save(using=info.context['es'])
+        return NewReport(report=Report.from_es(report, author=viewer))
+
+
 class Mutation(graphene.ObjectType):
     login = Login.Field()
     login_redirect = LoginRedirect.Field()
+    new_report = NewReport.Field()
