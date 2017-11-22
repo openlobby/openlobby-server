@@ -2,7 +2,7 @@ import json
 import jwt
 import re
 import time
-from flask import request
+from flask import g, request
 from flask_graphql import GraphQLView
 
 from .settings import (
@@ -42,7 +42,7 @@ def graphql_error_response(message, code=400):
 
 class AuthGraphQLView(GraphQLView):
     """
-    GraphQLView which sets session_id into 'context' if authorization token is
+    GraphQLView which sets session_id into 'g' if authorization token is
     provided in Authorization header.
     """
 
@@ -63,5 +63,5 @@ class AuthGraphQLView(GraphQLView):
             except Exception:
                 return graphql_error_response('Wrong Authorization token.', 401)
 
-        self.context['session_id'] = session_id
+        g.session_id = session_id
         return super(AuthGraphQLView, self).dispatch_request()
