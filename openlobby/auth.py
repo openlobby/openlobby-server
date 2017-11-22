@@ -58,8 +58,8 @@ class AuthGraphQLView(GraphQLView):
 
             try:
                 session_id = parse_access_token(token)
-            except jwt.ExpiredSignatureError:
-                return graphql_error_response('Session has expired.', 401)
+            except jwt.InvalidTokenError:
+                session_id = None
             except Exception:
                 return graphql_error_response('Wrong Authorization token.', 401)
 
