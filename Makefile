@@ -3,6 +3,7 @@ init-env:
 
 install:
 	pip install -r requirements.txt
+	pip install -e .
 
 run:
 	SECRET_KEY=local FLASK_DEBUG=1 FLASK_APP=./openlobby/server.py flask run -p 8010

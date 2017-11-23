@@ -9,7 +9,7 @@ ES_TEXT_ANALYZER = os.environ.get('ES_TEXT_ANALYZER', 'czech')
 # secret key for signing tokens
 SECRET_KEY = os.environ.get('SECRET_KEY', '')
 if not SECRET_KEY:
-    raise RuntimeError('Missing SECRET_KEY enviroment variable.')
+    raise RuntimeError('Missing SECRET_KEY environment variable.')
 
 # signature algorithm JSON Web Tokens
 JWT_ALGORITHM = 'HS512'
