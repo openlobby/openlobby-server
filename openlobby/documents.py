@@ -64,7 +64,7 @@ class SessionDoc(DocType):
 
     @classmethod
     def get_active(cls, using, session_id):
-        session = cls.get(session_id, using=using)
+        session = cls.get(session_id, using=using, ignore=404)
         if session and session.expiration > time.time():
             return session
         return None
