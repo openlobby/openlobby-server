@@ -49,3 +49,7 @@ Development server assumes that you have
 running on `http://localhost:9200`. You can override this address in environment
 variable `ELASTICSEARCH_DSN`. E.g.
 `ELASTICSEARCH_DSN=http://my-server:9200 make run`
+
+### Testing
+
+Run: `pytest`
