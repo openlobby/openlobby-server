@@ -19,3 +19,6 @@ LOGIN_ATTEMPT_EXPIRATION = 300
 
 # expiration time (seconds) of session
 SESSION_EXPIRATION = 60 * 60 * 24 * 14
+
+# name of the site used in OpenID authentication
+SITE_NAME = os.environ.get('SITE_NAME', 'Open Lobby')
