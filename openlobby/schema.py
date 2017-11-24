@@ -23,15 +23,26 @@ def get_authors(es, ids):
 
 
 class Query(graphene.ObjectType):
+    highlight_help = ('Whether search matches should be marked with tag <mark>.'
+        ' Default: false')
+
     node = relay.Node.Field()
-    search_reports = relay.ConnectionField(SearchReportsConnection, query=graphene.String())
-    viewer = graphene.Field(User)
+    search_reports = relay.ConnectionField(
+        SearchReportsConnection,
+        description='Fulltext search in Reports.',
+        query=graphene.String(description='Text to search for.'),
+        highlight=graphene.Boolean(default_value=False, description=highlight_help),
+    )
+    viewer = graphene.Field(User, description='Active user viewing API.')
 
     def resolve_search_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
         query = kwargs.get('query', '')
         query = extract_text(query)
-        response = search.query_reports(info.context['es'], query, paginator)
+        params = {
+            'highlight': kwargs.get('highlight'),
+        }
+        response = search.query_reports(info.context['es'], query, paginator, **params)
         total = response.hits.total
         page_info = paginator.get_page_info(total)
 

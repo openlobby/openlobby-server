@@ -1,10 +1,20 @@
 from .documents import ReportDoc
 
 
-def query_reports(es, query, paginator):
+HIGHLIGHT_PARAMS = {
+    'number_of_fragments': 0,
+    'pre_tags': ['<mark>'],
+    'post_tags': ['</mark>'],
+}
+
+
+def query_reports(es, query, paginator, *, highlight=False):
+    fields = ['title', 'body', 'received_benefit', 'provided_benefit']
     s = ReportDoc.search(using=es)
     if query != '':
-        s = s.query('multi_match', query=query, fields=['title', 'body', 'received_benefit', 'provided_benefit'])
+        s = s.query('multi_match', query=query, fields=fields)
+    if highlight:
+        s = s.highlight(*fields, **HIGHLIGHT_PARAMS)
     s = s.sort('-published')
     s = s[paginator.slice_from:paginator.slice_to]
     return s.execute()
