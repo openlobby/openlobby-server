@@ -61,8 +61,12 @@ class Login(relay.ClientIDMutation):
         login_attempt = LoginAttemptDoc(**data)
         login_attempt.save(using=info.context['es'])
 
+        # already registered user?
+        user = UserDoc.get_by_openid_uid(info.context['es'], openid_uid)
+        is_new_user = user is None
+
         # get OpenID authorization url
-        authorization_url = get_authorization_url(client, state, nonce)
+        authorization_url = get_authorization_url(client, state, nonce, is_new_user)
 
         return Login(authorization_url=authorization_url)
 
@@ -85,6 +89,10 @@ class LoginRedirect(relay.ClientIDMutation):
         # delete login attempt so it can be used just once
         la.delete(using=info.context['es'])
 
+        # check login attempt expiration
+        if la['expiration'] < time.time():
+            raise Exception('Login attempt expired.')
+
         # reconstruct OpenID Client
         client = init_client_for_uid(la['openid_uid'])
         client = set_registration_info(client, la['client_id'], la['client_secret'], la['redirect_uri'])
@@ -98,10 +106,6 @@ class LoginRedirect(relay.ClientIDMutation):
         if state != la['state']:
             raise ValueError('Wrong query_string.')
 
-        # check login attempt expiration
-        if la['expiration'] < time.time():
-            raise Exception('Login attempt expired.')
-
         # OpenID access token request
         do_access_token_request(client, code, state)
 
@@ -109,7 +113,10 @@ class LoginRedirect(relay.ClientIDMutation):
         user_info = client.do_user_info_request(state=state)
 
         # get or create User
-        user = UserDoc.get_or_create(info.context['es'], la['openid_uid'], user_info['name'], user_info['email'])
+        user = UserDoc.get_by_openid_uid(info.context['es'], la['openid_uid'])
+        if user is None:
+            user = UserDoc(openid_uid=la['openid_uid'], name=user_info['name'], email=user_info['email'])
+            user.save(using=info.context['es'])
 
         # create session
         expiration = get_session_expiration_time()

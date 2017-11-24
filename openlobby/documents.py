@@ -15,14 +15,9 @@ class UserDoc(DocType):
         doc_type = 'user'
 
     @classmethod
-    def get_or_create(cls, using, openid_uid, name, email):
+    def get_by_openid_uid(cls, using, openid_uid):
         response = cls.search(using=using).query('match', openid_uid=openid_uid).execute()
-        if response.hits.total == 0:
-            user = UserDoc(openid_uid=openid_uid, name=name, email=email)
-            user.save(using=using)
-        else:
-            user = response.hits[0]
-        return user
+        return response.hits[0] if response.hits.total > 0 else None
 
 
 class ReportDoc(DocType):

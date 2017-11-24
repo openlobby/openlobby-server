@@ -21,14 +21,7 @@ def register_client(client, redirect_uri):
     return client
 
 
-def get_authorization_url(client, state, nonce):
-    claims_request = ClaimsRequest(
-        userinfo=Claims(
-            email={'essential': True},
-            name={'essential': True},
-        )
-    )
-
+def get_authorization_url(client, state, nonce, is_new_user=True):
     args = {
         'client_id': client.client_id,
         'response_type': 'code',
@@ -36,8 +29,15 @@ def get_authorization_url(client, state, nonce):
         'nonce': nonce,
         'state': state,
         'redirect_uri': client.registration_response['redirect_uris'][0],
-        'claims': claims_request,
     }
+
+    if is_new_user:
+        args['claims'] = ClaimsRequest(
+            userinfo=Claims(
+                email={'essential': True},
+                name={'essential': True},
+            )
+        )
 
     auth_req = client.construct_AuthorizationRequest(request_args=args)
     url = auth_req.request(client.authorization_endpoint)
