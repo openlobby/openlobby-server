@@ -7,7 +7,7 @@ ES_INDEX = os.environ.get('ES_INDEX', 'openlobby')
 ES_TEXT_ANALYZER = os.environ.get('ES_TEXT_ANALYZER', 'czech')
 
 # secret key for signing tokens
-SECRET_KEY = os.environ.get('SECRET_KEY', '')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 if not SECRET_KEY:
     raise RuntimeError('Missing SECRET_KEY environment variable.')
 

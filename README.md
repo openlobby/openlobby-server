@@ -17,13 +17,20 @@ intended for search in Czech language with custom Czech text analyzer. There is
 prepared Elasticsearch Docker container with Czech support at
 [openlobby/openlobby-es-czech](https://github.com/openlobby/openlobby-es-czech).
 
+## Configuration
+
+Configuration is done by environment variables:
+ - `SECRET_KEY` - long random secret string (required)
+ - `ELASTICSEARCH_DSN` - DSN of Elasticsearch cluster (default: `http://localhost:9200`)
+ - `SITE_NAME` - site name for OpenID authentication (default: `Open Lobby`)
+ - `ES_INDEX` - Elasticsearch index (default: `openlobby`)
+
 ## Docker
 
 Docker image is at Docker Hub
 [openlobby/openlobby-server](https://hub.docker.com/r/openlobby/openlobby-server/).
-It exposes server on port 8010. You have to give it some environment variables:
- - `SECRET_KEY` - long random secret string
- - `ELASTICSEARCH_DSN` - if not provided then default is `http://localhost:9200`
+It exposes server on port 8010. You should provide it environment variables for
+configuration (at least `SECRET_KEY`).
 
 ## Demo
 
