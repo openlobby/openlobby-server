@@ -4,6 +4,12 @@ import time
 from .settings import ES_INDEX, ES_TEXT_ANALYZER
 
 
+"""
+Don't forget to add a new document to the list of all documents at the end of
+the file.
+"""
+
+
 class UserDoc(DocType):
     openid_uid = Keyword()
     name = Text(analyzer=ES_TEXT_ANALYZER)
@@ -63,3 +69,11 @@ class SessionDoc(DocType):
         if session and session.expiration > time.time():
             return session
         return None
+
+
+all_documents = (
+    UserDoc,
+    ReportDoc,
+    LoginAttemptDoc,
+    SessionDoc,
+)

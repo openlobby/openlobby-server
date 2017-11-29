@@ -3,7 +3,7 @@ from flask import Flask
 from elasticsearch import Elasticsearch
 
 from .auth import AuthGraphQLView
-from .bootstrap import bootstrap_es
+from .management import bootstrap_es
 from .schema import schema
 
 
