@@ -97,7 +97,7 @@ def test_reindex__with_some_data(es, index_name, snapshot):
     alias = index_name
     init_alias(es, alias)
     user = UserDoc(name='The Black Knight')
-    user.save(using=es, index=alias)
+    user.save(using=es, index=alias, refresh='true')
     reindex(es, alias)
     new_user = UserDoc.get(id=user.meta.id, using=es, index=alias)
     assert new_user.name == 'The Black Knight'
