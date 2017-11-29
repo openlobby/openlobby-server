@@ -12,7 +12,7 @@ def get_higlighted(hit, field):
     """Returns higlighted text of field if search is higlighted."""
     if hasattr(hit.meta, 'highlight') and field in hit.meta.highlight:
         return hit.meta.highlight[field][0]
-    return hit[field]
+    return hit[field] if field in hit else ''
 
 
 class Report(graphene.ObjectType):
@@ -23,6 +23,8 @@ class Report(graphene.ObjectType):
     body = graphene.String()
     received_benefit = graphene.String()
     provided_benefit = graphene.String()
+    our_participants = graphene.String()
+    other_participants = graphene.String()
     extra = JSONString()
 
     class Meta:
@@ -39,6 +41,8 @@ class Report(graphene.ObjectType):
             body=get_higlighted(report, 'body'),
             received_benefit=get_higlighted(report, 'received_benefit'),
             provided_benefit=get_higlighted(report, 'provided_benefit'),
+            our_participants=get_higlighted(report, 'our_participants'),
+            other_participants=get_higlighted(report, 'other_participants'),
             extra=report.extra._d_,
         )
 

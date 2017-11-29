@@ -34,6 +34,8 @@ class ReportDoc(DocType):
     body = Text(analyzer=ES_TEXT_ANALYZER)
     received_benefit = Text(analyzer=ES_TEXT_ANALYZER)
     provided_benefit = Text(analyzer=ES_TEXT_ANALYZER)
+    our_participants = Text(analyzer=ES_TEXT_ANALYZER)
+    other_participants = Text(analyzer=ES_TEXT_ANALYZER)
     extra = Object()
 
     class Meta:

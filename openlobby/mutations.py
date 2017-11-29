@@ -136,6 +136,8 @@ class NewReport(relay.ClientIDMutation):
         body = graphene.String(required=True)
         received_benefit = graphene.String()
         provided_benefit = graphene.String()
+        our_participants = graphene.String()
+        other_participants = graphene.String()
         date = DateTime(required=True)
 
     report = graphene.Field(Report)
@@ -153,6 +155,8 @@ class NewReport(relay.ClientIDMutation):
             'body': strip_all_tags(input.get('body', '')),
             'received_benefit': strip_all_tags(input.get('received_benefit', '')),
             'provided_benefit': strip_all_tags(input.get('provided_benefit', '')),
+            'our_participants': strip_all_tags(input.get('our_participants', '')),
+            'other_participants': strip_all_tags(input.get('other_participants', '')),
             'date': input.get('date'),
         }
         report = ReportDoc(**data)

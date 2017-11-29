@@ -84,6 +84,14 @@ snapshots['test_create_index__check_mappings 1'] = {
                 'extra': {
                     'type': 'object'
                 },
+                'other_participants': {
+                    'analyzer': 'czech',
+                    'type': 'text'
+                },
+                'our_participants': {
+                    'analyzer': 'czech',
+                    'type': 'text'
+                },
                 'provided_benefit': {
                     'analyzer': 'czech',
                     'type': 'text'
@@ -172,6 +180,14 @@ snapshots['test_init_alias 1'] = {
                 },
                 'extra': {
                     'type': 'object'
+                },
+                'other_participants': {
+                    'analyzer': 'czech',
+                    'type': 'text'
+                },
+                'our_participants': {
+                    'analyzer': 'czech',
+                    'type': 'text'
                 },
                 'provided_benefit': {
                     'analyzer': 'czech',
@@ -262,6 +278,14 @@ snapshots['test_reindex__check_new_index 1'] = {
                 'extra': {
                     'type': 'object'
                 },
+                'other_participants': {
+                    'analyzer': 'czech',
+                    'type': 'text'
+                },
+                'our_participants': {
+                    'analyzer': 'czech',
+                    'type': 'text'
+                },
                 'provided_benefit': {
                     'analyzer': 'czech',
                     'type': 'text'
@@ -350,6 +374,14 @@ snapshots['test_init_documents 1'] = {
                 },
                 'extra': {
                     'type': 'object'
+                },
+                'other_participants': {
+                    'analyzer': 'czech',
+                    'type': 'text'
+                },
+                'our_participants': {
+                    'analyzer': 'czech',
+                    'type': 'text'
                 },
                 'provided_benefit': {
                     'analyzer': 'czech',

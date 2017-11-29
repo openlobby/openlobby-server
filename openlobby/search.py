@@ -9,7 +9,8 @@ HIGHLIGHT_PARAMS = {
 
 
 def query_reports(es, query, paginator, *, highlight=False):
-    fields = ['title', 'body', 'received_benefit', 'provided_benefit']
+    fields = ['title', 'body', 'received_benefit', 'provided_benefit',
+        'our_participants', 'other_participants']
     s = ReportDoc.search(using=es)
     if query != '':
         s = s.query('multi_match', query=query, fields=fields)
