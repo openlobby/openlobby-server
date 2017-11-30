@@ -49,7 +49,7 @@ class Report(graphene.ObjectType):
     @classmethod
     def get_node(cls, info, id):
         try:
-            report = ReportDoc.get(id, using=info.context['es'])
+            report = ReportDoc.get(id, using=info.context['es'], index=info.context['index'])
         except NotFoundError:
             return None
 
@@ -88,14 +88,14 @@ class User(graphene.ObjectType):
     @classmethod
     def get_node(cls, info, id):
         try:
-            user = UserDoc.get(id, using=info.context['es'])
+            user = UserDoc.get(id, using=info.context['es'], index=info.context['index'])
         except NotFoundError:
             return None
         return cls.from_es(user)
 
     def resolve_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
-        response = search.reports_by_author(info.context['es'], self.id, paginator)
+        response = search.reports_by_author(self.id, paginator, **info.context)
         total = response.hits.total
         page_info = paginator.get_page_info(total)
 

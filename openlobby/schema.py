@@ -17,8 +17,8 @@ class SearchReportsConnection(relay.Connection):
         node = Report
 
 
-def get_authors(es, ids):
-    response = UserDoc.mget(ids, using=es)
+def get_authors(ids, *, es, index):
+    response = UserDoc.mget(ids, using=es, index=index)
     return {a.meta.id: User.from_es(a) for a in response}
 
 
@@ -40,15 +40,17 @@ class Query(graphene.ObjectType):
         query = kwargs.get('query', '')
         query = extract_text(query)
         params = {
+            'es': info.context['es'],
+            'index': info.context['index'],
             'highlight': kwargs.get('highlight'),
         }
-        response = search.query_reports(info.context['es'], query, paginator, **params)
+        response = search.query_reports(query, paginator, **params)
         total = response.hits.total
         page_info = paginator.get_page_info(total)
 
         edges = []
         if len(response) > 0:
-            authors = get_authors(info.context['es'], ids=[r.author_id for r in response])
+            authors = get_authors(ids=[r.author_id for r in response], **info.context)
             for i, report in enumerate(response):
                 cursor = paginator.get_edge_cursor(i + 1)
                 node = Report.from_es(report, author=authors[report.author_id])

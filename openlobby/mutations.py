@@ -59,7 +59,7 @@ class Login(relay.ClientIDMutation):
             'expiration': expiration,
         }
         login_attempt = LoginAttemptDoc(**data)
-        login_attempt.save(using=info.context['es'])
+        login_attempt.save(using=info.context['es'], index=info.context['index'])
 
         # already registered user?
         user = UserDoc.get_by_openid_uid(openid_uid, **info.context)
@@ -84,7 +84,8 @@ class LoginRedirect(relay.ClientIDMutation):
 
         # get login attempt from ES
         qs_data = urllib.parse.parse_qs(query_string)
-        la = LoginAttemptDoc.get(qs_data['client_id'], using=info.context['es'])
+        la = LoginAttemptDoc.get(qs_data['client_id'], using=info.context['es'],
+            index=info.context['index'])
 
         # delete login attempt so it can be used just once
         la.delete(using=info.context['es'])
@@ -116,12 +117,12 @@ class LoginRedirect(relay.ClientIDMutation):
         user = UserDoc.get_by_openid_uid(la['openid_uid'], **info.context)
         if user is None:
             user = UserDoc(openid_uid=la['openid_uid'], name=user_info['name'], email=user_info['email'])
-            user.save(using=info.context['es'])
+            user.save(using=info.context['es'], index=info.context['index'])
 
         # create session
         expiration = get_session_expiration_time()
         session = SessionDoc(user_id=user.meta.id, expiration=expiration)
-        session.save(using=info.context['es'])
+        session.save(using=info.context['es'], index=info.context['index'])
 
         # create access token for session
         token = create_access_token(session.meta.id, expiration)
@@ -160,7 +161,7 @@ class NewReport(relay.ClientIDMutation):
             'date': input.get('date'),
         }
         report = ReportDoc(**data)
-        report.save(using=info.context['es'])
+        report.save(using=info.context['es'], index=info.context['index'])
         return NewReport(report=Report.from_es(report, author=viewer))
 
 

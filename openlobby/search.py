@@ -8,10 +8,10 @@ HIGHLIGHT_PARAMS = {
 }
 
 
-def query_reports(es, query, paginator, *, highlight=False):
+def query_reports(query, paginator, *, es, index, highlight=False):
     fields = ['title', 'body', 'received_benefit', 'provided_benefit',
         'our_participants', 'other_participants']
-    s = ReportDoc.search(using=es)
+    s = ReportDoc.search(using=es, index=index)
     if query != '':
         s = s.query('multi_match', query=query, fields=fields)
     if highlight:
@@ -21,8 +21,8 @@ def query_reports(es, query, paginator, *, highlight=False):
     return s.execute()
 
 
-def reports_by_author(es, author_id, paginator):
-    s = ReportDoc.search(using=es)
+def reports_by_author(author_id, paginator, *, es, index):
+    s = ReportDoc.search(using=es, index=index)
     s = s.filter('term', author_id=author_id)
     s = s.sort('-published')
     s = s[paginator.slice_from:paginator.slice_to]
