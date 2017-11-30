@@ -10,7 +10,8 @@ def es():
     """Elasticsearch client."""
     es_dsn = os.environ.get('ELASTICSEARCH_DSN', 'http://localhost:9200')
     es_client = Elasticsearch(es_dsn)
-    return es_client
+    yield es_client
+    es_client.indices.delete('test_*')
 
 
 @pytest.fixture

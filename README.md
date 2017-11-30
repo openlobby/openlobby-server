@@ -60,3 +60,7 @@ variable `ELASTICSEARCH_DSN`. E.g.
 ### Testing
 
 Run: `pytest`
+
+Expects Elasticsearch for tests running on `localhost:9200` (can be override by
+environment variable `ELASTICSEARCH_DSN`). Tests creates random indices with
+prefix `test_` and deletes all indices matching `test_*` on teardown.
