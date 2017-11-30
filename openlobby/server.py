@@ -5,6 +5,7 @@ from elasticsearch import Elasticsearch
 from .auth import AuthGraphQLView
 from .management import bootstrap_es
 from .schema import schema
+from .settings import ES_INDEX
 
 
 app = Flask(__name__)
@@ -21,4 +22,4 @@ def hello():
 
 
 app.add_url_rule('/graphql', view_func=AuthGraphQLView.as_view(
-    'graphql', schema=schema, graphiql=True, context={'es': es_client}))
+    'graphql', schema=schema, graphiql=True, context={'es': es_client, 'index': ES_INDEX}))

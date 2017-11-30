@@ -11,7 +11,7 @@ def get_viewer(info):
         if session_id is None:
             g.viewer = None
         else:
-            session = SessionDoc.get_active(info.context['es'], session_id)
+            session = SessionDoc.get_active(session_id, **info.context)
             if session is None:
                 g.viewer = None
             else:

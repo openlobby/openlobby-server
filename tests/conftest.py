@@ -5,6 +5,9 @@ import random
 import string
 
 
+from openlobby.management import init_alias
+
+
 @pytest.fixture(scope='session')
 def es():
     """Elasticsearch client."""
@@ -20,3 +23,10 @@ def index_name():
     length = 10
     word = ''.join(random.choice(string.ascii_lowercase) for i in range(length))
     return 'test_{}'.format(word)
+
+
+@pytest.fixture
+def index(es, index_name):
+    """Initialized index."""
+    init_alias(es, index_name)
+    return index_name

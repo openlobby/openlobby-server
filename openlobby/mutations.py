@@ -62,7 +62,7 @@ class Login(relay.ClientIDMutation):
         login_attempt.save(using=info.context['es'])
 
         # already registered user?
-        user = UserDoc.get_by_openid_uid(info.context['es'], openid_uid)
+        user = UserDoc.get_by_openid_uid(openid_uid, **info.context)
         is_new_user = user is None
 
         # get OpenID authorization url
@@ -113,7 +113,7 @@ class LoginRedirect(relay.ClientIDMutation):
         user_info = client.do_user_info_request(state=state)
 
         # get or create User
-        user = UserDoc.get_by_openid_uid(info.context['es'], la['openid_uid'])
+        user = UserDoc.get_by_openid_uid(la['openid_uid'], **info.context)
         if user is None:
             user = UserDoc(openid_uid=la['openid_uid'], name=user_info['name'], email=user_info['email'])
             user.save(using=info.context['es'])
