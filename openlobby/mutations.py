@@ -1,4 +1,5 @@
 import arrow
+from flask import g
 import graphene
 from graphene import relay
 from graphene.types.datetime import DateTime
@@ -130,6 +131,22 @@ class LoginRedirect(relay.ClientIDMutation):
         return LoginRedirect(access_token=token)
 
 
+class Logout(relay.ClientIDMutation):
+    success = graphene.Boolean()
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        viewer = get_viewer(info)
+        if viewer is None:
+            raise Exception('User must be logged in to perform this mutation.')
+
+        session_id = g.get('session_id')
+        session = SessionDoc.get(session_id, using=info.context['es'], index=info.context['index'])
+        session.delete(using=info.context['es'], index=info.context['index'])
+
+        return Logout(success=True)
+
+
 class NewReport(relay.ClientIDMutation):
 
     class Input:
@@ -168,4 +185,5 @@ class NewReport(relay.ClientIDMutation):
 class Mutation(graphene.ObjectType):
     login = Login.Field()
     login_redirect = LoginRedirect.Field()
+    logout = Logout.Field()
     new_report = NewReport.Field()
