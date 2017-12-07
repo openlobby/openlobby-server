@@ -10,10 +10,11 @@ from .settings import ES_INDEX
 
 app = Flask(__name__)
 
+
 es_dsn = os.environ.get('ELASTICSEARCH_DSN', 'http://localhost:9200')
 es_client = Elasticsearch(es_dsn)
 
-bootstrap_es(es_client)
+bootstrap_es(es_client, ES_INDEX)
 
 
 @app.route('/')

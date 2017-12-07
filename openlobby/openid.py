@@ -40,7 +40,7 @@ def get_authorization_url(client, state, nonce, is_new_user=True):
         )
 
     auth_req = client.construct_AuthorizationRequest(request_args=args)
-    url = auth_req.request(client.authorization_endpoint)
+    url = auth_req.request(client.provider_info['authorization_endpoint'])
     return url
 
 

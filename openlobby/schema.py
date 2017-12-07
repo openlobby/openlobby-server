@@ -1,7 +1,7 @@
 import graphene
 from graphene import relay
 
-from .types import Report, User
+from .types import Report, User, LoginShortcut
 from .documents import UserDoc
 from .paginator import Paginator
 from .mutations import Mutation
@@ -34,6 +34,10 @@ class Query(graphene.ObjectType):
         highlight=graphene.Boolean(default_value=False, description=highlight_help),
     )
     viewer = graphene.Field(User, description='Active user viewing API.')
+    login_shortcuts = graphene.List(
+        LoginShortcut,
+        description='Shortcuts for login. Use with LoginByShortcut mutation.',
+    )
 
     def resolve_search_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
@@ -60,6 +64,10 @@ class Query(graphene.ObjectType):
 
     def resolve_viewer(self, info, **kwargs):
         return get_viewer(info)
+
+    def resolve_login_shortcuts(self, info, **kwargs):
+        response = search.login_shortcuts(**info.context)
+        return [LoginShortcut.from_es(ls) for ls in response]
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation, types=[User, Report])

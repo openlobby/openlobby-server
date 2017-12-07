@@ -1,6 +1,5 @@
 import re
 
-from .settings import ES_INDEX
 from .documents import all_documents
 
 
@@ -52,12 +51,12 @@ INDEX_SETTINGS = {
 }
 
 
-def bootstrap_es(es):
-    if es.indices.exists(ES_INDEX):
+def bootstrap_es(es, index):
+    if es.indices.exists(index):
         return
 
     print('Bootstrapping index and documents.')
-    init_alias(es, ES_INDEX)
+    init_alias(es, index)
 
 
 def init_documents(es, index):

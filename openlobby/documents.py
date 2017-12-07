@@ -1,4 +1,4 @@
-from elasticsearch_dsl import DocType, Text, Date, Object, Keyword, Integer
+from elasticsearch_dsl import DocType, Text, Date, Object, Keyword, Integer, Boolean
 import time
 
 from .settings import ES_TEXT_ANALYZER
@@ -41,6 +41,21 @@ class ReportDoc(DocType):
         doc_type = 'report'
 
 
+class OpenIdClientDoc(DocType):
+    # TODO conflict in field type
+    name_x = Keyword()
+    is_shortcut = Boolean()
+    client_id = Keyword()
+    client_secret = Keyword()
+    issuer = Keyword()
+    authorization_endpoint = Keyword()
+    token_endpoint = Keyword()
+    userinfo_endpoint = Keyword()
+
+    class Meta:
+        doc_type = 'open-id-client'
+
+
 class LoginAttemptDoc(DocType):
     openid_uid = Keyword()
     redirect_uri = Keyword()
@@ -74,4 +89,5 @@ all_documents = (
     ReportDoc,
     LoginAttemptDoc,
     SessionDoc,
+    OpenIdClientDoc,
 )

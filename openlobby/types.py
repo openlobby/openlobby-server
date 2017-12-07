@@ -3,7 +3,7 @@ import graphene
 from graphene import relay
 from graphene.types.json import JSONString
 
-from .documents import UserDoc, ReportDoc
+from .documents import UserDoc, ReportDoc, OpenIdClientDoc
 from .paginator import Paginator
 from . import search
 
@@ -106,3 +106,25 @@ class User(graphene.ObjectType):
             edges.append(ReportConnection.Edge(node=node, cursor=cursor))
 
         return ReportConnection(page_info=page_info, edges=edges, total_count=total)
+
+
+class LoginShortcut(graphene.ObjectType):
+    name = graphene.String()
+
+    class Meta:
+        interfaces = (relay.Node, )
+
+    @classmethod
+    def from_es(cls, openid_client):
+        return cls(
+            id=openid_client.meta.id,
+            name=openid_client.name_x,
+        )
+
+    @classmethod
+    def get_node(cls, info, id):
+        try:
+            openid_client = OpenIdClientDoc.get(id, using=info.context['es'], index=info.context['index'])
+        except NotFoundError:
+            return None
+        return cls.from_es(openid_client)
