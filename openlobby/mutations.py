@@ -3,6 +3,7 @@ from flask import g
 import graphene
 from graphene import relay
 from graphene.types.datetime import DateTime
+from graphql_relay import from_global_id
 from oic.oic import rndstr
 from oic.oic.message import AuthorizationResponse
 import time
@@ -13,9 +14,16 @@ from .auth import (
     get_session_expiration_time,
     create_access_token,
 )
-from .documents import UserDoc, LoginAttemptDoc, SessionDoc, ReportDoc
+from .documents import (
+    UserDoc,
+    LoginAttemptDoc,
+    SessionDoc,
+    ReportDoc,
+    OpenIdClientDoc,
+)
 from .openid import (
     init_client_for_uid,
+    init_client_for_shortcut,
     register_client,
     get_authorization_url,
     set_registration_info,
@@ -70,6 +78,59 @@ class Login(relay.ClientIDMutation):
         authorization_url = get_authorization_url(client, state, nonce, is_new_user)
 
         return Login(authorization_url=authorization_url)
+
+
+class LoginByShortcut(relay.ClientIDMutation):
+
+    class Input:
+        shortcut_id = relay.GlobalID(required=True)
+        redirect_uri = graphene.String(required=True)
+
+    authorization_url = graphene.String()
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        shortcut_id = input['shortcut_id']
+        redirect_uri = input['redirect_uri']
+
+        type, id = from_global_id(shortcut_id)
+        openid_client_data = OpenIdClientDoc.get(id, using=info.context['es'],
+            index=info.context['index'])
+
+        # prepare OpenID client
+        client = init_client_for_shortcut(openid_client_data, redirect_uri)
+
+        # TODO
+        """
+        # prepare login attempt details
+        state = rndstr(32)
+        nonce = rndstr()
+        expiration = get_login_attempt_expiration_time()
+
+        # save login attempt into ES
+        data = {
+            'meta': {'id': client.client_id},
+            'state': state,
+            'nonce': nonce,
+            'client_id': client.client_id,
+            'client_secret': client.client_secret,
+            'openid_uid': openid_uid,
+            'redirect_uri': redirect_uri,
+            'expiration': expiration,
+        }
+        login_attempt = LoginAttemptDoc(**data)
+        login_attempt.save(using=info.context['es'], index=info.context['index'])
+
+        # already registered user?
+        user = UserDoc.get_by_openid_uid(openid_uid, **info.context)
+        is_new_user = user is None
+
+        # get OpenID authorization url
+        authorization_url = get_authorization_url(client, state, nonce, is_new_user)
+        """
+
+        authorization_url = 'http://localhost/foo'
+        return LoginByShortcut(authorization_url=authorization_url)
 
 
 class LoginRedirect(relay.ClientIDMutation):
@@ -184,6 +245,7 @@ class NewReport(relay.ClientIDMutation):
 
 class Mutation(graphene.ObjectType):
     login = Login.Field()
+    login_by_shortcut = LoginByShortcut.Field()
     login_redirect = LoginRedirect.Field()
     logout = Logout.Field()
     new_report = NewReport.Field()

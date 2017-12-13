@@ -80,16 +80,13 @@ snapshots['test_create_index__check_mappings 1'] = {
                 'client_secret': {
                     'type': 'keyword'
                 },
-                'isShortcut': {
+                'is_shortcut': {
                     'type': 'boolean'
                 },
                 'issuer': {
                     'type': 'keyword'
                 },
                 'name_x': {
-                    'type': 'keyword'
-                },
-                'redirect_uri': {
                     'type': 'keyword'
                 },
                 'token_endpoint': {
@@ -208,16 +205,13 @@ snapshots['test_init_alias 1'] = {
                 'client_secret': {
                     'type': 'keyword'
                 },
-                'isShortcut': {
+                'is_shortcut': {
                     'type': 'boolean'
                 },
                 'issuer': {
                     'type': 'keyword'
                 },
                 'name_x': {
-                    'type': 'keyword'
-                },
-                'redirect_uri': {
                     'type': 'keyword'
                 },
                 'token_endpoint': {
@@ -336,16 +330,13 @@ snapshots['test_reindex__check_new_index 1'] = {
                 'client_secret': {
                     'type': 'keyword'
                 },
-                'isShortcut': {
+                'is_shortcut': {
                     'type': 'boolean'
                 },
                 'issuer': {
                     'type': 'keyword'
                 },
                 'name_x': {
-                    'type': 'keyword'
-                },
-                'redirect_uri': {
                     'type': 'keyword'
                 },
                 'token_endpoint': {
@@ -464,16 +455,13 @@ snapshots['test_init_documents 1'] = {
                 'client_secret': {
                     'type': 'keyword'
                 },
-                'isShortcut': {
+                'is_shortcut': {
                     'type': 'boolean'
                 },
                 'issuer': {
                     'type': 'keyword'
                 },
                 'name_x': {
-                    'type': 'keyword'
-                },
-                'redirect_uri': {
                     'type': 'keyword'
                 },
                 'token_endpoint': {

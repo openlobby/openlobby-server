@@ -1,5 +1,10 @@
 from oic.oic import Client
-from oic.oic.message import RegistrationResponse, ClaimsRequest, Claims
+from oic.oic.message import (
+    ProviderConfigurationResponse,
+    RegistrationResponse,
+    ClaimsRequest,
+    Claims,
+)
 from oic.utils.authn.client import CLIENT_AUTHN_METHOD
 
 from .settings import SITE_NAME
@@ -9,6 +14,19 @@ def init_client_for_uid(openid_uid):
     client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
     issuer = client.discover(openid_uid)
     client.provider_config(issuer)
+    return client
+
+
+def init_client_for_shortcut(data, redirect_uri):
+    client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
+    set_registration_info(client, data['client_id'], data['client_secret'], redirect_uri)
+    info = {
+        'issuer': data['issuer'],
+        'authorization_endpoint': data['authorization_endpoint'],
+        'token_endpoint': data['token_endpoint'],
+        'userinfo_endpoint': data['userinfo_endpoint'],
+    }
+    client.provider_info = ProviderConfigurationResponse(**info)
     return client
 
 
