@@ -4,7 +4,7 @@ Date: 2017-11-11
 
 ## Status
 
-Accepted
+Superceded by [10. Replace Flask with Django](0010-replace-flask-with-django.md)
 
 ## Context
 
