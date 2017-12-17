@@ -1,11 +1,12 @@
-from flask import g
-
 from .documents import SessionDoc
 from .types import User
 
 
 def get_viewer(info):
     """Resolves actual viewer and caches it into 'g'."""
+    # TODO
+    raise NotImplementedError
+
     if not hasattr(g, 'viewer'):
         session_id = g.get('session_id', None)
         if session_id is None:

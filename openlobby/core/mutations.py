@@ -1,5 +1,4 @@
 import arrow
-from flask import g
 import graphene
 from graphene import relay
 from graphene.types.datetime import DateTime
@@ -201,6 +200,8 @@ class Logout(relay.ClientIDMutation):
         if viewer is None:
             raise Exception('User must be logged in to perform this mutation.')
 
+        # TODO
+        raise NotImplementedError()
         session_id = g.get('session_id')
         session = SessionDoc.get(session_id, using=info.context['es'], index=info.context['index'])
         session.delete(using=info.context['es'], index=info.context['index'])
