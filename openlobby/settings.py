@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
+    'graphene_django',
     'openlobby.core',
 ]
 
@@ -126,6 +127,10 @@ LOGGING = {
     },
 }
 
+
+GRAPHENE = {
+    'SCHEMA': 'openlobby.core.schema.schema'
+}
 
 ###############################################################################
 # Custom settings
