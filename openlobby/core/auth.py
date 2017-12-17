@@ -1,3 +1,4 @@
+from django.conf import settings
 import json
 import jwt
 import re
@@ -5,20 +6,13 @@ import time
 from flask import g, request
 from flask_graphql import GraphQLView
 
-from .settings import (
-    SECRET_KEY,
-    JWT_ALGORITHM,
-    LOGIN_ATTEMPT_EXPIRATION,
-    SESSION_EXPIRATION,
-)
-
 
 def get_login_attempt_expiration_time():
-    return int(time.time() + LOGIN_ATTEMPT_EXPIRATION)
+    return int(time.time() + settings.LOGIN_ATTEMPT_EXPIRATION)
 
 
 def get_session_expiration_time():
-    return int(time.time() + SESSION_EXPIRATION)
+    return int(time.time() + settings.SESSION_EXPIRATION)
 
 
 def create_access_token(session_id, expiration):
@@ -26,12 +20,12 @@ def create_access_token(session_id, expiration):
         'sub': session_id,
         'exp': expiration,
     }
-    token = jwt.encode(payload, SECRET_KEY, algorithm=JWT_ALGORITHM)
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
     return token.decode('utf-8')
 
 
 def parse_access_token(token):
-    payload = jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])
+    payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
     return payload['sub']
 
 

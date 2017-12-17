@@ -1,7 +1,6 @@
+from django.conf import settings
 from elasticsearch_dsl import DocType, Text, Date, Object, Keyword, Integer, Boolean
 import time
-
-from .settings import ES_TEXT_ANALYZER
 
 
 """
@@ -12,7 +11,7 @@ the file.
 
 class UserDoc(DocType):
     openid_uid = Keyword()
-    name = Text(analyzer=ES_TEXT_ANALYZER)
+    name = Text(analyzer=settings.ES_TEXT_ANALYZER)
     email = Keyword()
     extra = Object()
 
@@ -29,12 +28,12 @@ class ReportDoc(DocType):
     author_id = Keyword()
     date = Date()
     published = Date()
-    title = Text(analyzer=ES_TEXT_ANALYZER)
-    body = Text(analyzer=ES_TEXT_ANALYZER)
-    received_benefit = Text(analyzer=ES_TEXT_ANALYZER)
-    provided_benefit = Text(analyzer=ES_TEXT_ANALYZER)
-    our_participants = Text(analyzer=ES_TEXT_ANALYZER)
-    other_participants = Text(analyzer=ES_TEXT_ANALYZER)
+    title = Text(analyzer=settings.ES_TEXT_ANALYZER)
+    body = Text(analyzer=settings.ES_TEXT_ANALYZER)
+    received_benefit = Text(analyzer=settings.ES_TEXT_ANALYZER)
+    provided_benefit = Text(analyzer=settings.ES_TEXT_ANALYZER)
+    our_participants = Text(analyzer=settings.ES_TEXT_ANALYZER)
+    other_participants = Text(analyzer=settings.ES_TEXT_ANALYZER)
     extra = Object()
 
     class Meta:

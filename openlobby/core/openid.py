@@ -1,3 +1,4 @@
+from django.conf import settings
 from oic.oic import Client
 from oic.oic.message import (
     ProviderConfigurationResponse,
@@ -6,8 +7,6 @@ from oic.oic.message import (
     Claims,
 )
 from oic.utils.authn.client import CLIENT_AUTHN_METHOD
-
-from .settings import SITE_NAME
 
 
 def init_client_for_uid(openid_uid):
@@ -33,7 +32,7 @@ def init_client_for_shortcut(data, redirect_uri):
 def register_client(client, redirect_uri):
     params = {
         'redirect_uris': [redirect_uri],
-        'client_name': SITE_NAME,
+        'client_name': settings.SITE_NAME,
     }
     client.register(client.provider_info['registration_endpoint'], **params)
     return client
