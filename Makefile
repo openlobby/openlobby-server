@@ -6,7 +6,10 @@ install:
 	pip install -e .
 
 run:
-	SECRET_KEY=local FLASK_DEBUG=1 FLASK_APP=./openlobby/server.py flask run -p 8010
+	DEBUG=1 python manage.py runserver 8010
+
+migrate:
+	DEBUG=1 python manage.py migrate
 
 build:
 	docker build -t openlobby/openlobby-server:latest .

@@ -20,7 +20,9 @@ prepared Elasticsearch Docker container with Czech support at
 ## Configuration
 
 Configuration is done by environment variables:
- - `SECRET_KEY` - long random secret string (required)
+ - `DEBUG` - Set to any value to turn on debug mode. Don't use in production!
+ - `SECRET_KEY` - long random secret string (required if not in debug mode)
+ - `DATABASE_DSN` - DSN of PostgreSQL database (default: `postgresql://db:db@localhost:5432/openlobby`)
  - `ELASTICSEARCH_DSN` - DSN of Elasticsearch cluster (default: `http://localhost:9200`)
  - `SITE_NAME` - site name for OpenID authentication (default: `Open Lobby`)
  - `ES_INDEX` - Elasticsearch index (default: `openlobby`)
@@ -44,12 +46,13 @@ You need to have Python 3 installed. Clone this repository and run:
 1. `make init-env` - prepares Python virtualenv in dir `.env`
 2. `source .env/bin/activate` - activates virtualenv
 3. `make install` - installs requirements and server in development mode
-4. `make run` - runs development server on port `8010`
+4. `make migrate` - runs database migrations
+5. `make run` - runs development server on port `8010`
 
 Now you can use GraphQL API endpoint and GraphiQL web interface at
 `http://localhost:8010/graphql`
 
-Next time you can just do steps 2 and 4.
+Next time you can just do steps 2 and 5.
 
 Development server assumes that you have
 [openlobby/openlobby-es-czech](https://github.com/openlobby/openlobby-es-czech).
