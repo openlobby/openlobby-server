@@ -3,6 +3,7 @@ from graphene import relay
 
 from .types import Report, User, LoginShortcut
 from .documents import UserDoc
+from .models import OpenIdClient
 from .paginator import Paginator
 from .sanitizers import extract_text
 from .utils import get_viewer
@@ -65,5 +66,5 @@ class Query:
         return get_viewer(info)
 
     def resolve_login_shortcuts(self, info, **kwargs):
-        response = search.login_shortcuts(**info.context)
-        return [LoginShortcut.from_es(ls) for ls in response]
+        clients = OpenIdClient.objects.filter(is_shortcut=True)
+        return [LoginShortcut.from_db(c) for c in clients]

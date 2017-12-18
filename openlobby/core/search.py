@@ -1,4 +1,4 @@
-from .documents import ReportDoc, OpenIdClientDoc
+from .documents import ReportDoc
 
 
 HIGHLIGHT_PARAMS = {
@@ -26,10 +26,4 @@ def reports_by_author(author_id, paginator, *, es, index):
     s = s.filter('term', author_id=author_id)
     s = s.sort('-published')
     s = s[paginator.slice_from:paginator.slice_to]
-    return s.execute()
-
-
-def login_shortcuts(*, es, index):
-    s = OpenIdClientDoc.search(using=es, index=index)
-    s = s.filter('term', is_shortcut=True)
     return s.execute()

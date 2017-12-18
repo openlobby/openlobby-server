@@ -1,9 +1,11 @@
-from django.urls import path, re_path
+from django.contrib import admin
+from django.urls import path
 from graphene_django.views import GraphQLView
 
 from openlobby.core.views import IndexView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
-    re_path(r'^graphql', GraphQLView.as_view(graphiql=True)),
+    path('admin/', admin.site.urls),
+    path('graphql', GraphQLView.as_view(graphiql=True)),
 ]

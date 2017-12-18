@@ -18,8 +18,8 @@ from .documents import (
     LoginAttemptDoc,
     SessionDoc,
     ReportDoc,
-    OpenIdClientDoc,
 )
+from .models import OpenIdClient
 from .openid import (
     init_client_for_uid,
     init_client_for_shortcut,
@@ -93,8 +93,7 @@ class LoginByShortcut(relay.ClientIDMutation):
         redirect_uri = input['redirect_uri']
 
         type, id = from_global_id(shortcut_id)
-        openid_client_data = OpenIdClientDoc.get(id, using=info.context['es'],
-            index=info.context['index'])
+        openid_client_data = OpenIdClient.objects.get(id=id)
 
         # prepare OpenID client
         client = init_client_for_shortcut(openid_client_data, redirect_uri)

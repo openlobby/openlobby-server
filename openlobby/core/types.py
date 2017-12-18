@@ -3,7 +3,8 @@ import graphene
 from graphene import relay
 from graphene.types.json import JSONString
 
-from .documents import UserDoc, ReportDoc, OpenIdClientDoc
+from .documents import UserDoc, ReportDoc
+from .models import OpenIdClient
 from .paginator import Paginator
 from . import search
 
@@ -115,16 +116,13 @@ class LoginShortcut(graphene.ObjectType):
         interfaces = (relay.Node, )
 
     @classmethod
-    def from_es(cls, openid_client):
-        return cls(
-            id=openid_client.meta.id,
-            name=openid_client.name_x,
-        )
+    def from_db(cls, openid_client):
+        return cls(id=openid_client.id, name=openid_client.name)
 
     @classmethod
     def get_node(cls, info, id):
         try:
-            openid_client = OpenIdClientDoc.get(id, using=info.context['es'], index=info.context['index'])
-        except NotFoundError:
+            client = OpenIdClient.objects.get(id=id)
+            return cls.from_db(client)
+        except OpenIdClient.DoesNotExist:
             return None
-        return cls.from_es(openid_client)
