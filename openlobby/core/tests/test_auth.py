@@ -1,14 +1,9 @@
+from django.conf import settings
 import time
 import jwt
 import pytest
 
-from openlobby.settings import (
-    SECRET_KEY,
-    JWT_ALGORITHM,
-    LOGIN_ATTEMPT_EXPIRATION,
-    SESSION_EXPIRATION,
-)
-from openlobby.auth import (
+from ..auth import (
     get_login_attempt_expiration_time,
     get_session_expiration_time,
     create_access_token,
@@ -18,13 +13,13 @@ from openlobby.auth import (
 
 def test_get_login_attempt_expiration_time():
     expiration = get_login_attempt_expiration_time()
-    expected = int(time.time() + LOGIN_ATTEMPT_EXPIRATION)
+    expected = int(time.time() + settings.LOGIN_ATTEMPT_EXPIRATION)
     assert expected <= expiration <= expected + 1
 
 
 def test_get_session_expiration_time():
     expiration = get_session_expiration_time()
-    expected = int(time.time() + SESSION_EXPIRATION)
+    expected = int(time.time() + settings.SESSION_EXPIRATION)
     assert expected <= expiration <= expected + 1
 
 
@@ -32,7 +27,7 @@ def test_create_access_token():
     session_id = 'idkfa'
     expiration = int(time.time() + 10)
     token = create_access_token(session_id, expiration)
-    payload = jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])
+    payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
     assert isinstance(token, str)
     assert payload['sub'] == session_id
     assert payload['exp'] == expiration

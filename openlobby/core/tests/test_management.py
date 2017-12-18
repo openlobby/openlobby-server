@@ -1,6 +1,6 @@
 import pytest
 
-from openlobby.management import (
+from ..management import (
     AliasAlreadyExistsError,
     IndexAlreadyExistsError,
     create_index,
@@ -9,7 +9,7 @@ from openlobby.management import (
     init_documents,
     reindex,
 )
-from openlobby.documents import UserDoc
+from ..documents import UserDoc
 
 
 def test_create_index(es, index_name):

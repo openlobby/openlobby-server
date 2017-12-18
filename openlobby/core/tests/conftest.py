@@ -5,7 +5,7 @@ import random
 import string
 
 
-from openlobby.management import init_alias
+from ..management import init_alias
 
 
 @pytest.fixture(scope='session')

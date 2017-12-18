@@ -1,6 +1,6 @@
 import time
 
-from openlobby.documents import SessionDoc, UserDoc
+from ..documents import SessionDoc, UserDoc
 
 
 class TestSessionDoc:

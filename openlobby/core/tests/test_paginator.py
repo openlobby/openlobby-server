@@ -1,6 +1,6 @@
 import pytest
 
-from openlobby.paginator import PER_PAGE, encode_cursor, decode_cursor, Paginator
+from ..paginator import PER_PAGE, encode_cursor, decode_cursor, Paginator
 
 
 @pytest.mark.parametrize('num, cursor', [

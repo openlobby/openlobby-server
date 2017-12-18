@@ -1,6 +1,6 @@
 import pytest
 
-from openlobby.sanitizers import strip_all_tags, extract_text
+from ..sanitizers import strip_all_tags, extract_text
 
 
 @pytest.mark.parametrize('input, text', [
