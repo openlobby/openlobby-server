@@ -4,7 +4,6 @@ from graphene import relay
 from .types import Report, User, LoginShortcut
 from .documents import UserDoc
 from .paginator import Paginator
-from .mutations import Mutation
 from .sanitizers import extract_text
 from .utils import get_viewer
 from . import search
@@ -22,7 +21,7 @@ def get_authors(ids, *, es, index):
     return {a.meta.id: User.from_es(a) for a in response}
 
 
-class Query(graphene.ObjectType):
+class Query:
     highlight_help = ('Whether search matches should be marked with tag <mark>.'
         ' Default: false')
 
@@ -68,6 +67,3 @@ class Query(graphene.ObjectType):
     def resolve_login_shortcuts(self, info, **kwargs):
         response = search.login_shortcuts(**info.context)
         return [LoginShortcut.from_es(ls) for ls in response]
-
-
-schema = graphene.Schema(query=Query, mutation=Mutation, types=[User, Report])

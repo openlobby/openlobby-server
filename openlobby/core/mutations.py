@@ -244,7 +244,7 @@ class NewReport(relay.ClientIDMutation):
         return NewReport(report=Report.from_es(report, author=viewer))
 
 
-class Mutation(graphene.ObjectType):
+class Mutation:
     login = Login.Field()
     login_by_shortcut = LoginByShortcut.Field()
     login_redirect = LoginRedirect.Field()

@@ -129,7 +129,7 @@ LOGGING = {
 
 
 GRAPHENE = {
-    'SCHEMA': 'openlobby.core.schema.schema'
+    'SCHEMA': 'openlobby.schema.schema'
 }
 
 ###############################################################################
