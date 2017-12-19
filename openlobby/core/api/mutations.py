@@ -8,19 +8,19 @@ from oic.oic.message import AuthorizationResponse
 import time
 import urllib.parse
 
-from .auth import (
+from ..auth import (
     get_login_attempt_expiration_time,
     get_session_expiration_time,
     create_access_token,
 )
-from .documents import (
+from ..documents import (
     UserDoc,
     LoginAttemptDoc,
     SessionDoc,
     ReportDoc,
 )
-from .models import OpenIdClient
-from .openid import (
+from ..models import OpenIdClient
+from ..openid import (
     init_client_for_uid,
     init_client_for_shortcut,
     register_client,
@@ -28,8 +28,8 @@ from .openid import (
     set_registration_info,
     do_access_token_request,
 )
+from ..utils import get_viewer
 from .types import Report
-from .utils import get_viewer
 from .sanitizers import strip_all_tags
 
 

@@ -1,5 +1,5 @@
 from .documents import SessionDoc
-from .types import User
+from .api.types import User
 
 
 def get_viewer(info):

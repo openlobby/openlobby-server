@@ -1,8 +1,8 @@
 import graphene
 
-from openlobby.core.mutations import Mutation as CoreMutation
-from openlobby.core.schema import Query as CoreQuery
-from openlobby.core.types import User, Report, LoginShortcut
+from openlobby.core.api.mutations import Mutation as CoreMutation
+from openlobby.core.api.schema import Query as CoreQuery
+from openlobby.core.api.types import User, Report, LoginShortcut
 
 
 class Query(CoreQuery, graphene.ObjectType):

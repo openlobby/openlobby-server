@@ -1,6 +1,6 @@
 import pytest
 
-from ..sanitizers import strip_all_tags, extract_text
+from ..api.sanitizers import strip_all_tags, extract_text
 
 
 @pytest.mark.parametrize('input, text', [

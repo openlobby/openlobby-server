@@ -3,10 +3,10 @@ import graphene
 from graphene import relay
 from graphene.types.json import JSONString
 
-from .documents import UserDoc, ReportDoc
-from .models import OpenIdClient
+from ..documents import UserDoc, ReportDoc
+from ..models import OpenIdClient
 from .paginator import Paginator
-from . import search
+from .. import search
 
 
 def get_higlighted(hit, field):

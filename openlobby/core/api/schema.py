@@ -2,12 +2,12 @@ import graphene
 from graphene import relay
 
 from .types import Report, User, LoginShortcut
-from .documents import UserDoc
-from .models import OpenIdClient
+from ..documents import UserDoc
+from ..models import OpenIdClient
 from .paginator import Paginator
 from .sanitizers import extract_text
-from .utils import get_viewer
-from . import search
+from ..utils import get_viewer
+from .. import search
 
 
 class SearchReportsConnection(relay.Connection):
