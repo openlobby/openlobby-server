@@ -16,3 +16,9 @@ class OpenIdClient(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class LoginAttempt(models.Model):
+    openid_client = models.ForeignKey(OpenIdClient, on_delete=models.CASCADE)
+    state = models.CharField(max_length=34)
+    expiration = models.DateTimeField()
