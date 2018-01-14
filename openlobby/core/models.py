@@ -20,5 +20,6 @@ class OpenIdClient(models.Model):
 
 class LoginAttempt(models.Model):
     openid_client = models.ForeignKey(OpenIdClient, on_delete=models.CASCADE)
-    state = models.CharField(max_length=34)
-    expiration = models.DateTimeField()
+    state = models.CharField(max_length=50, unique=True, db_index=True)
+    redirect_uri = models.CharField(max_length=255)
+    expiration = models.IntegerField()
