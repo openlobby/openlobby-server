@@ -16,14 +16,15 @@ def init_client_for_uid(openid_uid):
     return client
 
 
-def init_client_for_shortcut(data, redirect_uri):
+def init_client_for_shortcut(openid_client_obj, redirect_uri):
     client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
-    set_registration_info(client, data['client_id'], data['client_secret'], redirect_uri)
+    set_registration_info(client, openid_client_obj.client_id,
+            openid_client_obj.client_secret, redirect_uri)
     info = {
-        'issuer': data['issuer'],
-        'authorization_endpoint': data['authorization_endpoint'],
-        'token_endpoint': data['token_endpoint'],
-        'userinfo_endpoint': data['userinfo_endpoint'],
+        'issuer': openid_client_obj.issuer,
+        'authorization_endpoint': openid_client_obj.authorization_endpoint,
+        'token_endpoint': openid_client_obj.token_endpoint,
+        'userinfo_endpoint': openid_client_obj.userinfo_endpoint,
     }
     client.provider_info = ProviderConfigurationResponse(**info)
     return client
@@ -38,23 +39,18 @@ def register_client(client, redirect_uri):
     return client
 
 
-def get_authorization_url(client, state, nonce, is_new_user=True):
+def get_authorization_url(client, state):
     args = {
         'client_id': client.client_id,
         'response_type': 'code',
         'scope': ['openid'],
-        'nonce': nonce,
         'state': state,
         'redirect_uri': client.registration_response['redirect_uris'][0],
+        'claims': ClaimsRequest(userinfo=Claims(
+            name={'essential': True},
+            email={'essential': True},
+        )),
     }
-
-    if is_new_user:
-        args['claims'] = ClaimsRequest(
-            userinfo=Claims(
-                email={'essential': True},
-                name={'essential': True},
-            )
-        )
 
     auth_req = client.construct_AuthorizationRequest(request_args=args)
     url = auth_req.request(client.provider_info['authorization_endpoint'])

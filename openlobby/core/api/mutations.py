@@ -10,6 +10,7 @@ import urllib.parse
 
 from ..auth import (
     get_login_attempt_expiration_time,
+    get_login_attempt_expiration,
     get_session_expiration_time,
     create_access_token,
 )
@@ -19,7 +20,7 @@ from ..documents import (
     SessionDoc,
     ReportDoc,
 )
-from ..models import OpenIdClient
+from ..models import OpenIdClient, LoginAttempt
 from ..openid import (
     init_client_for_uid,
     init_client_for_shortcut,
@@ -55,7 +56,7 @@ class Login(relay.ClientIDMutation):
         nonce = rndstr()
         expiration = get_login_attempt_expiration_time()
 
-        # save login attempt into ES
+        # save login attempt
         data = {
             'meta': {'id': client.client_id},
             'state': state,
@@ -93,41 +94,22 @@ class LoginByShortcut(relay.ClientIDMutation):
         redirect_uri = input['redirect_uri']
 
         type, id = from_global_id(shortcut_id)
-        openid_client_data = OpenIdClient.objects.get(id=id)
+        openid_client_obj = OpenIdClient.objects.get(id=id)
 
         # prepare OpenID client
-        client = init_client_for_shortcut(openid_client_data, redirect_uri)
+        client = init_client_for_shortcut(openid_client_obj, redirect_uri)
 
-        # TODO
-        """
-        # prepare login attempt details
+        # prepare login attempt
         state = rndstr(32)
-        nonce = rndstr()
-        expiration = get_login_attempt_expiration_time()
+        expiration = get_login_attempt_expiration()
 
-        # save login attempt into ES
-        data = {
-            'meta': {'id': client.client_id},
-            'state': state,
-            'nonce': nonce,
-            'client_id': client.client_id,
-            'client_secret': client.client_secret,
-            'openid_uid': openid_uid,
-            'redirect_uri': redirect_uri,
-            'expiration': expiration,
-        }
-        login_attempt = LoginAttemptDoc(**data)
-        login_attempt.save(using=info.context['es'], index=info.context['index'])
-
-        # already registered user?
-        user = UserDoc.get_by_openid_uid(openid_uid, **info.context)
-        is_new_user = user is None
+        # save login attempt
+        LoginAttempt.objects.create(state=state, openid_client=openid_client_obj,
+            expiration=expiration)
 
         # get OpenID authorization url
-        authorization_url = get_authorization_url(client, state, nonce, is_new_user)
-        """
+        authorization_url = get_authorization_url(client, state)
 
-        authorization_url = 'http://localhost/foo'
         return LoginByShortcut(authorization_url=authorization_url)
 
 
