@@ -1,12 +1,7 @@
-import arrow
 from django.conf import settings
 import json
 import jwt
 import time
-
-
-def get_login_attempt_expiration():
-    return arrow.utcnow().shift(seconds=settings.LOGIN_ATTEMPT_EXPIRATION).datetime
 
 
 def get_login_attempt_expiration_time():

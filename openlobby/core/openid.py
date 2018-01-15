@@ -74,5 +74,6 @@ def do_access_token_request(client, code, state):
         'client_id': client.client_id,
         'client_secret': client.client_secret,
         'redirect_uri': client.registration_response['redirect_uris'][0],
+        'token_endpoint': client.provider_info['token_endpoint'],
     }
     client.do_access_token_request(state=state, request_args=args)

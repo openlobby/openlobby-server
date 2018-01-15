@@ -10,7 +10,6 @@ import urllib.parse
 
 from ..auth import (
     get_login_attempt_expiration_time,
-    get_login_attempt_expiration,
     get_session_expiration_time,
     create_access_token,
 )
@@ -57,6 +56,7 @@ class Login(relay.ClientIDMutation):
         expiration = get_login_attempt_expiration_time()
 
         # save login attempt
+        # TODO use LoginAttempt model
         data = {
             'meta': {'id': client.client_id},
             'state': state,
@@ -93,19 +93,18 @@ class LoginByShortcut(relay.ClientIDMutation):
         shortcut_id = input['shortcut_id']
         redirect_uri = input['redirect_uri']
 
+        # prepare OpenID client
         type, id = from_global_id(shortcut_id)
         openid_client_obj = OpenIdClient.objects.get(id=id)
-
-        # prepare OpenID client
         client = init_client_for_shortcut(openid_client_obj, redirect_uri)
 
         # prepare login attempt
-        state = rndstr(32)
-        expiration = get_login_attempt_expiration()
+        state = rndstr(48)
+        expiration = get_login_attempt_expiration_time()
 
         # save login attempt
         LoginAttempt.objects.create(state=state, openid_client=openid_client_obj,
-            expiration=expiration)
+            expiration=expiration, redirect_uri=redirect_uri)
 
         # get OpenID authorization url
         authorization_url = get_authorization_url(client, state)
@@ -124,37 +123,38 @@ class LoginRedirect(relay.ClientIDMutation):
     def mutate_and_get_payload(cls, root, info, **input):
         query_string = input['query_string']
 
-        # get login attempt from ES
-        qs_data = urllib.parse.parse_qs(query_string)
-        la = LoginAttemptDoc.get(qs_data['client_id'], using=info.context['es'],
-            index=info.context['index'])
+        # get state from query string
+        state = urllib.parse.parse_qs(query_string)['state'][0]
+        print('X:', state)
+
+        # get login attempt
+        la = LoginAttempt.objects.select_related().get(state=state)
 
         # delete login attempt so it can be used just once
-        la.delete(using=info.context['es'])
+        # TODO uncomment
+        #la.delete()
 
         # check login attempt expiration
-        if la['expiration'] < time.time():
+        if la.expiration < time.time():
             raise Exception('Login attempt expired.')
 
         # reconstruct OpenID Client
-        client = init_client_for_uid(la['openid_uid'])
-        client = set_registration_info(client, la['client_id'], la['client_secret'], la['redirect_uri'])
+        client = init_client_for_shortcut(la.openid_client, la.redirect_uri)
 
         # process query string from OpenID redirect
-        aresp = client.parse_response(AuthorizationResponse, info=query_string, sformat='urlencoded')
+        aresp = client.parse_response(AuthorizationResponse, info=query_string,
+            sformat='urlencoded')
         code = aresp['code']
         state = aresp['state']
-
-        # check state
-        if state != la['state']:
-            raise ValueError('Wrong query_string.')
 
         # OpenID access token request
         do_access_token_request(client, code, state)
 
         # OpenID user info request
         user_info = client.do_user_info_request(state=state)
+        print(user_info)
 
+        """
         # get or create User
         user = UserDoc.get_by_openid_uid(la['openid_uid'], **info.context)
         if user is None:
@@ -168,6 +168,8 @@ class LoginRedirect(relay.ClientIDMutation):
 
         # create access token for session
         token = create_access_token(session.meta.id, expiration)
+        """
+        token = 'foo'
 
         return LoginRedirect(access_token=token)
 
