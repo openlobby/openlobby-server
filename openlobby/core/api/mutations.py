@@ -48,34 +48,31 @@ class Login(relay.ClientIDMutation):
 
         # prepare OpenID client
         client = init_client_for_uid(openid_uid)
-        client = register_client(client, redirect_uri)
+        try:
+            openid_client_obj = OpenIdClient.objects.get(issuer=client.provider_info['issuer'])
+            client = init_client_for_shortcut(openid_client_obj, redirect_uri)
+        except OpenIdClient.DoesNotExist:
+            client = register_client(client, redirect_uri)
+            openid_client_obj = OpenIdClient.objects.create(
+                name=client.provider_info['issuer'],
+                client_id=client.client_id,
+                client_secret=client.client_secret,
+                issuer=client.provider_info['issuer'],
+                authorization_endpoint=client.provider_info['authorization_endpoint'],
+                token_endpoint=client.provider_info['token_endpoint'],
+                userinfo_endpoint=client.provider_info['userinfo_endpoint'],
+            )
 
         # prepare login attempt details
-        state = rndstr(32)
-        nonce = rndstr()
+        state = rndstr(48)
         expiration = get_login_attempt_expiration_time()
 
         # save login attempt
-        # TODO use LoginAttempt model
-        data = {
-            'meta': {'id': client.client_id},
-            'state': state,
-            'nonce': nonce,
-            'client_id': client.client_id,
-            'client_secret': client.client_secret,
-            'openid_uid': openid_uid,
-            'redirect_uri': redirect_uri,
-            'expiration': expiration,
-        }
-        login_attempt = LoginAttemptDoc(**data)
-        login_attempt.save(using=info.context['es'], index=info.context['index'])
-
-        # already registered user?
-        user = UserDoc.get_by_openid_uid(openid_uid, **info.context)
-        is_new_user = user is None
+        LoginAttempt.objects.create(state=state, openid_client=openid_client_obj,
+            expiration=expiration, redirect_uri=redirect_uri)
 
         # get OpenID authorization url
-        authorization_url = get_authorization_url(client, state, nonce, is_new_user)
+        authorization_url = get_authorization_url(client, state)
 
         return Login(authorization_url=authorization_url)
 
