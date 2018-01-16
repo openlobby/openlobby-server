@@ -40,19 +40,6 @@ class ReportDoc(DocType):
         doc_type = 'report'
 
 
-class LoginAttemptDoc(DocType):
-    openid_uid = Keyword()
-    redirect_uri = Keyword()
-    state = Keyword()
-    nonce = Keyword()
-    client_id = Keyword()
-    client_secret = Keyword()
-    expiration = Integer()  # UTC timestamp
-
-    class Meta:
-        doc_type = 'login-attempt'
-
-
 class SessionDoc(DocType):
     user_id = Keyword()
     expiration = Integer()  # UTC timestamp
@@ -71,6 +58,5 @@ class SessionDoc(DocType):
 all_documents = (
     UserDoc,
     ReportDoc,
-    LoginAttemptDoc,
     SessionDoc,
 )

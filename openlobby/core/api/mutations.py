@@ -15,7 +15,6 @@ from ..auth import (
 )
 from ..documents import (
     UserDoc,
-    LoginAttemptDoc,
     SessionDoc,
     ReportDoc,
 )
