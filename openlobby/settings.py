@@ -60,6 +60,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'openlobby.wsgi.application'
 
+AUTH_USER_MODEL = 'core.User'
+
 DATABASE_DSN = os.environ.get('DATABASE_DSN', 'postgresql://db:db@localhost:5432/openlobby')
 db = dsnparse.parse(DATABASE_DSN)
 assert db.scheme == 'postgresql'
