@@ -3,8 +3,8 @@ import graphene
 from graphene import relay
 from graphene.types.json import JSONString
 
-from ..documents import UserDoc, ReportDoc
-from ..models import OpenIdClient
+from ..documents import ReportDoc
+from .. import models
 from .paginator import Paginator
 from .. import search
 
@@ -77,22 +77,21 @@ class User(graphene.ObjectType):
         interfaces = (relay.Node, )
 
     @classmethod
-    def from_es(cls, user):
+    def from_db(cls, user):
         return cls(
-            id=user.meta.id,
-            name=user.name,
+            id=user.id,
+            name=user.get_full_name(),
             openid_uid=user.openid_uid,
             email=user.email,
-            extra=user.extra._d_,
+            extra=user.extra,
         )
 
     @classmethod
     def get_node(cls, info, id):
         try:
-            user = UserDoc.get(id, using=info.context['es'], index=info.context['index'])
-        except NotFoundError:
+            return cls.from_db(models.User.objects.get(id=id))
+        except models.User.DoesNotExist:
             return None
-        return cls.from_es(user)
 
     def resolve_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
@@ -122,7 +121,7 @@ class LoginShortcut(graphene.ObjectType):
     @classmethod
     def get_node(cls, info, id):
         try:
-            client = OpenIdClient.objects.get(id=id)
+            client = models.OpenIdClient.objects.get(id=id)
             return cls.from_db(client)
-        except OpenIdClient.DoesNotExist:
+        except models.OpenIdClient.DoesNotExist:
             return None

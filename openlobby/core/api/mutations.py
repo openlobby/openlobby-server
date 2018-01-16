@@ -14,7 +14,6 @@ from ..auth import (
     create_access_token,
 )
 from ..documents import (
-    UserDoc,
     SessionDoc,
     ReportDoc,
 )
