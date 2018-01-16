@@ -26,7 +26,6 @@ from ..openid import (
     set_registration_info,
     do_access_token_request,
 )
-from ..utils import get_viewer
 from .types import Report
 from .sanitizers import strip_all_tags
 
@@ -174,10 +173,6 @@ class Logout(relay.ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
-        viewer = get_viewer(info)
-        if viewer is None:
-            raise Exception('User must be logged in to perform this mutation.')
-
         # TODO
         raise NotImplementedError()
         session_id = g.get('session_id')
@@ -202,12 +197,13 @@ class NewReport(relay.ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
-        viewer = get_viewer(info)
-        if viewer is None:
+        if not info.context.user.is_authenticated:
             raise Exception('User must be logged in to perform this mutation.')
 
+        author = info.context.user
+
         data = {
-            'author_id': viewer.id,
+            'author_id': author.id,
             'published': arrow.utcnow().isoformat(),
             'title': strip_all_tags(input.get('title', '')),
             'body': strip_all_tags(input.get('body', '')),
@@ -219,7 +215,7 @@ class NewReport(relay.ClientIDMutation):
         }
         report = ReportDoc(**data)
         report.save(using=info.context['es'], index=info.context['index'])
-        return NewReport(report=Report.from_es(report, author=viewer))
+        return NewReport(report=Report.from_es(report, author=author))
 
 
 class Mutation:
