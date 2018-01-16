@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import JSONField
 
 class User(AbstractUser):
     openid_uid = models.CharField(max_length=255, unique=True, db_index=True)
-    extras = JSONField()
+    extras = JSONField(null=True, blank=True)
 
 
 class OpenIdClient(models.Model):
@@ -38,10 +38,10 @@ class Report(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date = models.DateTimeField()
     published = models.DateTimeField()
-    title = models.TextField()
+    title = models.TextField(null=True, blank=True)
     body = models.TextField()
-    received_benefit = models.TextField()
-    provided_benefit = models.TextField()
-    our_participants = models.TextField()
-    other_participants = models.TextField()
-    extra = JSONField()
+    received_benefit = models.TextField(null=True, blank=True)
+    provided_benefit = models.TextField(null=True, blank=True)
+    our_participants = models.TextField(null=True, blank=True)
+    other_participants = models.TextField(null=True, blank=True)
+    extra = JSONField(null=True, blank=True)
