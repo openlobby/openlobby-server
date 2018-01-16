@@ -5,7 +5,6 @@ from . import types
 from ..models import OpenIdClient
 from .paginator import Paginator
 from .sanitizers import extract_text
-from ..utils import get_viewer
 from .. import search
 from ..models import User
 
@@ -63,7 +62,10 @@ class Query:
         return SearchReportsConnection(page_info=page_info, edges=edges, total_count=total)
 
     def resolve_viewer(self, info, **kwargs):
-        return get_viewer(info)
+        if info.context.user.is_authenticated:
+            return types.User.from_db(info.context.user)
+        else:
+            return None
 
     def resolve_login_shortcuts(self, info, **kwargs):
         clients = OpenIdClient.objects.filter(is_shortcut=True)

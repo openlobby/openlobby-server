@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import JSONField
 
 class User(AbstractUser):
     openid_uid = models.CharField(max_length=255, unique=True, db_index=True)
-    extras = JSONField(null=True, blank=True)
+    extra = JSONField(null=True, blank=True)
 
 
 class OpenIdClient(models.Model):
