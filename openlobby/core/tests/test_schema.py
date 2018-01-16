@@ -5,8 +5,8 @@ from ..models import OpenIdClient
 
 @pytest.mark.django_db
 def test_login_shortcuts(client, snapshot):
-    OpenIdClient.objects.create(id=10, name='foo')
-    OpenIdClient.objects.create(id=20, name='bar', is_shortcut=True)
+    OpenIdClient.objects.create(id=10, name='foo', issuer='foo')
+    OpenIdClient.objects.create(id=20, name='bar', issuer='bar', is_shortcut=True)
     res = client.post('/graphql', {'query': """
     query {
         loginShortcuts {
