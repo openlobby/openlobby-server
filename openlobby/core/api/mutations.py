@@ -13,10 +13,7 @@ from ..auth import (
     get_session_expiration_time,
     create_access_token,
 )
-from ..documents import (
-    SessionDoc,
-    ReportDoc,
-)
+from ..documents import ReportDoc
 from ..models import OpenIdClient, LoginAttempt
 from ..openid import (
     init_client_for_uid,
@@ -148,21 +145,13 @@ class LoginRedirect(relay.ClientIDMutation):
         user_info = client.do_user_info_request(state=state)
         print(user_info)
 
-        """
-        # get or create User
-        user = UserDoc.get_by_openid_uid(la['openid_uid'], **info.context)
-        if user is None:
-            user = UserDoc(openid_uid=la['openid_uid'], name=user_info['name'], email=user_info['email'])
-            user.save(using=info.context['es'], index=info.context['index'])
+        # TODO get or create User
 
-        # create session
-        expiration = get_session_expiration_time()
-        session = SessionDoc(user_id=user.meta.id, expiration=expiration)
-        session.save(using=info.context['es'], index=info.context['index'])
+        # TODO create session
+        # expiration = get_session_expiration_time()
 
-        # create access token for session
-        token = create_access_token(session.meta.id, expiration)
-        """
+        # TODO create access token for session
+        # token = create_access_token(session.meta.id, expiration)
         token = 'foo'
 
         return LoginRedirect(access_token=token)
@@ -175,10 +164,6 @@ class Logout(relay.ClientIDMutation):
     def mutate_and_get_payload(cls, root, info, **input):
         # TODO
         raise NotImplementedError()
-        session_id = g.get('session_id')
-        session = SessionDoc.get(session_id, using=info.context['es'], index=info.context['index'])
-        session.delete(using=info.context['es'], index=info.context['index'])
-
         return Logout(success=True)
 
 
