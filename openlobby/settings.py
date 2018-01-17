@@ -77,6 +77,11 @@ DATABASES = {
     }
 }
 
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': os.environ.get('ELASTICSEARCH_DSN', 'http://localhost:9200'),
+    },
+}
 
 # Password validation
 
