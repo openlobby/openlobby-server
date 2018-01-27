@@ -67,11 +67,10 @@ class ReportConnection(relay.Connection):
 
 
 class User(graphene.ObjectType):
-    name = graphene.String()
     openid_uid = graphene.String()
+    first_name = graphene.String()
+    last_name = graphene.String()
     email = graphene.String()
-    extra = JSONString()
-    reports = relay.ConnectionField(ReportConnection)
 
     class Meta:
         interfaces = (relay.Node, )
@@ -80,36 +79,24 @@ class User(graphene.ObjectType):
     def from_db(cls, user):
         return cls(
             id=user.id,
-            name=user.get_full_name(),
             openid_uid=user.openid_uid,
+            first_name=user.first_name,
+            last_name=user.last_name,
             email=user.email,
-            extra=user.extra,
         )
 
     @classmethod
     def get_node(cls, info, id):
+        # TODO return only viewer
         try:
             return cls.from_db(models.User.objects.get(id=id))
         except models.User.DoesNotExist:
             return None
 
-    def resolve_reports(self, info, **kwargs):
-        paginator = Paginator(**kwargs)
-        response = search.reports_by_author(self.id, paginator, **info.context)
-        total = response.hits.total
-        page_info = paginator.get_page_info(total)
-
-        edges = []
-        for i, report in enumerate(response):
-            cursor = paginator.get_edge_cursor(i + 1)
-            node = Report.from_es(report, author=self)
-            edges.append(ReportConnection.Edge(node=node, cursor=cursor))
-
-        return ReportConnection(page_info=page_info, edges=edges, total_count=total)
-
 
 class Author(graphene.ObjectType):
-    name = graphene.String()
+    first_name = graphene.String()
+    last_name = graphene.String()
     openid_uid = graphene.String()
     extra = JSONString()
     # TODO
@@ -122,7 +109,8 @@ class Author(graphene.ObjectType):
     def from_db(cls, user):
         return cls(
             id=user.id,
-            name=user.get_full_name(),
+            first_name=user.first_name,
+            last_name=user.last_name,
             openid_uid=user.openid_uid,
             extra=user.extra,
         )

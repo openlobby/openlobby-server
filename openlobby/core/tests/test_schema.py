@@ -64,7 +64,8 @@ def test_node__author(client, snapshot):
         node (id:"{id}") {{
             ... on Author {{
                 id
-                name
+                firstName
+                lastName
                 openidUid
                 extra
             }}
@@ -76,10 +77,7 @@ def test_node__author(client, snapshot):
 
 @pytest.mark.django_db
 def test_node__author__only_if_is_author(client, snapshot):
-    User.objects.create(
-        id=7,
-        is_author=False,
-    )
+    User.objects.create(id=7, is_author=False)
     res = client.post('/graphql', {'query': """
     query {{
         node (id:"{id}") {{
