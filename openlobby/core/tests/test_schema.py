@@ -1,4 +1,5 @@
 import pytest
+from graphql_relay import to_global_id
 
 from ..models import OpenIdClient
 
@@ -29,4 +30,20 @@ def test_login_shortcuts__none(client, snapshot):
         }
     }
     """})
+    snapshot.assert_match(res.content)
+
+
+@pytest.mark.django_db
+def test_node__login_shortcut(client, snapshot):
+    OpenIdClient.objects.create(id=10, name='foo', issuer='foo', is_shortcut=True)
+    res = client.post('/graphql', {'query': """
+    query {{
+        node (id:"{id}") {{
+            ... on LoginShortcut {{
+                id
+                name
+            }}
+        }}
+    }}
+    """.format(id=to_global_id('LoginShortcut', 10))})
     snapshot.assert_match(res.content)
