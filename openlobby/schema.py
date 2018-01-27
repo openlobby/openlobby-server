@@ -2,7 +2,7 @@ import graphene
 
 from openlobby.core.api.mutations import Mutation as CoreMutation
 from openlobby.core.api.schema import Query as CoreQuery
-from openlobby.core.api.types import User, Report, LoginShortcut
+from openlobby.core.api.types import Author, User, Report, LoginShortcut
 
 
 class Query(CoreQuery, graphene.ObjectType):
@@ -14,4 +14,4 @@ class Mutation(CoreMutation, graphene.ObjectType):
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation,
-    types=[User, Report, LoginShortcut])
+    types=[Author, User, Report, LoginShortcut])

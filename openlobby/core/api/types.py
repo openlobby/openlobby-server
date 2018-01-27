@@ -108,6 +108,50 @@ class User(graphene.ObjectType):
         return ReportConnection(page_info=page_info, edges=edges, total_count=total)
 
 
+class Author(graphene.ObjectType):
+    name = graphene.String()
+    openid_uid = graphene.String()
+    extra = JSONString()
+    # TODO
+    # reports = relay.ConnectionField(ReportConnection)
+
+    class Meta:
+        interfaces = (relay.Node, )
+
+    @classmethod
+    def from_db(cls, user):
+        return cls(
+            id=user.id,
+            name=user.get_full_name(),
+            openid_uid=user.openid_uid,
+            extra=user.extra,
+        )
+
+    @classmethod
+    def get_node(cls, info, id):
+        try:
+            return cls.from_db(models.User.objects.get(id=id, is_author=True))
+        except models.User.DoesNotExist:
+            return None
+
+    # TODO
+    """
+    def resolve_reports(self, info, **kwargs):
+        paginator = Paginator(**kwargs)
+        response = search.reports_by_author(self.id, paginator, **info.context)
+        total = response.hits.total
+        page_info = paginator.get_page_info(total)
+
+        edges = []
+        for i, report in enumerate(response):
+            cursor = paginator.get_edge_cursor(i + 1)
+            node = Report.from_es(report, author=self)
+            edges.append(ReportConnection.Edge(node=node, cursor=cursor))
+
+        return ReportConnection(page_info=page_info, edges=edges, total_count=total)
+    """
+
+
 class LoginShortcut(graphene.ObjectType):
     name = graphene.String()
 

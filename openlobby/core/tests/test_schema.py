@@ -1,7 +1,7 @@
 import pytest
 from graphql_relay import to_global_id
 
-from ..models import OpenIdClient
+from ..models import OpenIdClient, User
 
 
 @pytest.mark.django_db
@@ -46,4 +46,47 @@ def test_node__login_shortcut(client, snapshot):
         }}
     }}
     """.format(id=to_global_id('LoginShortcut', 10))})
+    snapshot.assert_match(res.content)
+
+
+@pytest.mark.django_db
+def test_node__author(client, snapshot):
+    User.objects.create(
+        id=5,
+        is_author=True,
+        openid_uid='TheWolf',
+        first_name='Winston',
+        last_name='Wolfe',
+        extra={'x': 1},
+    )
+    res = client.post('/graphql', {'query': """
+    query {{
+        node (id:"{id}") {{
+            ... on Author {{
+                id
+                name
+                openidUid
+                extra
+            }}
+        }}
+    }}
+    """.format(id=to_global_id('Author', 5))})
+    snapshot.assert_match(res.content)
+
+
+@pytest.mark.django_db
+def test_node__author__only_if_is_author(client, snapshot):
+    User.objects.create(
+        id=7,
+        is_author=False,
+    )
+    res = client.post('/graphql', {'query': """
+    query {{
+        node (id:"{id}") {{
+            ... on Author {{
+                id
+            }}
+        }}
+    }}
+    """.format(id=to_global_id('Author', 7))})
     snapshot.assert_match(res.content)
