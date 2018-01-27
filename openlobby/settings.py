@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'graphene_django',
+    'django_elasticsearch_dsl',
     'openlobby.core',
 ]
 
@@ -81,6 +82,11 @@ ELASTICSEARCH_DSL = {
     'default': {
         'hosts': os.environ.get('ELASTICSEARCH_DSN', 'http://localhost:9200'),
     },
+}
+
+ELASTICSEARCH_DSL_INDEX_SETTINGS = {
+    'number_of_shards': 1,
+    'number_of_replicas': 0,
 }
 
 # Password validation
