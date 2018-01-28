@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import JSONField
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -39,7 +40,7 @@ class LoginAttempt(models.Model):
 class Report(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date = models.DateTimeField()
-    published = models.DateTimeField()
+    published = models.DateTimeField(default=timezone.now)
     title = models.TextField(null=True, blank=True)
     body = models.TextField()
     received_benefit = models.TextField(null=True, blank=True)
@@ -47,3 +48,7 @@ class Report(models.Model):
     our_participants = models.TextField(null=True, blank=True)
     other_participants = models.TextField(null=True, blank=True)
     extra = JSONField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        User.objects.filter(id=self.author.id).update(is_author=True)

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django_elasticsearch_dsl import DocType, Index, fields
+import json
 
 from .models import Report
 
@@ -16,7 +17,14 @@ class ReportDoc(DocType):
     provided_benefit = fields.TextField(analyzer=settings.ES_TEXT_ANALYZER)
     our_participants = fields.TextField(analyzer=settings.ES_TEXT_ANALYZER)
     other_participants = fields.TextField(analyzer=settings.ES_TEXT_ANALYZER)
-    extra = fields.ObjectField()
+    # there is no support for JSONField now, so we serialize it to text
+    extra = fields.TextField()
+
+    def prepare_extra(self, instance):
+        return json.dumps(instance.extra)
+
+    def get_extra(self):
+        return json.loads(self.extra)
 
     class Meta:
         model = Report
