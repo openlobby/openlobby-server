@@ -33,10 +33,13 @@ class Query:
         ' Default: false')
 
     node = relay.Node.Field()
-    authors = relay.ConnectionField(AuthorsConnection)
+    authors = relay.ConnectionField(
+        AuthorsConnection,
+        description='List of Authors. Returns first 10 nodes if pagination is not specified.',
+    )
     search_reports = relay.ConnectionField(
         SearchReportsConnection,
-        description='Fulltext search in Reports.',
+        description='Fulltext search in Reports. Returns first 10 nodes if pagination is not specified.',
         query=graphene.String(description='Text to search for.'),
         highlight=graphene.Boolean(default_value=False, description=highlight_help),
     )

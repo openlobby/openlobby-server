@@ -63,7 +63,7 @@ snapshots['TestAuthors.test_all 1'] = {
                         'firstName': 'Winston',
                         'id': 'QXV0aG9yOjE=',
                         'lastName': 'Wolfe',
-                        'openidUid': 'TheWolf'
+                        'openidUid': 'first'
                     }
                 },
                 {
@@ -73,7 +73,7 @@ snapshots['TestAuthors.test_all 1'] = {
                         'firstName': 'Captain',
                         'id': 'QXV0aG9yOjM=',
                         'lastName': 'Obvious',
-                        'openidUid': 'ccc'
+                        'openidUid': 'second'
                     }
                 },
                 {
@@ -83,11 +83,106 @@ snapshots['TestAuthors.test_all 1'] = {
                         'firstName': 'Shaun',
                         'id': 'QXV0aG9yOjQ=',
                         'lastName': 'Sheep',
-                        'openidUid': 'ddd'
+                        'openidUid': 'third'
                     }
                 }
             ],
+            'pageInfo': {
+                'endCursor': 'Mw==',
+                'hasNextPage': False,
+                'hasPreviousPage': False,
+                'startCursor': 'MQ=='
+            },
             'totalCount': 3
         }
     }
+}
+
+snapshots['TestAuthors.test_first 1'] = {
+    'data': {
+        'authors': {
+            'edges': [
+                {
+                    'cursor': 'MQ==',
+                    'node': {
+                        'openidUid': 'first'
+                    }
+                },
+                {
+                    'cursor': 'Mg==',
+                    'node': {
+                        'openidUid': 'second'
+                    }
+                }
+            ],
+            'pageInfo': {
+                'endCursor': 'Mg==',
+                'hasNextPage': True,
+                'hasPreviousPage': False,
+                'startCursor': 'MQ=='
+            },
+            'totalCount': 3
+        }
+    }
+}
+
+snapshots['TestAuthors.test_first_after 1'] = {
+    'data': {
+        'authors': {
+            'edges': [
+                {
+                    'cursor': 'Mg==',
+                    'node': {
+                        'openidUid': 'second'
+                    }
+                }
+            ],
+            'pageInfo': {
+                'endCursor': 'Mg==',
+                'hasNextPage': True,
+                'hasPreviousPage': True,
+                'startCursor': 'Mg=='
+            },
+            'totalCount': 3
+        }
+    }
+}
+
+snapshots['TestAuthors.test_last_before 1'] = {
+    'data': {
+        'authors': {
+            'edges': [
+                {
+                    'cursor': 'Mg==',
+                    'node': {
+                        'openidUid': 'second'
+                    }
+                }
+            ],
+            'pageInfo': {
+                'endCursor': 'Mg==',
+                'hasNextPage': True,
+                'hasPreviousPage': True,
+                'startCursor': 'Mg=='
+            },
+            'totalCount': 3
+        }
+    }
+}
+
+snapshots['TestAuthors.test_last 1'] = {
+    'data': {
+        'authors': None
+    },
+    'errors': [
+        {
+            'locations': [
+                {
+                    'column': 13,
+                    'line': 3
+                }
+            ],
+            'message': 'Pagination "last" works only in combination with "before" argument.'
+        }
+    ]
 }
