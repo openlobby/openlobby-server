@@ -9,6 +9,13 @@ from .. import search
 from ..models import User
 
 
+class AuthorsConnection(relay.Connection):
+    total_count = graphene.Int()
+
+    class Meta:
+        node = types.Author
+
+
 class SearchReportsConnection(relay.Connection):
     total_count = graphene.Int()
 
@@ -26,6 +33,7 @@ class Query:
         ' Default: false')
 
     node = relay.Node.Field()
+    authors = relay.ConnectionField(AuthorsConnection)
     search_reports = relay.ConnectionField(
         SearchReportsConnection,
         description='Fulltext search in Reports.',
@@ -37,6 +45,22 @@ class Query:
         types.LoginShortcut,
         description='Shortcuts for login. Use with LoginByShortcut mutation.',
     )
+
+    def resolve_authors(self, info, **kwargs):
+        paginator = Paginator(**kwargs)
+
+        total = User.objects.filter(is_author=True).count()
+        authors = User.objects.filter(is_author=True)[paginator.slice_from:paginator.slice_to]
+
+        page_info = paginator.get_page_info(total)
+
+        edges = []
+        for i, author in enumerate(authors):
+            cursor = paginator.get_edge_cursor(i + 1)
+            node = types.Author.from_db(author)
+            edges.append(AuthorsConnection.Edge(node=node, cursor=cursor))
+
+        return AuthorsConnection(page_info=page_info, edges=edges, total_count=total)
 
     def resolve_search_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)

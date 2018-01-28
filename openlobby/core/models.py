@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import JSONField
 
 
 class User(AbstractUser):
+    # TODO remove username, set different login field
     openid_uid = models.CharField(max_length=255, unique=True, db_index=True)
     extra = JSONField(null=True, blank=True)
     is_author = models.BooleanField(default=False)

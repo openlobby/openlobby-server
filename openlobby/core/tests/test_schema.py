@@ -88,3 +88,34 @@ def test_node__author__only_if_is_author(client, snapshot):
     }}
     """.format(id=to_global_id('Author', 7))})
     snapshot.assert_match(res.content)
+
+
+@pytest.mark.django_db
+def test_authors(client, snapshot):
+    User.objects.create(
+        id=5,
+        username='a',
+        is_author=True,
+        openid_uid='TheWolf',
+        first_name='Winston',
+        last_name='Wolfe',
+        extra={'x': 1},
+    )
+    User.objects.create(id=7, is_author=False, username='b')
+    res = client.post('/graphql', {'query': """
+    query {
+        authors {
+            totalCount
+            edges {
+                node {
+                    id
+                    firstName
+                    lastName
+                    openidUid
+                    extra
+                }
+            }
+        }
+    }
+    """})
+    snapshot.assert_match(res.content)
