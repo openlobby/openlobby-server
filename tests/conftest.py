@@ -1,12 +1,23 @@
-from elasticsearch import Elasticsearch
-import os
 import pytest
+from django_elasticsearch_dsl.test import ESTestCase
 
 
-@pytest.fixture(scope='session')
-def es():
-    """Elasticsearch client."""
-    es_dsn = os.environ.get('ELASTICSEARCH_DSN', 'http://localhost:9200')
-    es_client = Elasticsearch(es_dsn)
-    yield es_client
-    es_client.indices.delete('test_*')
+class DummyTestCase:
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+
+class TestCase(ESTestCase, DummyTestCase):
+    pass
+
+
+@pytest.fixture
+def django_es():
+    """Setup and teardown of test indices."""
+    testCase = TestCase()
+    testCase.setUp()
+    yield
+    testCase.tearDown()
