@@ -1,7 +1,7 @@
 import pytest
 from graphql_relay import to_global_id
 
-from ..models import OpenIdClient, User
+from openlobby.core.models import OpenIdClient, User
 
 
 @pytest.mark.django_db

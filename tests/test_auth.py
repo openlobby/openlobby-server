@@ -3,7 +3,7 @@ import time
 import jwt
 import pytest
 
-from ..auth import (
+from openlobby.core.auth import (
     get_login_attempt_expiration_time,
     get_session_expiration_time,
     create_access_token,
