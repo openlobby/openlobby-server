@@ -18,13 +18,14 @@ class ReportDoc(DocType):
     our_participants = fields.TextField(analyzer=settings.ES_TEXT_ANALYZER)
     other_participants = fields.TextField(analyzer=settings.ES_TEXT_ANALYZER)
     # there is no support for JSONField now, so we serialize it to keyword
-    extra = fields.KeywordField()
+    extra_serialized = fields.KeywordField()
 
-    def prepare_extra(self, instance):
+    def prepare_extra_serialized(self, instance):
         return json.dumps(instance.extra)
 
-    def get_extra(self):
-        return json.loads(self.extra)
+    @property
+    def extra(self):
+        return json.loads(self.extra_serialized)
 
     class Meta:
         model = Report

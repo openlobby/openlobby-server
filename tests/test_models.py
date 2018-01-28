@@ -46,4 +46,4 @@ def test_report_is_saved_in_elasticsearch():
     assert doc.provided_benefit == 'tea'
     assert doc.our_participants == 'me'
     assert doc.other_participants == 'them'
-    assert doc.get_extra() == {'a': 3}
+    assert doc.extra == {'a': 3}
