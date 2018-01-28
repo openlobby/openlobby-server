@@ -17,8 +17,8 @@ class ReportDoc(DocType):
     provided_benefit = fields.TextField(analyzer=settings.ES_TEXT_ANALYZER)
     our_participants = fields.TextField(analyzer=settings.ES_TEXT_ANALYZER)
     other_participants = fields.TextField(analyzer=settings.ES_TEXT_ANALYZER)
-    # there is no support for JSONField now, so we serialize it to text
-    extra = fields.TextField()
+    # there is no support for JSONField now, so we serialize it to keyword
+    extra = fields.KeywordField()
 
     def prepare_extra(self, instance):
         return json.dumps(instance.extra)
