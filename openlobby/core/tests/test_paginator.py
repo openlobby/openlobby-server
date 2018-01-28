@@ -1,6 +1,12 @@
 import pytest
 
-from ..api.paginator import PER_PAGE, encode_cursor, decode_cursor, Paginator
+from ..api.paginator import (
+    PER_PAGE,
+    encode_cursor,
+    decode_cursor,
+    Paginator,
+    MissingBeforeValueError,
+)
 
 
 @pytest.mark.parametrize('num, cursor', [
@@ -41,10 +47,8 @@ def test_paginator__custom_per_page():
 @pytest.mark.parametrize('kw, slice_from, slice_to', [
     ({'first': 15}, 0, 15),
     ({'first': 5, 'after': encode_cursor(3)}, 3, 8),
-    ({'last': 3}, 7, 10),
     ({'last': 8, 'before': encode_cursor(20)}, 11, 19),
     # overflow of slice_from
-    ({'last': 15}, 0, 10),
     ({'last': 100, 'before': encode_cursor(42)}, 0, 41),
     # preffer first before last if both provided
     ({'first': 20, 'last': 4}, 0, 20),
@@ -53,6 +57,11 @@ def test_paginator__input_combinations(kw, slice_from, slice_to):
     paginator = Paginator(**kw)
     assert paginator.slice_from == slice_from
     assert paginator.slice_to == slice_to
+
+
+def test_paginator__last_without_before():
+    with pytest.raises(MissingBeforeValueError):
+        Paginator(last=1)
 
 
 @pytest.mark.parametrize('kw, total, previous, next, start, end', [
@@ -66,10 +75,6 @@ def test_paginator__input_combinations(kw, slice_from, slice_to):
     ({'first': 3, 'after': encode_cursor(7)}, 20, True, True, 8, 10),
     ({'first': 3, 'after': encode_cursor(17)}, 20, True, False, 18, 20),
     ({'first': 5, 'after': encode_cursor(17)}, 20, True, False, 18, 20),
-    ({'last': 1}, 10, True, False, 10, 10),
-    ({'last': 5}, 10, True, False, 6, 10),
-    ({'last': 15}, 10, False, False, 1, 10),
-    ({'last': 10}, 10, False, False, 1, 10),
     ({'last': 4, 'before': encode_cursor(10)}, 20, True, True, 6, 9),
     ({'last': 4, 'before': encode_cursor(5)}, 20, False, True, 1, 4),
     ({'last': 4, 'before': encode_cursor(3)}, 20, False, True, 1, 2),
@@ -89,7 +94,7 @@ def test_paginator__get_page_info(kw, total, previous, next, start, end):
 @pytest.mark.parametrize('kw, num, cursor', [
     ({}, 3, encode_cursor(3)),
     ({'first': 6, 'after': encode_cursor(1)}, 3, encode_cursor(4)),
-    ({'last': 6}, 3, encode_cursor(7)),
+    ({'last': 6, 'before': encode_cursor(11)}, 3, encode_cursor(7)),
 ])
 def test_paginator__get_edge_cursor(kw, num, cursor):
     paginator = Paginator(**kw)
