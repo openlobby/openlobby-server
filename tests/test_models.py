@@ -8,7 +8,7 @@ from openlobby.core.documents import ReportDoc
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 
 
-def test_report_marks_user_as_author_on_save():
+def test_report__marks_user_as_author_on_save():
     author = User.objects.create(id=1, is_author=False)
     date = arrow.get(2018, 1, 1).datetime
     Report.objects.create(author=author, date=date, body='Lorem ipsum.')
@@ -16,7 +16,7 @@ def test_report_marks_user_as_author_on_save():
     assert user.is_author
 
 
-def test_report_is_saved_in_elasticsearch():
+def test_report__is_saved_in_elasticsearch():
     author = User.objects.create(id=6)
     date = arrow.get(2018, 1, 1).datetime
     published = arrow.get(2018, 1, 2).datetime
@@ -47,3 +47,20 @@ def test_report_is_saved_in_elasticsearch():
     assert doc.our_participants == 'me'
     assert doc.other_participants == 'them'
     assert doc.extra == {'a': 3}
+
+
+def test_report__save_works_with_no_extra():
+    author = User.objects.create(id=6)
+    date = arrow.get(2018, 1, 1).datetime
+    Report.objects.create(
+        id=7,
+        author=author,
+        date=date,
+        published=date,
+        body='Lorem ipsum.',
+    )
+    docs = list(ReportDoc.search())
+    assert len(docs) == 1
+    doc = docs[0]
+    assert doc.meta.id == '7'
+    assert doc.extra is None
