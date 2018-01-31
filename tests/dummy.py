@@ -25,6 +25,7 @@ reports = [
         'provided_benefit': '',
         'our_participants': 'Frodo, Gimli, Legolas',
         'other_participants': 'Saruman, Sauron',
+        'extra': {'rings': 1},
     },
     {
         'id': 3,

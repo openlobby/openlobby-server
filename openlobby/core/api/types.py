@@ -17,7 +17,7 @@ def get_higlighted(hit, field):
 
 
 class Report(graphene.ObjectType):
-    author = graphene.Field(lambda: User)
+    author = graphene.Field(lambda: Author)
     date = graphene.String()
     published = graphene.String()
     title = graphene.String()
@@ -44,7 +44,7 @@ class Report(graphene.ObjectType):
             provided_benefit=get_higlighted(report, 'provided_benefit'),
             our_participants=get_higlighted(report, 'our_participants'),
             other_participants=get_higlighted(report, 'other_participants'),
-            extra=report.extra._d_,
+            extra=report.extra,
         )
 
     @classmethod
