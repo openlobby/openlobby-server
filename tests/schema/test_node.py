@@ -3,8 +3,10 @@ from graphql_relay import to_global_id
 
 from openlobby.core.models import OpenIdClient, User
 
+from ..dummy import prepare_report
 
-pytestmark = pytest.mark.django_db
+
+pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 
 
 def test_login_shortcut(client, snapshot):
@@ -58,4 +60,33 @@ def test_author__returns_only_if_is_author(client, snapshot):
         }}
     }}
     """.format(id=to_global_id('Author', 7))})
+    snapshot.assert_match(res.json())
+
+
+def test_report(client, snapshot):
+    prepare_report()
+    res = client.post('/graphql', {'query': """
+    query {{
+        node (id:"{id}") {{
+            ... on Report {{
+                id
+                date
+                published
+                title
+                body
+                receivedBenefit
+                providedBenefit
+                ourParticipants
+                otherParticipants
+                extra
+                author {{
+                    id
+                    firstName
+                    lastName
+                    extra
+                }}
+            }}
+        }}
+    }}
+    """.format(id=to_global_id('Report', 1))})
     snapshot.assert_match(res.json())

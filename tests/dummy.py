@@ -3,6 +3,16 @@ import arrow
 from openlobby.core.models import Report, User
 
 
+authors = [
+    {
+        'id': 1,
+        'username': 'Wolf',
+        'openid_uid': 'Wolf',
+        'first_name': 'Winston',
+        'last_name': 'Wolfe',
+    },
+]
+
 reports = [
     {
         'id': 1,
@@ -42,7 +52,11 @@ reports = [
 
 
 def prepare_reports():
-    author = User.objects.create(id=1, username='Wolf', openid_uid='Wolf',
-        first_name='Winston', last_name='Wolfe')
+    author = User.objects.create(**authors[0])
     for report in reports:
         Report.objects.create(author=author, **report)
+
+
+def prepare_report():
+    author = User.objects.create(**authors[0])
+    Report.objects.create(author=author, **reports[0])

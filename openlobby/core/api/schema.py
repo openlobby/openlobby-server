@@ -23,7 +23,7 @@ class SearchReportsConnection(relay.Connection):
         node = types.Report
 
 
-def get_authors(ids):
+def _get_authors_cache(ids):
     users = User.objects.filter(id__in=ids)
     return {u.id: types.User.from_db(u) for u in users}
 
@@ -78,7 +78,7 @@ class Query:
 
         edges = []
         if len(response) > 0:
-            authors = get_authors(ids=[r.author_id for r in response])
+            authors = _get_authors_cache(ids=[r.author_id for r in response])
             for i, report in enumerate(response):
                 cursor = paginator.get_edge_cursor(i + 1)
                 node = types.Report.from_es(report, author=authors[report.author_id])

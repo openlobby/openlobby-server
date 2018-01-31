@@ -50,7 +50,7 @@ class Report(graphene.ObjectType):
     @classmethod
     def get_node(cls, info, id):
         try:
-            report = ReportDoc.get(id, using=info.context['es'], index=info.context['index'])
+            report = ReportDoc.get(id)
         except NotFoundError:
             return None
 
