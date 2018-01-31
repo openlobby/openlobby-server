@@ -70,8 +70,6 @@ class Query:
         query = kwargs.get('query', '')
         query = extract_text(query)
         params = {
-            'es': info.context['es'],
-            'index': info.context['index'],
             'highlight': kwargs.get('highlight'),
         }
         response = search.query_reports(query, paginator, **params)
