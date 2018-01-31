@@ -16,9 +16,9 @@ snapshots['test_all 1'] = {
                     'node': {
                         'author': {
                             'extra': None,
-                            'firstName': 'Winston',
-                            'id': 'QXV0aG9yOjE=',
-                            'lastName': 'Wolfe'
+                            'firstName': 'Spongebob',
+                            'id': 'QXV0aG9yOjI=',
+                            'lastName': 'Squarepants'
                         },
                         'body': 'Another long story.',
                         'date': '2018-01-05 00:00:00+00:00',
@@ -95,9 +95,9 @@ snapshots['test_query 1'] = {
                     'node': {
                         'author': {
                             'extra': None,
-                            'firstName': 'Winston',
-                            'id': 'QXV0aG9yOjE=',
-                            'lastName': 'Wolfe'
+                            'firstName': 'Spongebob',
+                            'id': 'QXV0aG9yOjI=',
+                            'lastName': 'Squarepants'
                         },
                         'body': 'Another long story.',
                         'date': '2018-01-05 00:00:00+00:00',

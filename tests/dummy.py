@@ -11,6 +11,13 @@ authors = [
         'first_name': 'Winston',
         'last_name': 'Wolfe',
     },
+    {
+        'id': 2,
+        'username': 'sponge',
+        'openid_uid': 'sponge',
+        'first_name': 'Spongebob',
+        'last_name': 'Squarepants',
+    },
 ]
 
 reports = [
@@ -52,9 +59,11 @@ reports = [
 
 
 def prepare_reports():
-    author = User.objects.create(**authors[0])
-    for report in reports:
-        Report.objects.create(author=author, **report)
+    author1 = User.objects.create(**authors[0])
+    author2 = User.objects.create(**authors[1])
+    Report.objects.create(author=author1, **reports[0])
+    Report.objects.create(author=author2, **reports[1])
+    Report.objects.create(author=author1, **reports[2])
 
 
 def prepare_report():
