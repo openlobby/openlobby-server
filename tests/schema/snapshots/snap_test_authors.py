@@ -141,3 +141,39 @@ snapshots['test_last_before 1'] = {
         }
     }
 }
+
+snapshots['test_with_reports 1'] = {
+    'data': {
+        'authors': {
+            'edges': [
+                {
+                    'node': {
+                        'firstName': 'Winston',
+                        'id': 'QXV0aG9yOjE=',
+                        'lastName': 'Wolfe',
+                        'reports': {
+                            'edges': [
+                                {
+                                    'cursor': 'MQ==',
+                                    'node': {
+                                        'body': 'Long story short: we got the Ring!',
+                                        'date': '2018-01-01 00:00:00+00:00',
+                                        'extra': None,
+                                        'id': 'UmVwb3J0OjE=',
+                                        'otherParticipants': 'Saruman',
+                                        'ourParticipants': 'Frodo, Gandalf',
+                                        'providedBenefit': '',
+                                        'published': '2018-01-02 00:00:00+00:00',
+                                        'receivedBenefit': 'The Ring',
+                                        'title': 'The Fellowship of the Ring'
+                                    }
+                                }
+                            ],
+                            'totalCount': 1
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

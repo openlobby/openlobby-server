@@ -2,7 +2,7 @@ import pytest
 
 from openlobby.core.models import User
 
-from ..dummy import prepare_authors
+from ..dummy import prepare_authors, prepare_report
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
@@ -126,6 +126,42 @@ def test_last_before(client, snapshot):
                 hasNextPage
                 startCursor
                 endCursor
+            }
+        }
+    }
+    """})
+    snapshot.assert_match(res.json())
+
+
+def test_with_reports(client, snapshot):
+    prepare_report()
+    res = client.post('/graphql', {'query': """
+    query {
+        authors {
+            edges {
+                node {
+                    id
+                    firstName
+                    lastName
+                    reports {
+                        totalCount
+                        edges {
+                            cursor
+                            node {
+                                id
+                                date
+                                published
+                                title
+                                body
+                                receivedBenefit
+                                providedBenefit
+                                ourParticipants
+                                otherParticipants
+                                extra
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -99,8 +99,7 @@ class Author(graphene.ObjectType):
     last_name = graphene.String()
     openid_uid = graphene.String()
     extra = JSONString()
-    # TODO
-    # reports = relay.ConnectionField(ReportConnection)
+    reports = relay.ConnectionField(ReportConnection)
 
     class Meta:
         interfaces = (relay.Node, )
@@ -122,11 +121,9 @@ class Author(graphene.ObjectType):
         except models.User.DoesNotExist:
             return None
 
-    # TODO
-    """
     def resolve_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
-        response = search.reports_by_author(self.id, paginator, **info.context)
+        response = search.reports_by_author(self.id, paginator)
         total = response.hits.total
         page_info = paginator.get_page_info(total)
 
@@ -137,7 +134,6 @@ class Author(graphene.ObjectType):
             edges.append(ReportConnection.Edge(node=node, cursor=cursor))
 
         return ReportConnection(page_info=page_info, edges=edges, total_count=total)
-    """
 
 
 class LoginShortcut(graphene.ObjectType):
