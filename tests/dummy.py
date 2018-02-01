@@ -10,6 +10,8 @@ authors = [
         'openid_uid': 'Wolf',
         'first_name': 'Winston',
         'last_name': 'Wolfe',
+        'is_author': True,
+        'extra': {'movies': 1},
     },
     {
         'id': 2,
@@ -17,6 +19,15 @@ authors = [
         'openid_uid': 'sponge',
         'first_name': 'Spongebob',
         'last_name': 'Squarepants',
+        'is_author': True,
+    },
+    {
+        'id': 3,
+        'username': 'shaun',
+        'openid_uid': 'shaun',
+        'first_name': 'Shaun',
+        'last_name': 'Sheep',
+        'is_author': True,
     },
 ]
 
@@ -69,3 +80,8 @@ def prepare_reports():
 def prepare_report():
     author = User.objects.create(**authors[0])
     Report.objects.create(author=author, **reports[0])
+
+
+def prepare_authors():
+    for author in authors:
+        User.objects.create(**author)

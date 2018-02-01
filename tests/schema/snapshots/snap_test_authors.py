@@ -14,21 +14,21 @@ snapshots['test_all 1'] = {
                 {
                     'cursor': 'MQ==',
                     'node': {
-                        'extra': '{"x": 1}',
+                        'extra': '{"movies": 1}',
                         'firstName': 'Winston',
                         'id': 'QXV0aG9yOjE=',
                         'lastName': 'Wolfe',
-                        'openidUid': 'first'
+                        'openidUid': 'Wolf'
                     }
                 },
                 {
                     'cursor': 'Mg==',
                     'node': {
                         'extra': None,
-                        'firstName': 'Captain',
-                        'id': 'QXV0aG9yOjM=',
-                        'lastName': 'Obvious',
-                        'openidUid': 'second'
+                        'firstName': 'Spongebob',
+                        'id': 'QXV0aG9yOjI=',
+                        'lastName': 'Squarepants',
+                        'openidUid': 'sponge'
                     }
                 },
                 {
@@ -36,9 +36,9 @@ snapshots['test_all 1'] = {
                     'node': {
                         'extra': None,
                         'firstName': 'Shaun',
-                        'id': 'QXV0aG9yOjQ=',
+                        'id': 'QXV0aG9yOjM=',
                         'lastName': 'Sheep',
-                        'openidUid': 'third'
+                        'openidUid': 'shaun'
                     }
                 }
             ],
@@ -60,13 +60,13 @@ snapshots['test_first 1'] = {
                 {
                     'cursor': 'MQ==',
                     'node': {
-                        'openidUid': 'first'
+                        'openidUid': 'Wolf'
                     }
                 },
                 {
                     'cursor': 'Mg==',
                     'node': {
-                        'openidUid': 'second'
+                        'openidUid': 'sponge'
                     }
                 }
             ],
@@ -88,7 +88,7 @@ snapshots['test_first_after 1'] = {
                 {
                     'cursor': 'Mg==',
                     'node': {
-                        'openidUid': 'second'
+                        'openidUid': 'sponge'
                     }
                 }
             ],
@@ -127,7 +127,7 @@ snapshots['test_last_before 1'] = {
                 {
                     'cursor': 'Mg==',
                     'node': {
-                        'openidUid': 'second'
+                        'openidUid': 'sponge'
                     }
                 }
             ],

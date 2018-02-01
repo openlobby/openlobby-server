@@ -38,7 +38,7 @@ snapshots['test_report 1'] = {
     'data': {
         'node': {
             'author': {
-                'extra': None,
+                'extra': '{"movies": 1}',
                 'firstName': 'Winston',
                 'id': 'QXV0aG9yOjE=',
                 'lastName': 'Wolfe'

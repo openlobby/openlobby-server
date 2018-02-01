@@ -2,23 +2,15 @@ import pytest
 
 from openlobby.core.models import User
 
+from ..dummy import prepare_authors
 
-pytestmark = pytest.mark.django_db
 
-
-@pytest.fixture(autouse=True)
-def setup():
-    User.objects.create(id=1, is_author=True, username='a', openid_uid='first',
-        first_name='Winston', last_name='Wolfe', extra={'x': 1})
-    User.objects.create(id=2, is_author=False, username='b')
-    User.objects.create(id=3, is_author=True, username='c', openid_uid='second',
-        first_name='Captain', last_name='Obvious')
-    User.objects.create(id=4, is_author=True, username='d', openid_uid='third',
-        first_name='Shaun', last_name='Sheep')
-    yield
+pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 
 
 def test_all(client, snapshot):
+    prepare_authors()
+    User.objects.create(id=4, is_author=False, username='x')
     res = client.post('/graphql', {'query': """
     query {
         authors {
@@ -46,6 +38,7 @@ def test_all(client, snapshot):
 
 
 def test_first(client, snapshot):
+    prepare_authors()
     res = client.post('/graphql', {'query': """
     query {
         authors (first: 2) {
@@ -69,6 +62,7 @@ def test_first(client, snapshot):
 
 
 def test_first_after(client, snapshot):
+    prepare_authors()
     res = client.post('/graphql', {'query': """
     query {
         authors (first: 1, after: "MQ==") {
@@ -92,6 +86,7 @@ def test_first_after(client, snapshot):
 
 
 def test_last(client, snapshot):
+    prepare_authors()
     res = client.post('/graphql', {'query': """
     query {
         authors (last: 2) {
@@ -115,6 +110,7 @@ def test_last(client, snapshot):
 
 
 def test_last_before(client, snapshot):
+    prepare_authors()
     res = client.post('/graphql', {'query': """
     query {
         authors (last: 1, before: "Mw==") {
