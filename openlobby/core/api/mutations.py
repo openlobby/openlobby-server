@@ -4,14 +4,7 @@ from graphene import relay
 from graphene.types.datetime import DateTime
 from graphql_relay import from_global_id
 from oic.oic import rndstr
-from oic.oic.message import AuthorizationResponse
-import time
-import urllib.parse
 
-from ..auth import (
-    get_session_expiration_time,
-    create_access_token,
-)
 from ..documents import ReportDoc
 from ..models import OpenIdClient, LoginAttempt
 from ..openid import (
@@ -19,8 +12,6 @@ from ..openid import (
     init_client_for_shortcut,
     register_client,
     get_authorization_url,
-    set_registration_info,
-    do_access_token_request,
 )
 from .types import Report
 from .sanitizers import strip_all_tags
@@ -100,60 +91,6 @@ class LoginByShortcut(relay.ClientIDMutation):
         return LoginByShortcut(authorization_url=authorization_url)
 
 
-class LoginRedirect(relay.ClientIDMutation):
-
-    class Input:
-        query_string = graphene.String(required=True)
-
-    access_token = graphene.String()
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        query_string = input['query_string']
-
-        # get state from query string
-        state = urllib.parse.parse_qs(query_string)['state'][0]
-        print('X:', state)
-
-        # get login attempt
-        la = LoginAttempt.objects.select_related().get(state=state)
-
-        # delete login attempt so it can be used just once
-        # TODO uncomment
-        #la.delete()
-
-        # check login attempt expiration
-        if la.expiration < time.time():
-            raise Exception('Login attempt expired.')
-
-        # reconstruct OpenID Client
-        client = init_client_for_shortcut(la.openid_clien)
-
-        # process query string from OpenID redirect
-        aresp = client.parse_response(AuthorizationResponse, info=query_string,
-            sformat='urlencoded')
-        code = aresp['code']
-        state = aresp['state']
-
-        # OpenID access token request
-        do_access_token_request(client, code, state)
-
-        # OpenID user info request
-        user_info = client.do_user_info_request(state=state)
-        print(user_info)
-
-        # TODO get or create User
-
-        # TODO create session
-        # expiration = get_session_expiration_time()
-
-        # TODO create access token for session
-        # token = create_access_token(session.meta.id, expiration)
-        token = 'foo'
-
-        return LoginRedirect(access_token=token)
-
-
 class Logout(relay.ClientIDMutation):
     success = graphene.Boolean()
 
@@ -203,6 +140,5 @@ class NewReport(relay.ClientIDMutation):
 class Mutation:
     login = Login.Field()
     login_by_shortcut = LoginByShortcut.Field()
-    login_redirect = LoginRedirect.Field()
     logout = Logout.Field()
     new_report = NewReport.Field()
