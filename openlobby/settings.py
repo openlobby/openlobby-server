@@ -157,3 +157,6 @@ SESSION_EXPIRATION = 60 * 60 * 24 * 14
 
 # name of the site used in OpenID authentication
 SITE_NAME = os.environ.get('SITE_NAME', 'Open Lobby')
+
+# redirect URI used in OpenID authentication
+REDIRECT_URI = os.environ.get('REDIRECT_URI', 'http://localhost:8010/login-redirect')

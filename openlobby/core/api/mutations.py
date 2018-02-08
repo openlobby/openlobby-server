@@ -38,15 +38,15 @@ class Login(relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
         openid_uid = input['openid_uid']
-        redirect_uri = input['redirect_uri']
+        app_redirect_uri = input['redirect_uri']
 
         # prepare OpenID client
         client = init_client_for_uid(openid_uid)
         try:
             openid_client_obj = OpenIdClient.objects.get(issuer=client.provider_info['issuer'])
-            client = init_client_for_shortcut(openid_client_obj, redirect_uri)
+            client = init_client_for_shortcut(openid_client_obj)
         except OpenIdClient.DoesNotExist:
-            client = register_client(client, redirect_uri)
+            client = register_client(client)
             openid_client_obj = OpenIdClient.objects.create(
                 name=client.provider_info['issuer'],
                 client_id=client.client_id,
@@ -63,7 +63,7 @@ class Login(relay.ClientIDMutation):
 
         # save login attempt
         LoginAttempt.objects.create(state=state, openid_client=openid_client_obj,
-            expiration=expiration, redirect_uri=redirect_uri)
+            expiration=expiration, app_redirect_uri=app_redirect_uri)
 
         # get OpenID authorization url
         authorization_url = get_authorization_url(client, state)
@@ -82,14 +82,12 @@ class LoginByShortcut(relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
         shortcut_id = input['shortcut_id']
-        # TODO
-        # app_redirect_uri = input['redirect_uri']
-        redirect_uri = 'http://localhost:8010/login-redirect'
+        app_redirect_uri = input['redirect_uri']
 
         # prepare OpenID client
         type, id = from_global_id(shortcut_id)
         openid_client_obj = OpenIdClient.objects.get(id=id)
-        client = init_client_for_shortcut(openid_client_obj, redirect_uri)
+        client = init_client_for_shortcut(openid_client_obj)
 
         # prepare login attempt
         state = rndstr(48)
@@ -97,7 +95,7 @@ class LoginByShortcut(relay.ClientIDMutation):
 
         # save login attempt
         LoginAttempt.objects.create(state=state, openid_client=openid_client_obj,
-            expiration=expiration, redirect_uri=redirect_uri)
+            expiration=expiration, app_redirect_uri=app_redirect_uri)
 
         # get OpenID authorization url
         authorization_url = get_authorization_url(client, state)
@@ -132,7 +130,7 @@ class LoginRedirect(relay.ClientIDMutation):
             raise Exception('Login attempt expired.')
 
         # reconstruct OpenID Client
-        client = init_client_for_shortcut(la.openid_client, la.redirect_uri)
+        client = init_client_for_shortcut(la.openid_clien)
 
         # process query string from OpenID redirect
         aresp = client.parse_response(AuthorizationResponse, info=query_string,

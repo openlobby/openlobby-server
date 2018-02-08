@@ -12,21 +12,23 @@ pytestmark = pytest.mark.django_db
 def test_login_by_shortcut(keycloak, client, snapshot):
     oid_client = OpenIdClient.objects.create(name='Test', is_shortcut=True, **keycloak)
 
+    app_redirect_uri = 'http://i.am.pirate'
     res = client.post('/graphql', {'query': """
     mutation {{
-        loginByShortcut (input: {{ shortcutId: "{id}", redirectUri: "foo" }}) {{
+        loginByShortcut (input: {{ shortcutId: "{id}", redirectUri: "{uri}" }}) {{
             authorizationUrl
         }}
     }}
-    """.format(id=to_global_id('LoginShortcut', oid_client.id))})
+    """.format(id=to_global_id('LoginShortcut', oid_client.id), uri=app_redirect_uri)})
     response = res.json()
     assert 'errors' not in response
-
-    la = LoginAttempt.objects.get(openid_client__id=oid_client.id)
-    # TODO assert app_redirect_uri
-
     authorization_url = response['data']['loginByShortcut']['authorizationUrl']
     url = urlparse(authorization_url)
+
+    la = LoginAttempt.objects.get(openid_client__id=oid_client.id)
+    assert la.app_redirect_uri == app_redirect_uri
+    # TODO assert expiration
+
     url_without_query = urlunparse((url.scheme, url.netloc, url.path, '', '', ''))
     assert url_without_query == '{}/protocol/openid-connect/auth'.format(oid_client.issuer)
 

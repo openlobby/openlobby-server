@@ -16,10 +16,10 @@ def init_client_for_uid(openid_uid):
     return client
 
 
-def init_client_for_shortcut(openid_client_obj, redirect_uri):
+def init_client_for_shortcut(openid_client_obj):
     client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
     set_registration_info(client, openid_client_obj.client_id,
-            openid_client_obj.client_secret, redirect_uri)
+            openid_client_obj.client_secret, settings.REDIRECT_URI)
     info = {
         'issuer': openid_client_obj.issuer,
         'authorization_endpoint': openid_client_obj.authorization_endpoint,
@@ -30,9 +30,9 @@ def init_client_for_shortcut(openid_client_obj, redirect_uri):
     return client
 
 
-def register_client(client, redirect_uri):
+def register_client(client):
     params = {
-        'redirect_uris': [redirect_uri],
+        'redirect_uris': [settings.REDIRECT_URI],
         'client_name': settings.SITE_NAME,
     }
     client.register(client.provider_info['registration_endpoint'], **params)
