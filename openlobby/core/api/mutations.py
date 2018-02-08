@@ -9,7 +9,6 @@ import time
 import urllib.parse
 
 from ..auth import (
-    get_login_attempt_expiration_time,
     get_session_expiration_time,
     create_access_token,
 )
@@ -59,11 +58,10 @@ class Login(relay.ClientIDMutation):
 
         # prepare login attempt details
         state = rndstr(48)
-        expiration = get_login_attempt_expiration_time()
 
         # save login attempt
         LoginAttempt.objects.create(state=state, openid_client=openid_client_obj,
-            expiration=expiration, app_redirect_uri=app_redirect_uri)
+            app_redirect_uri=app_redirect_uri)
 
         # get OpenID authorization url
         authorization_url = get_authorization_url(client, state)
@@ -91,11 +89,10 @@ class LoginByShortcut(relay.ClientIDMutation):
 
         # prepare login attempt
         state = rndstr(48)
-        expiration = get_login_attempt_expiration_time()
 
         # save login attempt
         LoginAttempt.objects.create(state=state, openid_client=openid_client_obj,
-            expiration=expiration, app_redirect_uri=app_redirect_uri)
+            app_redirect_uri=app_redirect_uri)
 
         # get OpenID authorization url
         authorization_url = get_authorization_url(client, state)

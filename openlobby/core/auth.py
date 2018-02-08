@@ -4,10 +4,6 @@ import jwt
 import time
 
 
-def get_login_attempt_expiration_time():
-    return int(time.time() + settings.LOGIN_ATTEMPT_EXPIRATION)
-
-
 def get_session_expiration_time():
     return int(time.time() + settings.SESSION_EXPIRATION)
 

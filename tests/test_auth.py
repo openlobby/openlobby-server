@@ -4,17 +4,10 @@ import jwt
 import pytest
 
 from openlobby.core.auth import (
-    get_login_attempt_expiration_time,
     get_session_expiration_time,
     create_access_token,
     parse_access_token,
 )
-
-
-def test_get_login_attempt_expiration_time():
-    expiration = get_login_attempt_expiration_time()
-    expected = int(time.time() + settings.LOGIN_ATTEMPT_EXPIRATION)
-    assert expected <= expiration <= expected + 1
 
 
 def test_get_session_expiration_time():

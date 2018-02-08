@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import JSONField
 from django.utils import timezone
+import time
 
 
 class User(AbstractUser):
@@ -29,12 +30,16 @@ class OpenIdClient(models.Model):
         return self.name
 
 
+def get_login_attempt_expiration():
+    return int(time.time() + settings.LOGIN_ATTEMPT_EXPIRATION)
+
+
 class LoginAttempt(models.Model):
     """Temporary login attempt details which persists redirects."""
     openid_client = models.ForeignKey(OpenIdClient, on_delete=models.CASCADE)
     state = models.CharField(max_length=50, unique=True, db_index=True)
     app_redirect_uri = models.CharField(max_length=255)
-    expiration = models.IntegerField()
+    expiration = models.IntegerField(default=get_login_attempt_expiration)
 
 
 class Report(models.Model):

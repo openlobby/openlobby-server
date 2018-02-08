@@ -1,7 +1,9 @@
 import pytest
 import arrow
+from django.conf import settings
+from unittest.mock import patch
 
-from openlobby.core.models import Report, User
+from openlobby.core.models import Report, User, OpenIdClient, LoginAttempt
 from openlobby.core.documents import ReportDoc
 
 
@@ -64,3 +66,11 @@ def test_report__save_works_with_no_extra():
     doc = docs[0]
     assert doc.meta.id == '7'
     assert doc.extra is None
+
+
+def test_login_attempt__default_expiration():
+    client = OpenIdClient.objects.create(name='a', client_id='b', client_secret='c')
+    with patch('openlobby.core.models.time.time', return_value=10000):
+        attempt = LoginAttempt.objects.create(openid_client=client, state='foo',
+            app_redirect_uri='http://openlobby/app')
+    assert attempt.expiration == 10000 + settings.LOGIN_ATTEMPT_EXPIRATION

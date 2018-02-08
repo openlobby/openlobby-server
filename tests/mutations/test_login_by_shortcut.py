@@ -27,7 +27,6 @@ def test_login_by_shortcut(keycloak, client, snapshot):
 
     la = LoginAttempt.objects.get(openid_client__id=oid_client.id)
     assert la.app_redirect_uri == app_redirect_uri
-    # TODO assert expiration
 
     url_without_query = urlunparse((url.scheme, url.netloc, url.path, '', '', ''))
     assert url_without_query == '{}/protocol/openid-connect/auth'.format(oid_client.issuer)
