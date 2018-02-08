@@ -82,7 +82,9 @@ class LoginByShortcut(relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
         shortcut_id = input['shortcut_id']
-        redirect_uri = input['redirect_uri']
+        # TODO
+        # app_redirect_uri = input['redirect_uri']
+        redirect_uri = 'http://localhost:8010/login-redirect'
 
         # prepare OpenID client
         type, id = from_global_id(shortcut_id)
