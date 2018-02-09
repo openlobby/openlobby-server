@@ -42,9 +42,6 @@ class Login(relay.ClientIDMutation):
                 client_id=client.client_id,
                 client_secret=client.client_secret,
                 issuer=client.provider_info['issuer'],
-                authorization_endpoint=client.provider_info['authorization_endpoint'],
-                token_endpoint=client.provider_info['token_endpoint'],
-                userinfo_endpoint=client.provider_info['userinfo_endpoint'],
             )
 
         # prepare login attempt details

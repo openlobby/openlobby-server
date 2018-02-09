@@ -1,7 +1,6 @@
 from django.conf import settings
 from oic.oic import Client
 from oic.oic.message import (
-    ProviderConfigurationResponse,
     RegistrationResponse,
     ClaimsRequest,
     Claims,
@@ -18,15 +17,14 @@ def init_client_for_uid(openid_uid):
 
 def init_client_for_shortcut(openid_client_obj):
     client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
-    set_registration_info(client, openid_client_obj.client_id,
-            openid_client_obj.client_secret, settings.REDIRECT_URI)
-    info = {
-        'issuer': openid_client_obj.issuer,
-        'authorization_endpoint': openid_client_obj.authorization_endpoint,
-        'token_endpoint': openid_client_obj.token_endpoint,
-        'userinfo_endpoint': openid_client_obj.userinfo_endpoint,
+    reg_info = {
+        'client_id': openid_client_obj.client_id,
+        'client_secret': openid_client_obj.client_secret,
+        'redirect_uris': [settings.REDIRECT_URI],
     }
-    client.provider_info = ProviderConfigurationResponse(**info)
+    client_reg = RegistrationResponse(**reg_info)
+    client.store_registration_info(client_reg)
+    client.provider_config(openid_client_obj.issuer)
     return client
 
 
@@ -43,7 +41,7 @@ def get_authorization_url(client, state):
     args = {
         'client_id': client.client_id,
         'response_type': 'code',
-        'scope': ['openid'],
+        'scope': 'openid',
         'state': state,
         'redirect_uri': client.registration_response['redirect_uris'][0],
         'claims': ClaimsRequest(userinfo=Claims(
@@ -53,27 +51,9 @@ def get_authorization_url(client, state):
     }
 
     auth_req = client.construct_AuthorizationRequest(request_args=args)
-    url = auth_req.request(client.provider_info['authorization_endpoint'])
-    return url
-
-
-def set_registration_info(client, client_id, client_secret, redirect_uri):
-    info = {
-        'client_id': client_id,
-        'client_secret': client_secret,
-        'redirect_uris': [redirect_uri],
-    }
-    client_reg = RegistrationResponse(**info)
-    client.store_registration_info(client_reg)
-    return client
+    return auth_req.request(client.provider_info['authorization_endpoint'])
 
 
 def do_access_token_request(client, code, state):
-    args = {
-        'code': code,
-        'client_id': client.client_id,
-        'client_secret': client.client_secret,
-        'redirect_uri': client.registration_response['redirect_uris'][0],
-        'token_endpoint': client.provider_info['token_endpoint'],
-    }
+    args = {'code': code, 'redirect_uri': settings.REDIRECT_URI}
     client.do_access_token_request(state=state, request_args=args)
