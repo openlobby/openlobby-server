@@ -22,9 +22,6 @@ class OpenIdClient(models.Model):
     client_id = models.CharField(max_length=255)
     client_secret = models.CharField(max_length=255)
     issuer = models.CharField(max_length=255, unique=True, db_index=True)
-    authorization_endpoint = models.CharField(max_length=255)
-    token_endpoint = models.CharField(max_length=255)
-    userinfo_endpoint = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
