@@ -17,3 +17,14 @@ snapshots['test_login_by_shortcut 1'] = {
         }
     }
 }
+
+snapshots['test_login__known_openid_client 1'] = {
+    'userinfo': {
+        'email': {
+            'essential': True
+        },
+        'name': {
+            'essential': True
+        }
+    }
+}

@@ -8,13 +8,16 @@ from oic.oic import rndstr
 from ..documents import ReportDoc
 from ..models import OpenIdClient, LoginAttempt
 from ..openid import (
-    init_client_for_uid,
+    discover_issuer,
     init_client_for_shortcut,
     register_client,
     get_authorization_url,
 )
 from .types import Report
 from .sanitizers import strip_all_tags
+
+
+STATE_LENGTH = 48
 
 
 class Login(relay.ClientIDMutation):
@@ -31,21 +34,21 @@ class Login(relay.ClientIDMutation):
         app_redirect_uri = input['redirect_uri']
 
         # prepare OpenID client
-        client = init_client_for_uid(openid_uid)
+        issuer = discover_issuer(openid_uid)
         try:
-            openid_client_obj = OpenIdClient.objects.get(issuer=client.provider_info['issuer'])
+            openid_client_obj = OpenIdClient.objects.get(issuer=issuer)
             client = init_client_for_shortcut(openid_client_obj)
         except OpenIdClient.DoesNotExist:
-            client = register_client(client)
+            client = register_client(issuer)
             openid_client_obj = OpenIdClient.objects.create(
-                name=client.provider_info['issuer'],
+                name=issuer,
+                issuer=issuer,
                 client_id=client.client_id,
                 client_secret=client.client_secret,
-                issuer=client.provider_info['issuer'],
             )
 
         # prepare login attempt details
-        state = rndstr(48)
+        state = rndstr(STATE_LENGTH)
 
         # save login attempt
         LoginAttempt.objects.create(state=state, openid_client=openid_client_obj,
@@ -76,7 +79,7 @@ class LoginByShortcut(relay.ClientIDMutation):
         client = init_client_for_shortcut(openid_client_obj)
 
         # prepare login attempt
-        state = rndstr(48)
+        state = rndstr(STATE_LENGTH)
 
         # save login attempt
         LoginAttempt.objects.create(state=state, openid_client=openid_client_obj,

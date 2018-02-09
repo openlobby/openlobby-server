@@ -8,11 +8,9 @@ from oic.oic.message import (
 from oic.utils.authn.client import CLIENT_AUTHN_METHOD
 
 
-def init_client_for_uid(openid_uid):
+def discover_issuer(openid_uid):
     client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
-    issuer = client.discover(openid_uid)
-    client.provider_config(issuer)
-    return client
+    return client.discover(openid_uid)
 
 
 def init_client_for_shortcut(openid_client_obj):
@@ -28,7 +26,9 @@ def init_client_for_shortcut(openid_client_obj):
     return client
 
 
-def register_client(client):
+def register_client(issuer):
+    client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
+    client.provider_config(issuer)
     params = {
         'redirect_uris': [settings.REDIRECT_URI],
         'client_name': settings.SITE_NAME,
