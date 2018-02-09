@@ -43,7 +43,4 @@ def keycloak(request):
         'client_id': config.username,
         'client_secret': config.password,
         'issuer': realm_url,
-        'authorization_endpoint': '{}/protocol/openid-connect/auth'.format(realm_url),
-        'token_endpoint': '{}/protocol/openid-connect/token'.format(realm_url),
-        'userinfo_endpoint': '{}/protocol/openid-connect/userinfo'.format(realm_url),
     }
