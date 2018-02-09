@@ -26,17 +26,19 @@ class LoginRedirectView(View):
 
         # get login attempt
         la = LoginAttempt.objects.select_related().get(state=state)
-
-        # delete login attempt so it can be used just once
-        la.delete()
+        app_redirect_uri = la.app_redirect_uri
 
         # check login attempt expiration
         if la.expiration < time.time():
             # TODO redirect to app_redirect_uri with fail
+            la.delete()
             raise NotImplementedError
 
         # reconstruct OpenID Client
         client = init_client_for_shortcut(la.openid_client)
+
+        # delete login attempt so it can be used just once
+        la.delete()
 
         # process query string from OpenID redirect
         aresp = client.parse_response(AuthorizationResponse, info=query_string,
@@ -60,4 +62,4 @@ class LoginRedirectView(View):
         # token = create_access_token(session.meta.id, expiration)
 
         # TODO add token
-        return redirect(la.app_redirect_uri)
+        return redirect(app_redirect_uri)
