@@ -1,6 +1,7 @@
 from graphql_relay import to_global_id
 import json
 import pytest
+import re
 from urllib.parse import urlparse, urlunparse, parse_qs
 from unittest.mock import patch
 
@@ -64,6 +65,36 @@ def test_login__known_openid_client(keycloak, client, snapshot):
     response = res.json()
     assert 'errors' not in response
     authorization_url = response['data']['login']['authorizationUrl']
+
+    la = LoginAttempt.objects.get(openid_client__id=oid_client.id)
+    assert la.app_redirect_uri == app_redirect_uri
+
+    _check_authorization_url(authorization_url, oid_client, la.state, snapshot)
+
+
+def test_login__new_openid_client(keycloak, client, snapshot):
+    app_redirect_uri = 'http://i.am.pirate'
+    openid_uid = 'wolf@openid.provider'
+    # Keycloak does not support issuer discovery by UID, so we mock it
+    with patch('openlobby.core.api.mutations.discover_issuer', return_value=keycloak['issuer']) as mock:
+        res = client.post('/graphql', {'query': """
+        mutation {{
+            login (input: {{ openidUid: "{uid}", redirectUri: "{uri}" }}) {{
+                authorizationUrl
+            }}
+        }}
+        """.format(uid=openid_uid, uri=app_redirect_uri)})
+        mock.assert_called_once_with(openid_uid)
+
+    response = res.json()
+    assert 'errors' not in response
+    authorization_url = response['data']['login']['authorizationUrl']
+
+    oid_client = OpenIdClient.objects.get()
+    assert oid_client.name == keycloak['issuer']
+    assert oid_client.issuer == keycloak['issuer']
+    assert re.match(r'\w+', oid_client.client_id)
+    assert re.match(r'\w+', oid_client.client_secret)
 
     la = LoginAttempt.objects.get(openid_client__id=oid_client.id)
     assert la.app_redirect_uri == app_redirect_uri
