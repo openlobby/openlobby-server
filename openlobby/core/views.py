@@ -18,6 +18,7 @@ class IndexView(TemplateView):
 
 class LoginRedirectView(View):
 
+    # TODO redirect to app_redirect_uri on fail
     def get(self, request, **kwargs):
         query_string = request.META['QUERY_STRING']
 
@@ -25,26 +26,26 @@ class LoginRedirectView(View):
         state = urllib.parse.parse_qs(query_string)['state'][0]
 
         # get login attempt
-        la = LoginAttempt.objects.select_related().get(state=state)
+        la = LoginAttempt.objects.select_related('openid_client').get(state=state)
         app_redirect_uri = la.app_redirect_uri
 
         # check login attempt expiration
         if la.expiration < time.time():
             # TODO redirect to app_redirect_uri with fail
-            la.delete()
             raise NotImplementedError
 
         # reconstruct OpenID Client
         client = init_client_for_shortcut(la.openid_client)
 
         # delete login attempt so it can be used just once
-        la.delete()
+        # TODO delete breaks it with LoginAttempt.DoesNotExist exception, why?!
+        # la.delete()
 
         # process query string from OpenID redirect
         aresp = client.parse_response(AuthorizationResponse, info=query_string,
             sformat='urlencoded')
         code = aresp['code']
-        state = aresp['state']
+        assert state == aresp['state']
 
         # OpenID access token request
         do_access_token_request(client, code, state)

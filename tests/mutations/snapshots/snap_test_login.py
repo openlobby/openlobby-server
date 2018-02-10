@@ -12,7 +12,10 @@ snapshots['test_login_by_shortcut 1'] = {
         'email': {
             'essential': True
         },
-        'name': {
+        'family_name': {
+            'essential': True
+        },
+        'given_name': {
             'essential': True
         }
     }
@@ -23,7 +26,10 @@ snapshots['test_login__known_openid_client 1'] = {
         'email': {
             'essential': True
         },
-        'name': {
+        'family_name': {
+            'essential': True
+        },
+        'given_name': {
             'essential': True
         }
     }

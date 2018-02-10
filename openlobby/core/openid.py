@@ -45,7 +45,8 @@ def get_authorization_url(client, state):
         'state': state,
         'redirect_uri': client.registration_response['redirect_uris'][0],
         'claims': ClaimsRequest(userinfo=Claims(
-            name={'essential': True},
+            given_name={'essential': True},
+            family_name={'essential': True},
             email={'essential': True},
         )),
     }
