@@ -3,12 +3,11 @@ from django.views import View
 from django.views.generic.base import TemplateView
 import time
 import urllib.parse
-from oic.oic.message import AuthorizationResponse
 
 from .models import LoginAttempt
 from .openid import (
     init_client_for_shortcut,
-    do_access_token_request,
+    get_user_info,
 )
 
 
@@ -41,17 +40,8 @@ class LoginRedirectView(View):
         # TODO delete breaks it with LoginAttempt.DoesNotExist exception, why?!
         # la.delete()
 
-        # process query string from OpenID redirect
-        aresp = client.parse_response(AuthorizationResponse, info=query_string,
-            sformat='urlencoded')
-        code = aresp['code']
-        assert state == aresp['state']
-
-        # OpenID access token request
-        do_access_token_request(client, code, state)
-
-        # OpenID user info request
-        user_info = client.do_user_info_request(state=state)
+        # get OpenID user info
+        user_info = get_user_info(client, query_string)
         print('\nUSER INFO:', user_info, '\n')
 
         # TODO get or create User

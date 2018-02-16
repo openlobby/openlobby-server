@@ -1,6 +1,7 @@
 from django.conf import settings
 from oic.oic import Client
 from oic.oic.message import (
+    AuthorizationResponse,
     RegistrationResponse,
     ClaimsRequest,
     Claims,
@@ -55,6 +56,12 @@ def get_authorization_url(client, state):
     return auth_req.request(client.provider_info['authorization_endpoint'])
 
 
-def do_access_token_request(client, code, state):
-    args = {'code': code, 'redirect_uri': settings.REDIRECT_URI}
-    client.do_access_token_request(state=state, request_args=args)
+def get_user_info(client, query_string):
+    """Processes query string from OpenID redirect and returns user info."""
+    aresp = client.parse_response(AuthorizationResponse, info=query_string,
+        sformat='urlencoded')
+
+    args = {'code': aresp['code'], 'redirect_uri': settings.REDIRECT_URI}
+    client.do_access_token_request(state=aresp['state'], request_args=args)
+
+    return client.do_user_info_request(state=aresp['state'])
