@@ -6,6 +6,7 @@ from urllib.parse import urlparse, urlunparse, parse_qs
 from unittest.mock import patch
 
 from openlobby.core.models import OpenIdClient, LoginAttempt
+from openlobby.core.openid import register_client
 
 
 pytestmark = pytest.mark.django_db
@@ -25,8 +26,10 @@ def _check_authorization_url(authorization_url, oid_client, state, snapshot):
     snapshot.assert_match(json.loads(qs['claims'][0]))
 
 
-def test_login_by_shortcut(keycloak, client, snapshot):
-    oid_client = OpenIdClient.objects.create(name='Test', is_shortcut=True, **keycloak)
+def test_login_by_shortcut(issuer, client, snapshot):
+    oc = register_client(issuer)
+    oid_client = OpenIdClient.objects.create(name='Test', is_shortcut=True,
+        issuer=issuer, client_id=oc.client_id, client_secret=oc.client_secret)
 
     app_redirect_uri = 'http://i.am.pirate'
     res = client.post('/graphql', {'query': """
@@ -46,13 +49,15 @@ def test_login_by_shortcut(keycloak, client, snapshot):
     _check_authorization_url(authorization_url, oid_client, la.state, snapshot)
 
 
-def test_login__known_openid_client(keycloak, client, snapshot):
-    oid_client = OpenIdClient.objects.create(name='Test', **keycloak)
+def test_login__known_openid_client(issuer, client, snapshot):
+    oc = register_client(issuer)
+    oid_client = OpenIdClient.objects.create(name='Test', issuer=issuer,
+        client_id=oc.client_id, client_secret=oc.client_secret)
 
     app_redirect_uri = 'http://i.am.pirate'
     openid_uid = 'wolf@openid.provider'
-    # Keycloak does not support issuer discovery by UID, so we mock it
-    with patch('openlobby.core.api.mutations.discover_issuer', return_value=oid_client.issuer) as mock:
+    # Keycloak server used for tests does not support issuer discovery by UID, so we mock it
+    with patch('openlobby.core.api.mutations.discover_issuer', return_value=issuer) as mock:
         res = client.post('/graphql', {'query': """
         mutation {{
             login (input: {{ openidUid: "{uid}", redirectUri: "{uri}" }}) {{
@@ -72,11 +77,11 @@ def test_login__known_openid_client(keycloak, client, snapshot):
     _check_authorization_url(authorization_url, oid_client, la.state, snapshot)
 
 
-def test_login__new_openid_client(keycloak, client, snapshot):
+def test_login__new_openid_client(issuer, client, snapshot):
     app_redirect_uri = 'http://i.am.pirate'
     openid_uid = 'wolf@openid.provider'
-    # Keycloak does not support issuer discovery by UID, so we mock it
-    with patch('openlobby.core.api.mutations.discover_issuer', return_value=keycloak['issuer']) as mock:
+    # Keycloak server used for tests does not support issuer discovery by UID, so we mock it
+    with patch('openlobby.core.api.mutations.discover_issuer', return_value=issuer) as mock:
         res = client.post('/graphql', {'query': """
         mutation {{
             login (input: {{ openidUid: "{uid}", redirectUri: "{uri}" }}) {{
@@ -91,8 +96,8 @@ def test_login__new_openid_client(keycloak, client, snapshot):
     authorization_url = response['data']['login']['authorizationUrl']
 
     oid_client = OpenIdClient.objects.get()
-    assert oid_client.name == keycloak['issuer']
-    assert oid_client.issuer == keycloak['issuer']
+    assert oid_client.name == issuer
+    assert oid_client.issuer == issuer
     assert re.match(r'\w+', oid_client.client_id)
     assert re.match(r'\w+', oid_client.client_secret)
 
