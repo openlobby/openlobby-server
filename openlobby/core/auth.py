@@ -1,5 +1,4 @@
 from django.conf import settings
-import json
 import jwt
 import time
 
@@ -18,8 +17,3 @@ def create_access_token(username, expiration=None):
 def parse_access_token(token):
     payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
     return payload['sub']
-
-
-def graphql_error_response(message, code=400):
-    error = {'message': message}
-    return json.dumps({'errors': [error]}), code, {'Content-Type': 'application/json'}
