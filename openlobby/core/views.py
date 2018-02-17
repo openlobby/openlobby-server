@@ -4,7 +4,7 @@ from django.views.generic.base import TemplateView
 import time
 import urllib.parse
 
-from .models import LoginAttempt
+from .models import LoginAttempt, User
 from .openid import (
     init_client_for_shortcut,
     get_user_info,
@@ -26,7 +26,6 @@ class LoginRedirectView(View):
         la = LoginAttempt.objects.select_related('openid_client').get(state=state)
         app_redirect_uri = la.app_redirect_uri
 
-        # check login attempt expiration
         if la.expiration < time.time():
             # TODO redirect to app_redirect_uri with fail
             raise NotImplementedError
@@ -35,12 +34,16 @@ class LoginRedirectView(View):
         # TODO delete breaks it with LoginAttempt.DoesNotExist exception, why?!
         # la.delete()
 
-        # get OpenID user info
         client = init_client_for_shortcut(la.openid_client)
         user_info = get_user_info(client, query_string)
-        print('\nUSER INFO:', user_info, '\n')
 
-        # TODO get or create User
+        user = User.objects.get_or_create(username=user_info['sub'], defaults={
+            'username': user_info['sub'],
+            'first_name': user_info['given_name'],
+            'last_name': user_info['family_name'],
+            'email': user_info['email'],
+            'openid_uid': la.openid_uid,
+        })
 
         # TODO create session
         # expiration = get_session_expiration_time()
