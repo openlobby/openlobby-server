@@ -48,6 +48,22 @@ class Report(graphene.ObjectType):
         )
 
     @classmethod
+    def from_db(cls, report):
+        return cls(
+            id=report.id,
+            author=report.author,
+            date=report.date,
+            published=report.published,
+            title=report.title,
+            body=report.body,
+            received_benefit=report.received_benefit,
+            provided_benefit=report.provided_benefit,
+            our_participants=report.our_participants,
+            other_participants=report.other_participants,
+            extra=report.extra,
+        )
+
+    @classmethod
     def get_node(cls, info, id):
         try:
             report = ReportDoc.get(id)

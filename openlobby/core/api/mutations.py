@@ -1,19 +1,17 @@
-import arrow
 import graphene
 from graphene import relay
 from graphene.types.datetime import DateTime
 from graphql_relay import from_global_id
 from oic.oic import rndstr
 
-from ..documents import ReportDoc
-from ..models import OpenIdClient, LoginAttempt
+from ..models import OpenIdClient, LoginAttempt, Report
 from ..openid import (
     discover_issuer,
     init_client_for_shortcut,
     register_client,
     get_authorization_url,
 )
-from .types import Report
+from . import types
 from .sanitizers import strip_all_tags
 
 
@@ -112,7 +110,7 @@ class NewReport(relay.ClientIDMutation):
         other_participants = graphene.String()
         date = DateTime(required=True)
 
-    report = graphene.Field(Report)
+    report = graphene.Field(types.Report)
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
@@ -121,20 +119,18 @@ class NewReport(relay.ClientIDMutation):
 
         author = info.context.user
 
-        data = {
-            'author_id': author.id,
-            'published': arrow.utcnow().isoformat(),
-            'title': strip_all_tags(input.get('title', '')),
-            'body': strip_all_tags(input.get('body', '')),
-            'received_benefit': strip_all_tags(input.get('received_benefit', '')),
-            'provided_benefit': strip_all_tags(input.get('provided_benefit', '')),
-            'our_participants': strip_all_tags(input.get('our_participants', '')),
-            'other_participants': strip_all_tags(input.get('other_participants', '')),
-            'date': input.get('date'),
-        }
-        report = ReportDoc(**data)
-        report.save(using=info.context['es'], index=info.context['index'])
-        return NewReport(report=Report.from_es(report, author=author))
+        report = Report.objects.create(
+            author=author,
+            date=input.get('date'),
+            title=strip_all_tags(input.get('title', '')),
+            body=strip_all_tags(input.get('body', '')),
+            received_benefit=strip_all_tags(input.get('received_benefit', '')),
+            provided_benefit=strip_all_tags(input.get('provided_benefit', '')),
+            our_participants=strip_all_tags(input.get('our_participants', '')),
+            other_participants=strip_all_tags(input.get('other_participants', '')),
+        )
+
+        return NewReport(report=types.Report.from_db(report))
 
 
 class Mutation:
