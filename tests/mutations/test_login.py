@@ -45,6 +45,7 @@ def test_login_by_shortcut(issuer, client, snapshot):
 
     la = LoginAttempt.objects.get(openid_client__id=oid_client.id)
     assert la.app_redirect_uri == app_redirect_uri
+    assert la.openid_uid is None
 
     _check_authorization_url(authorization_url, oid_client, la.state, snapshot)
 
@@ -73,6 +74,7 @@ def test_login__known_openid_client(issuer, client, snapshot):
 
     la = LoginAttempt.objects.get(openid_client__id=oid_client.id)
     assert la.app_redirect_uri == app_redirect_uri
+    assert la.openid_uid == openid_uid
 
     _check_authorization_url(authorization_url, oid_client, la.state, snapshot)
 
@@ -103,5 +105,6 @@ def test_login__new_openid_client(issuer, client, snapshot):
 
     la = LoginAttempt.objects.get(openid_client__id=oid_client.id)
     assert la.app_redirect_uri == app_redirect_uri
+    assert la.openid_uid == openid_uid
 
     _check_authorization_url(authorization_url, oid_client, la.state, snapshot)

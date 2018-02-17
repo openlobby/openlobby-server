@@ -52,7 +52,7 @@ class Login(relay.ClientIDMutation):
 
         # save login attempt
         LoginAttempt.objects.create(state=state, openid_client=openid_client_obj,
-            app_redirect_uri=app_redirect_uri)
+            app_redirect_uri=app_redirect_uri, openid_uid=openid_uid)
 
         # get OpenID authorization url
         authorization_url = get_authorization_url(client, state)
