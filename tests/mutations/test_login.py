@@ -1,4 +1,3 @@
-from graphql_relay import to_global_id
 import json
 import pytest
 import re
@@ -12,7 +11,7 @@ from openlobby.core.openid import register_client
 pytestmark = pytest.mark.django_db
 
 
-def _check_authorization_url(authorization_url, oid_client, state, snapshot):
+def check_authorization_url(authorization_url, oid_client, state, snapshot):
     url = urlparse(authorization_url)
     url_without_query = urlunparse((url.scheme, url.netloc, url.path, '', '', ''))
     assert url_without_query == '{}/protocol/openid-connect/auth'.format(oid_client.issuer)
@@ -24,30 +23,6 @@ def _check_authorization_url(authorization_url, oid_client, state, snapshot):
     assert qs['redirect_uri'][0] == 'http://localhost:8010/login-redirect'
     assert qs['state'][0] == state
     snapshot.assert_match(json.loads(qs['claims'][0]))
-
-
-def test_login_by_shortcut(issuer, client, snapshot):
-    oc = register_client(issuer)
-    oid_client = OpenIdClient.objects.create(name='Test', is_shortcut=True,
-        issuer=issuer, client_id=oc.client_id, client_secret=oc.client_secret)
-
-    app_redirect_uri = 'http://i.am.pirate'
-    res = client.post('/graphql', {'query': """
-    mutation {{
-        loginByShortcut (input: {{ shortcutId: "{id}", redirectUri: "{uri}" }}) {{
-            authorizationUrl
-        }}
-    }}
-    """.format(id=to_global_id('LoginShortcut', oid_client.id), uri=app_redirect_uri)})
-    response = res.json()
-    assert 'errors' not in response
-    authorization_url = response['data']['loginByShortcut']['authorizationUrl']
-
-    la = LoginAttempt.objects.get(openid_client__id=oid_client.id)
-    assert la.app_redirect_uri == app_redirect_uri
-    assert la.openid_uid is None
-
-    _check_authorization_url(authorization_url, oid_client, la.state, snapshot)
 
 
 def test_login__known_openid_client(issuer, client, snapshot):
@@ -76,7 +51,7 @@ def test_login__known_openid_client(issuer, client, snapshot):
     assert la.app_redirect_uri == app_redirect_uri
     assert la.openid_uid == openid_uid
 
-    _check_authorization_url(authorization_url, oid_client, la.state, snapshot)
+    check_authorization_url(authorization_url, oid_client, la.state, snapshot)
 
 
 def test_login__new_openid_client(issuer, client, snapshot):
@@ -107,4 +82,4 @@ def test_login__new_openid_client(issuer, client, snapshot):
     assert la.app_redirect_uri == app_redirect_uri
     assert la.openid_uid == openid_uid
 
-    _check_authorization_url(authorization_url, oid_client, la.state, snapshot)
+    check_authorization_url(authorization_url, oid_client, la.state, snapshot)
