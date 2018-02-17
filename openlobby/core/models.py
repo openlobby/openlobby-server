@@ -7,7 +7,9 @@ import time
 
 
 class User(AbstractUser):
-    # TODO remove username, set different login field
+    """Custom user model. For simplicity we store OpenID 'sub' identifier in
+    username field.
+    """
     openid_uid = models.CharField(max_length=255, unique=True, db_index=True)
     extra = JSONField(null=True, blank=True)
     is_author = models.BooleanField(default=False)
@@ -36,6 +38,7 @@ class LoginAttempt(models.Model):
     openid_client = models.ForeignKey(OpenIdClient, on_delete=models.CASCADE)
     state = models.CharField(max_length=50, unique=True, db_index=True)
     app_redirect_uri = models.CharField(max_length=255)
+    openid_uid = models.CharField(max_length=255, null=True)
     expiration = models.IntegerField(default=get_login_attempt_expiration)
 
 
