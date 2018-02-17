@@ -10,7 +10,7 @@ class User(AbstractUser):
     """Custom user model. For simplicity we store OpenID 'sub' identifier in
     username field.
     """
-    openid_uid = models.CharField(max_length=255, unique=True, db_index=True)
+    openid_uid = models.CharField(max_length=255, null=True)
     extra = JSONField(null=True, blank=True)
     is_author = models.BooleanField(default=False)
 
