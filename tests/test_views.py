@@ -1,7 +1,9 @@
 import pytest
 from django.urls import reverse
 from unittest.mock import patch
+import urllib.parse
 
+from openlobby.core.auth import parse_access_token
 from openlobby.core.models import User, OpenIdClient, LoginAttempt
 from openlobby.core.openid import register_client
 
@@ -35,11 +37,14 @@ def test_login_redirect__new_user(client, issuer):
     with patch('openlobby.core.views.get_user_info', return_value=user_info) as mock:
         response = client.get(reverse('login-redirect'), {'state': state})
         m_client, m_query_string = mock.call_args[0]
+        assert m_client.client_id == oc.client_id
+        assert m_query_string == 'state={}'.format(state)
 
-    assert m_client.client_id == oc.client_id
-    assert m_query_string == 'state={}'.format(state)
     assert response.status_code == 302
-    assert response.url == app_redirect_uri
+    url, query_string = response.url.split('?')
+    qs = urllib.parse.parse_qs(query_string)
+    assert url == app_redirect_uri
+    assert sub == parse_access_token(qs['token'][0])
 
     user = User.objects.get()
     assert user.username == sub
@@ -78,11 +83,14 @@ def test_login_redirect__existing_user(client, issuer):
     with patch('openlobby.core.views.get_user_info', return_value=user_info) as mock:
         response = client.get(reverse('login-redirect'), {'state': state})
         m_client, m_query_string = mock.call_args[0]
+        assert m_client.client_id == oc.client_id
+        assert m_query_string == 'state={}'.format(state)
 
-    assert m_client.client_id == oc.client_id
-    assert m_query_string == 'state={}'.format(state)
     assert response.status_code == 302
-    assert response.url == app_redirect_uri
+    url, query_string = response.url.split('?')
+    qs = urllib.parse.parse_qs(query_string)
+    assert url == app_redirect_uri
+    assert sub == parse_access_token(qs['token'][0])
 
     # check there is still just one user, who's details are not updated
     user = User.objects.get()

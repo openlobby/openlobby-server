@@ -4,13 +4,11 @@ import jwt
 import time
 
 
-def get_session_expiration_time():
-    return int(time.time() + settings.SESSION_EXPIRATION)
-
-
-def create_access_token(session_id, expiration):
+def create_access_token(username, expiration=None):
+    if expiration is None:
+        expiration = int(time.time() + settings.SESSION_EXPIRATION)
     payload = {
-        'sub': session_id,
+        'sub': username,
         'exp': expiration,
     }
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
