@@ -1,7 +1,6 @@
 import pytest
 import arrow
 import json
-from unittest.mock import patch
 
 from openlobby.core.auth import create_access_token
 from openlobby.core.models import User, Report
@@ -108,3 +107,34 @@ def test_full_report(client, snapshot):
     assert report.our_participants == our_participants
     assert report.other_participants == other_participants
     assert report.extra is None
+
+
+def test_input_sanitization(client):
+    query = """
+    mutation newReport ($input: NewReportInput!) {
+        newReport (input: $input) {
+            report {
+                id
+            }
+        }
+    }
+    """
+    input = {
+        'title': '<s>No</s> tags',
+        'body': 'some <a href="http://foo">link</a> <br>in body',
+        'receivedBenefit': '<b>coffee</b>',
+        'providedBenefit': '<li>tea',
+        'ourParticipants': 'me, <u>myself</u>',
+        'otherParticipants': '<strong>you!</strong>',
+        'date': arrow.utcnow().isoformat(),
+    }
+
+    call_api(client, query, input, 'wolfe')
+
+    report = Report.objects.get()
+    assert report.title == 'No tags'
+    assert report.body == 'some link in body'
+    assert report.received_benefit == 'coffee'
+    assert report.provided_benefit == 'tea'
+    assert report.our_participants == 'me, myself'
+    assert report.other_participants == 'you!'
