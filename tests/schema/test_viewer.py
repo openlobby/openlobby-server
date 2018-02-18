@@ -10,7 +10,8 @@ pytestmark = pytest.mark.django_db
 @pytest.fixture(autouse=True)
 def setup():
     User.objects.create(id=1, is_author=True, username='wolfe', openid_uid='TheWolf',
-        first_name='Winston', last_name='Wolfe', email='winston@wolfe.com')
+        first_name='Winston', last_name='Wolfe', email='winston@wolfe.com',
+        extra={'caliber': 45})
 
 
 def test_unauthenticated(client, snapshot):
@@ -35,6 +36,8 @@ def test_authenticated(client, snapshot):
             lastName
             email
             openidUid
+            isAuthor
+            extra
         }
     }
     """}, HTTP_AUTHORIZATION=auth_header)

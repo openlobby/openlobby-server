@@ -87,6 +87,8 @@ class User(graphene.ObjectType):
     first_name = graphene.String()
     last_name = graphene.String()
     email = graphene.String()
+    is_author = graphene.Boolean()
+    extra = JSONString()
 
     class Meta:
         interfaces = (relay.Node, )
@@ -99,6 +101,8 @@ class User(graphene.ObjectType):
             first_name=user.first_name,
             last_name=user.last_name,
             email=user.email,
+            is_author=user.is_author,
+            extra=user.extra,
         )
 
     @classmethod
@@ -113,7 +117,6 @@ class User(graphene.ObjectType):
 class Author(graphene.ObjectType):
     first_name = graphene.String()
     last_name = graphene.String()
-    openid_uid = graphene.String()
     extra = JSONString()
     reports = relay.ConnectionField(ReportConnection)
 
@@ -126,7 +129,6 @@ class Author(graphene.ObjectType):
             id=user.id,
             first_name=user.first_name,
             last_name=user.last_name,
-            openid_uid=user.openid_uid,
             extra=user.extra,
         )
 

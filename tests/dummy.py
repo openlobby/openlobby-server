@@ -7,7 +7,6 @@ authors = [
     {
         'id': 1,
         'username': 'Wolf',
-        'openid_uid': 'Wolf',
         'first_name': 'Winston',
         'last_name': 'Wolfe',
         'is_author': True,
@@ -16,7 +15,6 @@ authors = [
     {
         'id': 2,
         'username': 'sponge',
-        'openid_uid': 'sponge',
         'first_name': 'Spongebob',
         'last_name': 'Squarepants',
         'is_author': True,
@@ -24,7 +22,6 @@ authors = [
     {
         'id': 3,
         'username': 'shaun',
-        'openid_uid': 'shaun',
         'first_name': 'Shaun',
         'last_name': 'Sheep',
         'is_author': True,

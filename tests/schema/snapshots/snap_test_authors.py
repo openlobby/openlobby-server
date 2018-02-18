@@ -17,8 +17,7 @@ snapshots['test_all 1'] = {
                         'extra': '{"movies": 1}',
                         'firstName': 'Winston',
                         'id': 'QXV0aG9yOjE=',
-                        'lastName': 'Wolfe',
-                        'openidUid': 'Wolf'
+                        'lastName': 'Wolfe'
                     }
                 },
                 {
@@ -27,8 +26,7 @@ snapshots['test_all 1'] = {
                         'extra': None,
                         'firstName': 'Spongebob',
                         'id': 'QXV0aG9yOjI=',
-                        'lastName': 'Squarepants',
-                        'openidUid': 'sponge'
+                        'lastName': 'Squarepants'
                     }
                 },
                 {
@@ -37,8 +35,7 @@ snapshots['test_all 1'] = {
                         'extra': None,
                         'firstName': 'Shaun',
                         'id': 'QXV0aG9yOjM=',
-                        'lastName': 'Sheep',
-                        'openidUid': 'shaun'
+                        'lastName': 'Sheep'
                     }
                 }
             ],
@@ -60,13 +57,17 @@ snapshots['test_first 1'] = {
                 {
                     'cursor': 'MQ==',
                     'node': {
-                        'openidUid': 'Wolf'
+                        'firstName': 'Winston',
+                        'id': 'QXV0aG9yOjE=',
+                        'lastName': 'Wolfe'
                     }
                 },
                 {
                     'cursor': 'Mg==',
                     'node': {
-                        'openidUid': 'sponge'
+                        'firstName': 'Spongebob',
+                        'id': 'QXV0aG9yOjI=',
+                        'lastName': 'Squarepants'
                     }
                 }
             ],
@@ -88,7 +89,9 @@ snapshots['test_first_after 1'] = {
                 {
                     'cursor': 'Mg==',
                     'node': {
-                        'openidUid': 'sponge'
+                        'firstName': 'Spongebob',
+                        'id': 'QXV0aG9yOjI=',
+                        'lastName': 'Squarepants'
                     }
                 }
             ],
@@ -127,7 +130,9 @@ snapshots['test_last_before 1'] = {
                 {
                     'cursor': 'Mg==',
                     'node': {
-                        'openidUid': 'sponge'
+                        'firstName': 'Spongebob',
+                        'id': 'QXV0aG9yOjI=',
+                        'lastName': 'Squarepants'
                     }
                 }
             ],

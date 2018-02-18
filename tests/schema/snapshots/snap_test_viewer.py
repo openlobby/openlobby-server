@@ -17,8 +17,10 @@ snapshots['test_authenticated 1'] = {
     'data': {
         'viewer': {
             'email': 'winston@wolfe.com',
+            'extra': '{"caliber": 45}',
             'firstName': 'Winston',
             'id': 'VXNlcjox',
+            'isAuthor': True,
             'lastName': 'Wolfe',
             'openidUid': 'TheWolf'
         }

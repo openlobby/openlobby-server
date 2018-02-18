@@ -21,7 +21,6 @@ def test_all(client, snapshot):
                     id
                     firstName
                     lastName
-                    openidUid
                     extra
                 }
             }
@@ -46,7 +45,9 @@ def test_first(client, snapshot):
             edges {
                 cursor
                 node {
-                    openidUid
+                    id
+                    firstName
+                    lastName
                 }
             }
             pageInfo {
@@ -70,7 +71,9 @@ def test_first_after(client, snapshot):
             edges {
                 cursor
                 node {
-                    openidUid
+                    id
+                    firstName
+                    lastName
                 }
             }
             pageInfo {
@@ -94,7 +97,9 @@ def test_last(client, snapshot):
             edges {
                 cursor
                 node {
-                    openidUid
+                    id
+                    firstName
+                    lastName
                 }
             }
             pageInfo {
@@ -118,7 +123,9 @@ def test_last_before(client, snapshot):
             edges {
                 cursor
                 node {
-                    openidUid
+                    id
+                    firstName
+                    lastName
                 }
             }
             pageInfo {

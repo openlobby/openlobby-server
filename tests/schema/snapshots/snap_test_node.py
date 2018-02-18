@@ -22,8 +22,7 @@ snapshots['test_author 1'] = {
             'extra': '{"x": 1}',
             'firstName': 'Winston',
             'id': 'QXV0aG9yOjU=',
-            'lastName': 'Wolfe',
-            'openidUid': 'TheWolf'
+            'lastName': 'Wolfe'
         }
     }
 }
@@ -72,8 +71,10 @@ snapshots['test_user__not_a_viewer 1'] = {
 snapshots['test_user 1'] = {
     'data': {
         'node': {
+            'extra': '{"e": "mc2"}',
             'firstName': 'Albert',
             'id': 'VXNlcjo4',
+            'isAuthor': False,
             'lastName': 'Einstein',
             'openidUid': 'albert@einstein.id'
         }

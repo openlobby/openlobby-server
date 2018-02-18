@@ -41,7 +41,6 @@ def test_author(client, snapshot):
                 id
                 firstName
                 lastName
-                openidUid
                 extra
             }}
         }}
@@ -95,7 +94,7 @@ def test_report(client, snapshot):
 
 def test_user__unauthorized(client, snapshot):
     User.objects.create(id=8, username='albert', openid_uid='albert@einstein.id',
-        first_name='Albert', last_name='Einstein')
+        first_name='Albert', last_name='Einstein', extra={'e': 'mc2'})
     res = client.post('/graphql', {'query': """
     query {{
         node (id:"{id}") {{
@@ -104,6 +103,8 @@ def test_user__unauthorized(client, snapshot):
                 firstName
                 lastName
                 openidUid
+                isAuthor
+                extra
             }}
         }}
     }}
@@ -113,9 +114,9 @@ def test_user__unauthorized(client, snapshot):
 
 def test_user__not_a_viewer(client, snapshot):
     User.objects.create(id=8, username='albert', openid_uid='albert@einstein.id',
-        first_name='Albert', last_name='Einstein')
+        first_name='Albert', last_name='Einstein', extra={'e': 'mc2'})
     User.objects.create(id=2, username='isaac', openid_uid='isaac@newton.id',
-        first_name='Isaac', last_name='Newton')
+        first_name='Isaac', last_name='Newton', extra={'apple': 'hit'})
     auth_header = 'Bearer {}'.format(create_access_token('isaac'))
     res = client.post('/graphql', {'query': """
     query {{
@@ -125,6 +126,8 @@ def test_user__not_a_viewer(client, snapshot):
                 firstName
                 lastName
                 openidUid
+                isAuthor
+                extra
             }}
         }}
     }}
@@ -134,7 +137,7 @@ def test_user__not_a_viewer(client, snapshot):
 
 def test_user(client, snapshot):
     User.objects.create(id=8, username='albert', openid_uid='albert@einstein.id',
-        first_name='Albert', last_name='Einstein')
+            first_name='Albert', last_name='Einstein', extra={'e': 'mc2'})
     auth_header = 'Bearer {}'.format(create_access_token('albert'))
     res = client.post('/graphql', {'query': """
     query {{
@@ -144,6 +147,8 @@ def test_user(client, snapshot):
                 firstName
                 lastName
                 openidUid
+                isAuthor
+                extra
             }}
         }}
     }}

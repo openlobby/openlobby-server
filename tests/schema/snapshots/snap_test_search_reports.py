@@ -36,7 +36,7 @@ snapshots['test_all 1'] = {
                     'cursor': 'Mg==',
                     'node': {
                         'author': {
-                            'extra': None,
+                            'extra': '{"movies": 1}',
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
                             'lastName': 'Wolfe'
@@ -57,7 +57,7 @@ snapshots['test_all 1'] = {
                     'cursor': 'Mw==',
                     'node': {
                         'author': {
-                            'extra': None,
+                            'extra': '{"movies": 1}',
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
                             'lastName': 'Wolfe'
@@ -125,7 +125,7 @@ snapshots['test_highlight 1'] = {
                     'cursor': 'MQ==',
                     'node': {
                         'author': {
-                            'extra': None,
+                            'extra': '{"movies": 1}',
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
                             'lastName': 'Wolfe'
@@ -146,7 +146,7 @@ snapshots['test_highlight 1'] = {
                     'cursor': 'Mg==',
                     'node': {
                         'author': {
-                            'extra': None,
+                            'extra': '{"movies": 1}',
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
                             'lastName': 'Wolfe'
