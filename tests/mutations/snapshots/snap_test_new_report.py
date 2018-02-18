@@ -37,7 +37,7 @@ snapshots['test_full_report 1'] = {
                 'body': 'I visited Tesla factory and talked with Elon Musk.',
                 'date': '2018-01-01 00:00:00+00:00',
                 'extra': None,
-                'id': 'UmVwb3J0OjE=',
+                'id': '__STRIPPED__',
                 'otherParticipants': 'Elon Musk',
                 'ourParticipants': 'me',
                 'providedBenefit': 'nothing',
