@@ -1,6 +1,7 @@
 import pytest
 from graphql_relay import to_global_id
 
+from openlobby.core.auth import create_access_token
 from openlobby.core.models import OpenIdClient, User
 
 from ..dummy import prepare_report
@@ -89,4 +90,62 @@ def test_report(client, snapshot):
         }}
     }}
     """.format(id=to_global_id('Report', 1))})
+    snapshot.assert_match(res.json())
+
+
+def test_user__unauthorized(client, snapshot):
+    User.objects.create(id=8, username='albert', openid_uid='albert@einstein.id',
+        first_name='Albert', last_name='Einstein')
+    res = client.post('/graphql', {'query': """
+    query {{
+        node (id:"{id}") {{
+            ... on User {{
+                id
+                firstName
+                lastName
+                openidUid
+            }}
+        }}
+    }}
+    """.format(id=to_global_id('User', 8))})
+    snapshot.assert_match(res.json())
+
+
+def test_user__not_a_viewer(client, snapshot):
+    User.objects.create(id=8, username='albert', openid_uid='albert@einstein.id',
+        first_name='Albert', last_name='Einstein')
+    User.objects.create(id=2, username='isaac', openid_uid='isaac@newton.id',
+        first_name='Isaac', last_name='Newton')
+    auth_header = 'Bearer {}'.format(create_access_token('isaac'))
+    res = client.post('/graphql', {'query': """
+    query {{
+        node (id:"{id}") {{
+            ... on User {{
+                id
+                firstName
+                lastName
+                openidUid
+            }}
+        }}
+    }}
+    """.format(id=to_global_id('User', 8))}, HTTP_AUTHORIZATION=auth_header)
+    snapshot.assert_match(res.json())
+
+
+def test_user(client, snapshot):
+    User.objects.create(id=8, username='albert', openid_uid='albert@einstein.id',
+        first_name='Albert', last_name='Einstein')
+    auth_header = 'Bearer {}'.format(create_access_token('albert'))
+    res = client.post('/graphql', {'query': """
+    query {{
+        node (id:"{id}") {{
+            ... on User {{
+                id
+                firstName
+                lastName
+                openidUid
+            }}
+        }}
+    }}
+    """.format(id=to_global_id('User', 8))}, HTTP_AUTHORIZATION=auth_header)
     snapshot.assert_match(res.json())

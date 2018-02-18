@@ -94,7 +94,6 @@ class Logout(relay.ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
-        # TODO
         raise NotImplementedError()
         return Logout(success=True)
 
@@ -136,5 +135,6 @@ class NewReport(relay.ClientIDMutation):
 class Mutation:
     login = Login.Field()
     login_by_shortcut = LoginByShortcut.Field()
-    logout = Logout.Field()
+    # TODO
+    # logout = Logout.Field()
     new_report = NewReport.Field()

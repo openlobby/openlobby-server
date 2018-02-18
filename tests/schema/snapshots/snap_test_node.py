@@ -56,3 +56,26 @@ snapshots['test_report 1'] = {
         }
     }
 }
+
+snapshots['test_user__unauthorized 1'] = {
+    'data': {
+        'node': None
+    }
+}
+
+snapshots['test_user__not_a_viewer 1'] = {
+    'data': {
+        'node': None
+    }
+}
+
+snapshots['test_user 1'] = {
+    'data': {
+        'node': {
+            'firstName': 'Albert',
+            'id': 'VXNlcjo4',
+            'lastName': 'Einstein',
+            'openidUid': 'albert@einstein.id'
+        }
+    }
+}

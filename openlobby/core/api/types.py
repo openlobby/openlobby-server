@@ -103,11 +103,11 @@ class User(graphene.ObjectType):
 
     @classmethod
     def get_node(cls, info, id):
-        # TODO return only viewer
-        try:
-            return cls.from_db(models.User.objects.get(id=id))
-        except models.User.DoesNotExist:
+        if not info.context.user.is_authenticated:
             return None
+        if int(id) != info.context.user.id:
+            return None
+        return cls.from_db(info.context.user)
 
 
 class Author(graphene.ObjectType):
