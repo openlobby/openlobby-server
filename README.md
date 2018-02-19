@@ -26,6 +26,16 @@ Configuration is done by environment variables:
  - `ELASTICSEARCH_DSN` - DSN of Elasticsearch cluster (default: `http://localhost:9200`)
  - `SITE_NAME` - site name for OpenID authentication (default: `Open Lobby`)
  - `ES_INDEX` - Elasticsearch indices prefix (default: `openlobby`)
+ - `REDIRECT_URI` - redirect URI used in OpenID Connect authentication (default: `http://localhost:8010/login-redirect`)
+     - put there address where you run server, but keep there `/login-redirect`
+     - this is the Redirect URI for static client registration at OpenID Provider
+
+### Login shortcuts aka preregistered OpenID Clients
+
+Some OpenID Providers does not allow dynamic client registration. You can still
+use them. Register client with `REDIRECT_URI` and save client's credentials into
+database. You can do it in admin interface running at `/admin`. It's standard
+Django admin (create superuser for yourself like `./manage.py createsuperuser`).
 
 ## Docker
 
@@ -41,7 +51,7 @@ Demo of Open Lobby with instructions is in repository
 
 ## Local run and development
 
-### Prrequisites
+### Prerequisites
 
 You need to have Python 3 installed.
 
