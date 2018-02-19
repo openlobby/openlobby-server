@@ -41,6 +41,7 @@ def test_author(client, snapshot):
                 id
                 firstName
                 lastName
+                totalReports
                 extra
             }}
         }}
@@ -83,6 +84,7 @@ def test_report(client, snapshot):
                     id
                     firstName
                     lastName
+                    totalReports
                     extra
                 }}
             }}

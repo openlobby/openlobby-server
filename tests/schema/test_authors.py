@@ -21,6 +21,7 @@ def test_all(client, snapshot):
                     id
                     firstName
                     lastName
+                    totalReports
                     extra
                 }
             }
@@ -48,6 +49,8 @@ def test_first(client, snapshot):
                     id
                     firstName
                     lastName
+                    totalReports
+                    extra
                 }
             }
             pageInfo {
@@ -74,6 +77,8 @@ def test_first_after(client, snapshot):
                     id
                     firstName
                     lastName
+                    totalReports
+                    extra
                 }
             }
             pageInfo {
@@ -100,6 +105,8 @@ def test_last(client, snapshot):
                     id
                     firstName
                     lastName
+                    totalReports
+                    extra
                 }
             }
             pageInfo {
@@ -126,6 +133,8 @@ def test_last_before(client, snapshot):
                     id
                     firstName
                     lastName
+                    totalReports
+                    extra
                 }
             }
             pageInfo {
@@ -150,6 +159,8 @@ def test_with_reports(client, snapshot):
                     id
                     firstName
                     lastName
+                    totalReports
+                    extra
                     reports {
                         totalCount
                         edges {

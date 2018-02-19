@@ -1,5 +1,6 @@
 import graphene
 from graphene import relay
+from django.db.models import Count
 
 from . import types
 from ..models import OpenIdClient
@@ -24,8 +25,8 @@ class SearchReportsConnection(relay.Connection):
 
 
 def _get_authors_cache(ids):
-    users = User.objects.filter(id__in=ids)
-    return {u.id: types.User.from_db(u) for u in users}
+    authors = User.objects.filter(id__in=ids).annotate(total_reports=Count('report'))
+    return {a.id: types.Author.from_db(a) for a in authors}
 
 
 class Query:
@@ -53,7 +54,10 @@ class Query:
         paginator = Paginator(**kwargs)
 
         total = User.objects.filter(is_author=True).count()
-        authors = User.objects.filter(is_author=True)[paginator.slice_from:paginator.slice_to]
+        authors = User.objects.filter(is_author=True)\
+            .annotate(total_reports=Count('report'))\
+            .order_by('last_name', 'first_name')[
+            paginator.slice_from:paginator.slice_to]
 
         page_info = paginator.get_page_info(total)
 

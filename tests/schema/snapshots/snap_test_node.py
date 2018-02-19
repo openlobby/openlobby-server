@@ -22,7 +22,8 @@ snapshots['test_author 1'] = {
             'extra': '{"x": 1}',
             'firstName': 'Winston',
             'id': 'QXV0aG9yOjU=',
-            'lastName': 'Wolfe'
+            'lastName': 'Wolfe',
+            'totalReports': 0
         }
     }
 }
@@ -40,7 +41,8 @@ snapshots['test_report 1'] = {
                 'extra': '{"movies": 1}',
                 'firstName': 'Winston',
                 'id': 'QXV0aG9yOjE=',
-                'lastName': 'Wolfe'
+                'lastName': 'Wolfe',
+                'totalReports': 1
             },
             'body': 'Long story short: we got the Ring!',
             'date': '2018-01-01 00:00:00+00:00',

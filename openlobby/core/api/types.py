@@ -1,3 +1,4 @@
+from django.db.models import Count
 from elasticsearch import NotFoundError
 import graphene
 from graphene import relay
@@ -117,6 +118,7 @@ class User(graphene.ObjectType):
 class Author(graphene.ObjectType):
     first_name = graphene.String()
     last_name = graphene.String()
+    total_reports = graphene.Int()
     extra = JSONString()
     reports = relay.ConnectionField(ReportConnection)
 
@@ -130,12 +132,15 @@ class Author(graphene.ObjectType):
             first_name=user.first_name,
             last_name=user.last_name,
             extra=user.extra,
+            total_reports=user.total_reports,
         )
 
     @classmethod
     def get_node(cls, info, id):
         try:
-            return cls.from_db(models.User.objects.get(id=id, is_author=True))
+            author = models.User.objects.annotate(total_reports=Count('report'))\
+                .get(id=id, is_author=True)
+            return cls.from_db(author)
         except models.User.DoesNotExist:
             return None
 

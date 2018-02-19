@@ -18,7 +18,8 @@ snapshots['test_all 1'] = {
                             'extra': None,
                             'firstName': 'Spongebob',
                             'id': 'QXV0aG9yOjI=',
-                            'lastName': 'Squarepants'
+                            'lastName': 'Squarepants',
+                            'totalReports': 1
                         },
                         'body': 'Another long story.',
                         'date': '2018-01-05 00:00:00+00:00',
@@ -39,7 +40,8 @@ snapshots['test_all 1'] = {
                             'extra': '{"movies": 1}',
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
-                            'lastName': 'Wolfe'
+                            'lastName': 'Wolfe',
+                            'totalReports': 2
                         },
                         'body': 'Aragorn is the King. And we have lost the Ring.',
                         'date': '2018-01-07 00:00:00+00:00',
@@ -60,7 +62,8 @@ snapshots['test_all 1'] = {
                             'extra': '{"movies": 1}',
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
-                            'lastName': 'Wolfe'
+                            'lastName': 'Wolfe',
+                            'totalReports': 2
                         },
                         'body': 'Long story short: we got the Ring!',
                         'date': '2018-01-01 00:00:00+00:00',
@@ -97,7 +100,8 @@ snapshots['test_query 1'] = {
                             'extra': None,
                             'firstName': 'Spongebob',
                             'id': 'QXV0aG9yOjI=',
-                            'lastName': 'Squarepants'
+                            'lastName': 'Squarepants',
+                            'totalReports': 1
                         },
                         'body': 'Another long story.',
                         'date': '2018-01-05 00:00:00+00:00',
@@ -128,7 +132,8 @@ snapshots['test_highlight 1'] = {
                             'extra': '{"movies": 1}',
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
-                            'lastName': 'Wolfe'
+                            'lastName': 'Wolfe',
+                            'totalReports': 2
                         },
                         'body': 'Aragorn is the King. And we have lost the <mark>Ring</mark>.',
                         'date': '2018-01-07 00:00:00+00:00',
@@ -149,7 +154,8 @@ snapshots['test_highlight 1'] = {
                             'extra': '{"movies": 1}',
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
-                            'lastName': 'Wolfe'
+                            'lastName': 'Wolfe',
+                            'totalReports': 2
                         },
                         'body': 'Long story short: we got the <mark>Ring</mark>!',
                         'date': '2018-01-01 00:00:00+00:00',

@@ -29,6 +29,7 @@ def test_all(client, snapshot):
                         id
                         firstName
                         lastName
+                        totalReports
                         extra
                     }
                 }
@@ -68,6 +69,7 @@ def test_query(client, snapshot):
                         id
                         firstName
                         lastName
+                        totalReports
                         extra
                     }
                 }
@@ -101,6 +103,7 @@ def test_highlight(client, snapshot):
                         id
                         firstName
                         lastName
+                        totalReports
                         extra
                     }
                 }

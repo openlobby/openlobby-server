@@ -14,10 +14,11 @@ snapshots['test_all 1'] = {
                 {
                     'cursor': 'MQ==',
                     'node': {
-                        'extra': '{"movies": 1}',
-                        'firstName': 'Winston',
-                        'id': 'QXV0aG9yOjE=',
-                        'lastName': 'Wolfe'
+                        'extra': None,
+                        'firstName': 'Shaun',
+                        'id': 'QXV0aG9yOjM=',
+                        'lastName': 'Sheep',
+                        'totalReports': 0
                     }
                 },
                 {
@@ -26,16 +27,18 @@ snapshots['test_all 1'] = {
                         'extra': None,
                         'firstName': 'Spongebob',
                         'id': 'QXV0aG9yOjI=',
-                        'lastName': 'Squarepants'
+                        'lastName': 'Squarepants',
+                        'totalReports': 0
                     }
                 },
                 {
                     'cursor': 'Mw==',
                     'node': {
-                        'extra': None,
-                        'firstName': 'Shaun',
-                        'id': 'QXV0aG9yOjM=',
-                        'lastName': 'Sheep'
+                        'extra': '{"movies": 1}',
+                        'firstName': 'Winston',
+                        'id': 'QXV0aG9yOjE=',
+                        'lastName': 'Wolfe',
+                        'totalReports': 0
                     }
                 }
             ],
@@ -57,17 +60,21 @@ snapshots['test_first 1'] = {
                 {
                     'cursor': 'MQ==',
                     'node': {
-                        'firstName': 'Winston',
-                        'id': 'QXV0aG9yOjE=',
-                        'lastName': 'Wolfe'
+                        'extra': None,
+                        'firstName': 'Shaun',
+                        'id': 'QXV0aG9yOjM=',
+                        'lastName': 'Sheep',
+                        'totalReports': 0
                     }
                 },
                 {
                     'cursor': 'Mg==',
                     'node': {
+                        'extra': None,
                         'firstName': 'Spongebob',
                         'id': 'QXV0aG9yOjI=',
-                        'lastName': 'Squarepants'
+                        'lastName': 'Squarepants',
+                        'totalReports': 0
                     }
                 }
             ],
@@ -89,9 +96,11 @@ snapshots['test_first_after 1'] = {
                 {
                     'cursor': 'Mg==',
                     'node': {
+                        'extra': None,
                         'firstName': 'Spongebob',
                         'id': 'QXV0aG9yOjI=',
-                        'lastName': 'Squarepants'
+                        'lastName': 'Squarepants',
+                        'totalReports': 0
                     }
                 }
             ],
@@ -130,9 +139,11 @@ snapshots['test_last_before 1'] = {
                 {
                     'cursor': 'Mg==',
                     'node': {
+                        'extra': None,
                         'firstName': 'Spongebob',
                         'id': 'QXV0aG9yOjI=',
-                        'lastName': 'Squarepants'
+                        'lastName': 'Squarepants',
+                        'totalReports': 0
                     }
                 }
             ],
@@ -153,6 +164,7 @@ snapshots['test_with_reports 1'] = {
             'edges': [
                 {
                     'node': {
+                        'extra': '{"movies": 1}',
                         'firstName': 'Winston',
                         'id': 'QXV0aG9yOjE=',
                         'lastName': 'Wolfe',
@@ -175,7 +187,8 @@ snapshots['test_with_reports 1'] = {
                                 }
                             ],
                             'totalCount': 1
-                        }
+                        },
+                        'totalReports': 1
                     }
                 }
             ]
