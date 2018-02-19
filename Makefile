@@ -10,6 +10,7 @@ run:
 
 migrate:
 	DEBUG=1 python manage.py migrate
+	DEBUG=1 python manage.py search_index --rebuild -f
 
 build:
 	docker build -t openlobby/openlobby-server:latest .

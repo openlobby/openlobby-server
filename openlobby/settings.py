@@ -141,7 +141,7 @@ GRAPHENE = {
 ###############################################################################
 # Custom settings
 
-# Elasticsearch index
+# Elasticsearch index with reports
 ES_INDEX = os.environ.get('ES_INDEX', 'openlobby')
 
 # default analyzer for text fields

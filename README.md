@@ -25,7 +25,7 @@ Configuration is done by environment variables:
  - `DATABASE_DSN` - DSN of PostgreSQL database (default: `postgresql://db:db@localhost:5432/openlobby`)
  - `ELASTICSEARCH_DSN` - DSN of Elasticsearch cluster (default: `http://localhost:9200`)
  - `SITE_NAME` - site name for OpenID authentication (default: `Open Lobby`)
- - `ES_INDEX` - Elasticsearch index (default: `openlobby`)
+ - `ES_INDEX` - Elasticsearch indices prefix (default: `openlobby`)
 
 ## Docker
 
@@ -41,12 +41,27 @@ Demo of Open Lobby with instructions is in repository
 
 ## Local run and development
 
-You need to have Python 3 installed. Clone this repository and run:
+### Prrequisites
+
+You need to have Python 3 installed.
+
+Run PostgreSQL database on `localhost:5432` with user `db`, password `db` and
+database `openlobby`. You can provide different address in environment variable
+`DATABASE_DSN`.
+
+Run Elasticsearch server
+[openlobby/openlobby-es-czech](https://github.com/openlobby/openlobby-es-czech) 
+on `http://localhost:9200`. You can provide different address in environment
+variable `ELASTICSEARCH_DSN`.
+
+### Local run
+
+Clone this repository and run:
 
 1. `make init-env` - prepares Python virtualenv in dir `.env`
 2. `source .env/bin/activate` - activates virtualenv
 3. `make install` - installs requirements and server in development mode
-4. `make migrate` - runs database migrations
+4. `make migrate` - runs database migrations and rebuilds Elasticsearch index
 5. `make run` - runs development server on port `8010`
 
 Now you can use GraphQL API endpoint and GraphiQL web interface at
@@ -54,16 +69,18 @@ Now you can use GraphQL API endpoint and GraphiQL web interface at
 
 Next time you can just do steps 2 and 5.
 
-Development server assumes that you have
-[openlobby/openlobby-es-czech](https://github.com/openlobby/openlobby-es-czech).
-running on `http://localhost:9200`. You can override this address in environment
-variable `ELASTICSEARCH_DSN`. E.g.
-`ELASTICSEARCH_DSN=http://my-server:9200 make run`
-
 ### Testing
 
 Run: `pytest`
 
-Expects Elasticsearch for tests running on `localhost:9200` (can be override by
-environment variable `ELASTICSEARCH_DSN`). Tests creates random indices with
-prefix `test_` and deletes all indices matching `test_*` on teardown.
+For full test suite run you have to provide OpenID Provider issuer URL which
+allows client registration. For example you can run Keycloak sever locally:
+`docker run -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=pass -p 8080:8080 --rm jboss/keycloak`
+
+Login into Keycloak admin console `http://localhost:8080/auth/admin/`
+(as admin/pass) and go to Realm Settings -> Client Registration -> Client 
+Registration Policies -> Trusted Hosts. There add `localhost` to "Trusted 
+Hosts", turn off "Host Sending Client Registration Request Must Match" and save
+it.
+
+Now run: `pytest --issuer=http://localhost:8080/auth/realms/master`
