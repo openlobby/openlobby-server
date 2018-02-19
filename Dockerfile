@@ -9,5 +9,4 @@ ADD . /code/
 
 EXPOSE 8010
 
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8010", "--access-logfile", "-", \
-     "--error-logfile", "-", "--capture-output", "openlobby.server:app"]
+CMD ["sh", "-c", "make migrate && gunicorn -w 4 -b 0.0.0.0:8010 --access-logfile - --error-logfile - --capture-output openlobby.wsgi"]
