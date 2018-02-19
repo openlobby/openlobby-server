@@ -97,5 +97,5 @@ class Query:
             return None
 
     def resolve_login_shortcuts(self, info, **kwargs):
-        clients = OpenIdClient.objects.filter(is_shortcut=True)
+        clients = OpenIdClient.objects.filter(is_shortcut=True).order_by('name')
         return [types.LoginShortcut.from_db(c) for c in clients]
