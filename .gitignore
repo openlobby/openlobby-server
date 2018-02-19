@@ -3,3 +3,5 @@ __pycache__/
 .env
 .cache/
 *.egg-info/
+.coverage
+.pytest_cache/

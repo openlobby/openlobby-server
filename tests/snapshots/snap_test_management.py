@@ -44,59 +44,6 @@ snapshots['test_create_index__check_analysis_settings 1'] = {
 
 snapshots['test_create_index__check_mappings 1'] = {
     'mappings': {
-        'login-attempt': {
-            'properties': {
-                'client_id': {
-                    'type': 'keyword'
-                },
-                'client_secret': {
-                    'type': 'keyword'
-                },
-                'expiration': {
-                    'type': 'integer'
-                },
-                'nonce': {
-                    'type': 'keyword'
-                },
-                'openid_uid': {
-                    'type': 'keyword'
-                },
-                'redirect_uri': {
-                    'type': 'keyword'
-                },
-                'state': {
-                    'type': 'keyword'
-                }
-            }
-        },
-        'open-id-client': {
-            'properties': {
-                'authorization_endpoint': {
-                    'type': 'keyword'
-                },
-                'client_id': {
-                    'type': 'keyword'
-                },
-                'client_secret': {
-                    'type': 'keyword'
-                },
-                'is_shortcut': {
-                    'type': 'boolean'
-                },
-                'issuer': {
-                    'type': 'keyword'
-                },
-                'name_x': {
-                    'type': 'keyword'
-                },
-                'token_endpoint': {
-                    'type': 'keyword'
-                },
-                'userinfo_endpoint': {
-                    'type': 'keyword'
-                }
-            }
-        },
         'report': {
             'properties': {
                 'author_id': {
@@ -169,59 +116,6 @@ snapshots['test_create_index__check_mappings 1'] = {
 
 snapshots['test_init_alias 1'] = {
     'mappings': {
-        'login-attempt': {
-            'properties': {
-                'client_id': {
-                    'type': 'keyword'
-                },
-                'client_secret': {
-                    'type': 'keyword'
-                },
-                'expiration': {
-                    'type': 'integer'
-                },
-                'nonce': {
-                    'type': 'keyword'
-                },
-                'openid_uid': {
-                    'type': 'keyword'
-                },
-                'redirect_uri': {
-                    'type': 'keyword'
-                },
-                'state': {
-                    'type': 'keyword'
-                }
-            }
-        },
-        'open-id-client': {
-            'properties': {
-                'authorization_endpoint': {
-                    'type': 'keyword'
-                },
-                'client_id': {
-                    'type': 'keyword'
-                },
-                'client_secret': {
-                    'type': 'keyword'
-                },
-                'is_shortcut': {
-                    'type': 'boolean'
-                },
-                'issuer': {
-                    'type': 'keyword'
-                },
-                'name_x': {
-                    'type': 'keyword'
-                },
-                'token_endpoint': {
-                    'type': 'keyword'
-                },
-                'userinfo_endpoint': {
-                    'type': 'keyword'
-                }
-            }
-        },
         'report': {
             'properties': {
                 'author_id': {
@@ -294,59 +188,6 @@ snapshots['test_init_alias 1'] = {
 
 snapshots['test_reindex__check_new_index 1'] = {
     'mappings': {
-        'login-attempt': {
-            'properties': {
-                'client_id': {
-                    'type': 'keyword'
-                },
-                'client_secret': {
-                    'type': 'keyword'
-                },
-                'expiration': {
-                    'type': 'integer'
-                },
-                'nonce': {
-                    'type': 'keyword'
-                },
-                'openid_uid': {
-                    'type': 'keyword'
-                },
-                'redirect_uri': {
-                    'type': 'keyword'
-                },
-                'state': {
-                    'type': 'keyword'
-                }
-            }
-        },
-        'open-id-client': {
-            'properties': {
-                'authorization_endpoint': {
-                    'type': 'keyword'
-                },
-                'client_id': {
-                    'type': 'keyword'
-                },
-                'client_secret': {
-                    'type': 'keyword'
-                },
-                'is_shortcut': {
-                    'type': 'boolean'
-                },
-                'issuer': {
-                    'type': 'keyword'
-                },
-                'name_x': {
-                    'type': 'keyword'
-                },
-                'token_endpoint': {
-                    'type': 'keyword'
-                },
-                'userinfo_endpoint': {
-                    'type': 'keyword'
-                }
-            }
-        },
         'report': {
             'properties': {
                 'author_id': {
@@ -419,59 +260,6 @@ snapshots['test_reindex__check_new_index 1'] = {
 
 snapshots['test_init_documents 1'] = {
     'mappings': {
-        'login-attempt': {
-            'properties': {
-                'client_id': {
-                    'type': 'keyword'
-                },
-                'client_secret': {
-                    'type': 'keyword'
-                },
-                'expiration': {
-                    'type': 'integer'
-                },
-                'nonce': {
-                    'type': 'keyword'
-                },
-                'openid_uid': {
-                    'type': 'keyword'
-                },
-                'redirect_uri': {
-                    'type': 'keyword'
-                },
-                'state': {
-                    'type': 'keyword'
-                }
-            }
-        },
-        'open-id-client': {
-            'properties': {
-                'authorization_endpoint': {
-                    'type': 'keyword'
-                },
-                'client_id': {
-                    'type': 'keyword'
-                },
-                'client_secret': {
-                    'type': 'keyword'
-                },
-                'is_shortcut': {
-                    'type': 'boolean'
-                },
-                'issuer': {
-                    'type': 'keyword'
-                },
-                'name_x': {
-                    'type': 'keyword'
-                },
-                'token_endpoint': {
-                    'type': 'keyword'
-                },
-                'userinfo_endpoint': {
-                    'type': 'keyword'
-                }
-            }
-        },
         'report': {
             'properties': {
                 'author_id': {

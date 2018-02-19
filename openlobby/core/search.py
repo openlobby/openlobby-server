@@ -1,4 +1,4 @@
-from .documents import ReportDoc, OpenIdClientDoc
+from .documents import ReportDoc
 
 
 HIGHLIGHT_PARAMS = {
@@ -8,10 +8,10 @@ HIGHLIGHT_PARAMS = {
 }
 
 
-def query_reports(query, paginator, *, es, index, highlight=False):
+def query_reports(query, paginator, *, highlight=False):
     fields = ['title', 'body', 'received_benefit', 'provided_benefit',
         'our_participants', 'other_participants']
-    s = ReportDoc.search(using=es, index=index)
+    s = ReportDoc.search()
     if query != '':
         s = s.query('multi_match', query=query, fields=fields)
     if highlight:
@@ -21,15 +21,9 @@ def query_reports(query, paginator, *, es, index, highlight=False):
     return s.execute()
 
 
-def reports_by_author(author_id, paginator, *, es, index):
-    s = ReportDoc.search(using=es, index=index)
+def reports_by_author(author_id, paginator):
+    s = ReportDoc.search()
     s = s.filter('term', author_id=author_id)
     s = s.sort('-published')
     s = s[paginator.slice_from:paginator.slice_to]
-    return s.execute()
-
-
-def login_shortcuts(*, es, index):
-    s = OpenIdClientDoc.search(using=es, index=index)
-    s = s.filter('term', is_shortcut=True)
     return s.execute()

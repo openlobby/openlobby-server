@@ -3,9 +3,10 @@ import graphene
 from graphene import relay
 from graphene.types.json import JSONString
 
-from .documents import UserDoc, ReportDoc, OpenIdClientDoc
+from ..documents import ReportDoc
+from .. import models
 from .paginator import Paginator
-from . import search
+from .. import search
 
 
 def get_higlighted(hit, field):
@@ -16,7 +17,7 @@ def get_higlighted(hit, field):
 
 
 class Report(graphene.ObjectType):
-    author = graphene.Field(lambda: User)
+    author = graphene.Field(lambda: Author)
     date = graphene.String()
     published = graphene.String()
     title = graphene.String()
@@ -43,13 +44,29 @@ class Report(graphene.ObjectType):
             provided_benefit=get_higlighted(report, 'provided_benefit'),
             our_participants=get_higlighted(report, 'our_participants'),
             other_participants=get_higlighted(report, 'other_participants'),
-            extra=report.extra._d_,
+            extra=report.extra,
+        )
+
+    @classmethod
+    def from_db(cls, report):
+        return cls(
+            id=report.id,
+            author=report.author,
+            date=report.date,
+            published=report.published,
+            title=report.title,
+            body=report.body,
+            received_benefit=report.received_benefit,
+            provided_benefit=report.provided_benefit,
+            our_participants=report.our_participants,
+            other_participants=report.other_participants,
+            extra=report.extra,
         )
 
     @classmethod
     def get_node(cls, info, id):
         try:
-            report = ReportDoc.get(id, using=info.context['es'], index=info.context['index'])
+            report = ReportDoc.get(id)
         except NotFoundError:
             return None
 
@@ -66,9 +83,40 @@ class ReportConnection(relay.Connection):
 
 
 class User(graphene.ObjectType):
-    name = graphene.String()
     openid_uid = graphene.String()
+    first_name = graphene.String()
+    last_name = graphene.String()
     email = graphene.String()
+    is_author = graphene.Boolean()
+    extra = JSONString()
+
+    class Meta:
+        interfaces = (relay.Node, )
+
+    @classmethod
+    def from_db(cls, user):
+        return cls(
+            id=user.id,
+            openid_uid=user.openid_uid,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            email=user.email,
+            is_author=user.is_author,
+            extra=user.extra,
+        )
+
+    @classmethod
+    def get_node(cls, info, id):
+        if not info.context.user.is_authenticated:
+            return None
+        if int(id) != info.context.user.id:
+            return None
+        return cls.from_db(info.context.user)
+
+
+class Author(graphene.ObjectType):
+    first_name = graphene.String()
+    last_name = graphene.String()
     extra = JSONString()
     reports = relay.ConnectionField(ReportConnection)
 
@@ -76,26 +124,24 @@ class User(graphene.ObjectType):
         interfaces = (relay.Node, )
 
     @classmethod
-    def from_es(cls, user):
+    def from_db(cls, user):
         return cls(
-            id=user.meta.id,
-            name=user.name,
-            openid_uid=user.openid_uid,
-            email=user.email,
-            extra=user.extra._d_,
+            id=user.id,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            extra=user.extra,
         )
 
     @classmethod
     def get_node(cls, info, id):
         try:
-            user = UserDoc.get(id, using=info.context['es'], index=info.context['index'])
-        except NotFoundError:
+            return cls.from_db(models.User.objects.get(id=id, is_author=True))
+        except models.User.DoesNotExist:
             return None
-        return cls.from_es(user)
 
     def resolve_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
-        response = search.reports_by_author(self.id, paginator, **info.context)
+        response = search.reports_by_author(self.id, paginator)
         total = response.hits.total
         page_info = paginator.get_page_info(total)
 
@@ -115,16 +161,13 @@ class LoginShortcut(graphene.ObjectType):
         interfaces = (relay.Node, )
 
     @classmethod
-    def from_es(cls, openid_client):
-        return cls(
-            id=openid_client.meta.id,
-            name=openid_client.name_x,
-        )
+    def from_db(cls, openid_client):
+        return cls(id=openid_client.id, name=openid_client.name)
 
     @classmethod
     def get_node(cls, info, id):
         try:
-            openid_client = OpenIdClientDoc.get(id, using=info.context['es'], index=info.context['index'])
-        except NotFoundError:
+            client = models.OpenIdClient.objects.get(id=id)
+            return cls.from_db(client)
+        except models.OpenIdClient.DoesNotExist:
             return None
-        return cls.from_es(openid_client)

@@ -2,11 +2,14 @@ init-env:
 	python3 -m venv .env
 
 install:
-	pip install -r requirements.txt
+	pip install --upgrade -r requirements.txt
 	pip install -e .
 
 run:
-	SECRET_KEY=local FLASK_DEBUG=1 FLASK_APP=./openlobby/server.py flask run -p 8010
+	DEBUG=1 python manage.py runserver 8010
+
+migrate:
+	DEBUG=1 python manage.py migrate
 
 build:
 	docker build -t openlobby/openlobby-server:latest .

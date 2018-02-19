@@ -5,6 +5,10 @@ from graphene.relay import PageInfo
 PER_PAGE = 10
 
 
+class MissingBeforeValueError(Exception):
+    pass
+
+
 def encode_cursor(num):
     return base64.b64encode(str(num).encode('utf-8')).decode('utf-8')
 
@@ -27,8 +31,10 @@ class Paginator:
             slice_to = slice_from + first
 
         elif last is not None:
-            if before is not None:
-                slice_to = decode_cursor(before) - 1
+            if before is None:
+                raise MissingBeforeValueError('Pagination "last" works only in combination with "before" argument.')
+
+            slice_to = decode_cursor(before) - 1
             slice_from = slice_to - last
             if slice_from < 0:
                 slice_from = 0
