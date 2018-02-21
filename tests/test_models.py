@@ -77,27 +77,34 @@ def test_login_attempt__default_expiration():
 
 
 def test_user__no_name_collision():
-    User.objects.create(username='a', first_name='Ryan', last_name='Gosling')
-    User.objects.create(username='b', first_name='Burt', last_name='Reynolds')
-    user = User.objects.create(username='c', first_name='Ryan', last_name='Reynolds')
-    assert user.name_collision_id == 0
+    User.objects.create(username='a', is_author=True, first_name='Ryan', last_name='Gosling')
+    User.objects.create(username='b', is_author=True, first_name='Ryan', last_name='Reynolds')
+    assert User.objects.get(username='a').has_colliding_name is False
+    assert User.objects.get(username='b').has_colliding_name is False
 
 
 def test_user__name_collision():
-    u1 = User.objects.create(username='a', first_name='Ryan', last_name='Gosling')
-    u2 = User.objects.create(username='b', first_name='Ryan', last_name='Gosling')
-    u3 = User.objects.create(username='c', first_name='Ryan', last_name='Gosling')
-    assert u1.name_collision_id == 0
-    assert u2.name_collision_id == 1
-    assert u3.name_collision_id == 2
+    User.objects.create(username='a', is_author=True, first_name='Ryan', last_name='Gosling')
+    User.objects.create(username='b', is_author=True, first_name='Ryan', last_name='Gosling')
+    assert User.objects.get(username='a').has_colliding_name is True
+    assert User.objects.get(username='b').has_colliding_name is True
 
 
-def test_user__name_collision_is_not_updated_for_existing_user():
-    u1 = User.objects.create(username='a', first_name='Ryan', last_name='Reynolds')
-    u2 = User.objects.create(username='b', first_name='Ryan', last_name='Reynolds')
-    assert u1.name_collision_id == 0
-    assert u2.name_collision_id == 1
-    u1.save()
-    u2.save()
-    assert u1.name_collision_id == 0
-    assert u2.name_collision_id == 1
+def test_user__name_collision_affects_only_authors():
+    User.objects.create(username='a', is_author=False, first_name='Ryan', last_name='Gosling')
+    User.objects.create(username='b', is_author=True, first_name='Ryan', last_name='Gosling')
+    User.objects.create(username='c', is_author=False, first_name='Ryan', last_name='Gosling')
+    assert User.objects.get(username='a').has_colliding_name is False
+    assert User.objects.get(username='b').has_colliding_name is False
+    assert User.objects.get(username='c').has_colliding_name is False
+    User.objects.create(username='d', is_author=True, first_name='Ryan', last_name='Gosling')
+    assert User.objects.get(username='a').has_colliding_name is False
+    assert User.objects.get(username='b').has_colliding_name is True
+    assert User.objects.get(username='c').has_colliding_name is False
+    assert User.objects.get(username='d').has_colliding_name is True
+
+
+def test_user__name_collision_excludes_self_on_update():
+    u = User.objects.create(username='a', is_author=True, first_name='Ryan', last_name='Gosling')
+    u.save()
+    assert User.objects.get(username='a').has_colliding_name is False

@@ -13,15 +13,16 @@ class User(AbstractUser):
     openid_uid = models.CharField(max_length=255, null=True)
     extra = JSONField(null=True, blank=True)
     is_author = models.BooleanField(default=False)
-    name_collision_id = models.IntegerField(default=0)
+    has_colliding_name = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         # deal with first name and last name collisions
-        collisions = User.objects.filter(first_name=self.first_name, last_name=self.last_name)\
-            .order_by('-name_collision_id')
-        if len(collisions) > 0 and self not in collisions:
-            self.name_collision_id = collisions[0].name_collision_id + 1
-        # TODO when we allow name change, it should also reset name_collision_id
+        if self.is_author:
+            collisions = User.objects.filter(first_name=self.first_name, last_name=self.last_name,
+                is_author=True).exclude(id=self.id)
+            if collisions.count() > 0:
+                self.has_colliding_name = True
+                collisions.update(has_colliding_name=True)
         super().save(*args, **kwargs)
 
 
@@ -66,4 +67,6 @@ class Report(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        User.objects.filter(id=self.author.id).update(is_author=True)
+        if not self.author.is_author:
+            self.author.is_author = True
+            self.author.save()
