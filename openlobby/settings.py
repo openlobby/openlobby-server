@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
+    'django_extensions',
     'graphene_django',
     'django_elasticsearch_dsl',
     'openlobby.core',
