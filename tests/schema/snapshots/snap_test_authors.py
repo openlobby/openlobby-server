@@ -16,9 +16,9 @@ snapshots['test_all 1'] = {
                     'node': {
                         'extra': None,
                         'firstName': 'Shaun',
+                        'hasCollidingName': False,
                         'id': 'QXV0aG9yOjM=',
                         'lastName': 'Sheep',
-                        'nameCollisionId': 0,
                         'totalReports': 0
                     }
                 },
@@ -27,9 +27,9 @@ snapshots['test_all 1'] = {
                     'node': {
                         'extra': None,
                         'firstName': 'Spongebob',
+                        'hasCollidingName': False,
                         'id': 'QXV0aG9yOjI=',
                         'lastName': 'Squarepants',
-                        'nameCollisionId': 0,
                         'totalReports': 0
                     }
                 },
@@ -38,9 +38,9 @@ snapshots['test_all 1'] = {
                     'node': {
                         'extra': '{"movies": 1}',
                         'firstName': 'Winston',
+                        'hasCollidingName': False,
                         'id': 'QXV0aG9yOjE=',
                         'lastName': 'Wolfe',
-                        'nameCollisionId': 0,
                         'totalReports': 0
                     }
                 }
@@ -65,9 +65,9 @@ snapshots['test_first 1'] = {
                     'node': {
                         'extra': None,
                         'firstName': 'Shaun',
+                        'hasCollidingName': False,
                         'id': 'QXV0aG9yOjM=',
                         'lastName': 'Sheep',
-                        'nameCollisionId': 0,
                         'totalReports': 0
                     }
                 },
@@ -76,9 +76,9 @@ snapshots['test_first 1'] = {
                     'node': {
                         'extra': None,
                         'firstName': 'Spongebob',
+                        'hasCollidingName': False,
                         'id': 'QXV0aG9yOjI=',
                         'lastName': 'Squarepants',
-                        'nameCollisionId': 0,
                         'totalReports': 0
                     }
                 }
@@ -103,9 +103,9 @@ snapshots['test_first_after 1'] = {
                     'node': {
                         'extra': None,
                         'firstName': 'Spongebob',
+                        'hasCollidingName': False,
                         'id': 'QXV0aG9yOjI=',
                         'lastName': 'Squarepants',
-                        'nameCollisionId': 0,
                         'totalReports': 0
                     }
                 }
@@ -147,9 +147,9 @@ snapshots['test_last_before 1'] = {
                     'node': {
                         'extra': None,
                         'firstName': 'Spongebob',
+                        'hasCollidingName': False,
                         'id': 'QXV0aG9yOjI=',
                         'lastName': 'Squarepants',
-                        'nameCollisionId': 0,
                         'totalReports': 0
                     }
                 }
@@ -173,9 +173,9 @@ snapshots['test_with_reports 1'] = {
                     'node': {
                         'extra': '{"movies": 1}',
                         'firstName': 'Winston',
+                        'hasCollidingName': False,
                         'id': 'QXV0aG9yOjE=',
                         'lastName': 'Wolfe',
-                        'nameCollisionId': 0,
                         'reports': {
                             'edges': [
                                 {

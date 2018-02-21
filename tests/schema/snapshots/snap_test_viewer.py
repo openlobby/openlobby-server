@@ -19,10 +19,10 @@ snapshots['test_authenticated 1'] = {
             'email': 'winston@wolfe.com',
             'extra': '{"caliber": 45}',
             'firstName': 'Winston',
+            'hasCollidingName': False,
             'id': 'VXNlcjox',
             'isAuthor': True,
             'lastName': 'Wolfe',
-            'nameCollisionId': 0,
             'openidUid': 'TheWolf'
         }
     }

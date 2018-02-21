@@ -41,7 +41,7 @@ def test_author(client, snapshot):
                 id
                 firstName
                 lastName
-                nameCollisionId
+                hasCollidingName
                 totalReports
                 extra
             }}
@@ -85,7 +85,7 @@ def test_report(client, snapshot):
                     id
                     firstName
                     lastName
-                    nameCollisionId
+                    hasCollidingName
                     totalReports
                     extra
                 }}
@@ -106,7 +106,7 @@ def test_user__unauthorized(client, snapshot):
                 id
                 firstName
                 lastName
-                nameCollisionId
+                hasCollidingName
                 openidUid
                 isAuthor
                 extra
@@ -130,7 +130,7 @@ def test_user__not_a_viewer(client, snapshot):
                 id
                 firstName
                 lastName
-                nameCollisionId
+                hasCollidingName
                 openidUid
                 isAuthor
                 extra
@@ -152,7 +152,7 @@ def test_user(client, snapshot):
                 id
                 firstName
                 lastName
-                nameCollisionId
+                hasCollidingName
                 openidUid
                 isAuthor
                 extra

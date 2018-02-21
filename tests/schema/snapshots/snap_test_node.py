@@ -21,9 +21,9 @@ snapshots['test_author 1'] = {
         'node': {
             'extra': '{"x": 1}',
             'firstName': 'Winston',
+            'hasCollidingName': False,
             'id': 'QXV0aG9yOjU=',
             'lastName': 'Wolfe',
-            'nameCollisionId': 0,
             'totalReports': 0
         }
     }
@@ -41,9 +41,9 @@ snapshots['test_report 1'] = {
             'author': {
                 'extra': '{"movies": 1}',
                 'firstName': 'Winston',
+                'hasCollidingName': False,
                 'id': 'QXV0aG9yOjE=',
                 'lastName': 'Wolfe',
-                'nameCollisionId': 0,
                 'totalReports': 1
             },
             'body': 'Long story short: we got the Ring!',
@@ -77,10 +77,10 @@ snapshots['test_user 1'] = {
         'node': {
             'extra': '{"e": "mc2"}',
             'firstName': 'Albert',
+            'hasCollidingName': False,
             'id': 'VXNlcjo4',
             'isAuthor': False,
             'lastName': 'Einstein',
-            'nameCollisionId': 0,
             'openidUid': 'albert@einstein.id'
         }
     }
