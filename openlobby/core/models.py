@@ -13,6 +13,15 @@ class User(AbstractUser):
     openid_uid = models.CharField(max_length=255, null=True)
     extra = JSONField(null=True, blank=True)
     is_author = models.BooleanField(default=False)
+    name_collision_id = models.IntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        # deal with first name and last name collisions
+        collisions = User.objects.filter(first_name=self.first_name, last_name=self.last_name)\
+            .order_by('-name_collision_id')[:1]
+        if len(collisions) > 0:
+            self.name_collision_id = collisions[0].name_collision_id + 1
+        super().save(*args, **kwargs)
 
 
 class OpenIdClient(models.Model):

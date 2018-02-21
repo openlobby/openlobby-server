@@ -74,3 +74,19 @@ def test_login_attempt__default_expiration():
         attempt = LoginAttempt.objects.create(openid_client=client, state='foo',
             app_redirect_uri='http://openlobby/app')
     assert attempt.expiration == 10000 + settings.LOGIN_ATTEMPT_EXPIRATION
+
+
+def test_user__no_name_collision():
+    User.objects.create(username='a', first_name='Ryan', last_name='Gosling')
+    User.objects.create(username='b', first_name='Burt', last_name='Reynolds')
+    user = User.objects.create(username='c', first_name='Ryan', last_name='Reynolds')
+    assert user.name_collision_id == 0
+
+
+def test_user__name_collision():
+    u1 = User.objects.create(username='a', first_name='Ryan', last_name='Gosling')
+    u2 = User.objects.create(username='b', first_name='Ryan', last_name='Gosling')
+    u3 = User.objects.create(username='c', first_name='Ryan', last_name='Gosling')
+    assert u1.name_collision_id == 0
+    assert u2.name_collision_id == 1
+    assert u3.name_collision_id == 2
