@@ -22,6 +22,7 @@ snapshots['test_authenticated 1'] = {
             'id': 'VXNlcjox',
             'isAuthor': True,
             'lastName': 'Wolfe',
+            'nameCollisionId': 0,
             'openidUid': 'TheWolf'
         }
     }

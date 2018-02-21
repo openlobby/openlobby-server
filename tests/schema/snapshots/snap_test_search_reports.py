@@ -19,6 +19,7 @@ snapshots['test_all 1'] = {
                             'firstName': 'Spongebob',
                             'id': 'QXV0aG9yOjI=',
                             'lastName': 'Squarepants',
+                            'nameCollisionId': 0,
                             'totalReports': 1
                         },
                         'body': 'Another long story.',
@@ -41,6 +42,7 @@ snapshots['test_all 1'] = {
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
                             'lastName': 'Wolfe',
+                            'nameCollisionId': 0,
                             'totalReports': 2
                         },
                         'body': 'Aragorn is the King. And we have lost the Ring.',
@@ -63,6 +65,7 @@ snapshots['test_all 1'] = {
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
                             'lastName': 'Wolfe',
+                            'nameCollisionId': 0,
                             'totalReports': 2
                         },
                         'body': 'Long story short: we got the Ring!',
@@ -101,6 +104,7 @@ snapshots['test_query 1'] = {
                             'firstName': 'Spongebob',
                             'id': 'QXV0aG9yOjI=',
                             'lastName': 'Squarepants',
+                            'nameCollisionId': 0,
                             'totalReports': 1
                         },
                         'body': 'Another long story.',
@@ -133,6 +137,7 @@ snapshots['test_highlight 1'] = {
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
                             'lastName': 'Wolfe',
+                            'nameCollisionId': 0,
                             'totalReports': 2
                         },
                         'body': 'Aragorn is the King. And we have lost the <mark>Ring</mark>.',
@@ -155,6 +160,7 @@ snapshots['test_highlight 1'] = {
                             'firstName': 'Winston',
                             'id': 'QXV0aG9yOjE=',
                             'lastName': 'Wolfe',
+                            'nameCollisionId': 0,
                             'totalReports': 2
                         },
                         'body': 'Long story short: we got the <mark>Ring</mark>!',

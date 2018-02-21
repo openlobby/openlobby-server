@@ -41,6 +41,7 @@ def test_author(client, snapshot):
                 id
                 firstName
                 lastName
+                nameCollisionId
                 totalReports
                 extra
             }}
@@ -84,6 +85,7 @@ def test_report(client, snapshot):
                     id
                     firstName
                     lastName
+                    nameCollisionId
                     totalReports
                     extra
                 }}
@@ -104,6 +106,7 @@ def test_user__unauthorized(client, snapshot):
                 id
                 firstName
                 lastName
+                nameCollisionId
                 openidUid
                 isAuthor
                 extra
@@ -127,6 +130,7 @@ def test_user__not_a_viewer(client, snapshot):
                 id
                 firstName
                 lastName
+                nameCollisionId
                 openidUid
                 isAuthor
                 extra
@@ -148,6 +152,7 @@ def test_user(client, snapshot):
                 id
                 firstName
                 lastName
+                nameCollisionId
                 openidUid
                 isAuthor
                 extra

@@ -34,6 +34,7 @@ def test_authenticated(client, snapshot):
             id
             firstName
             lastName
+            nameCollisionId
             email
             openidUid
             isAuthor

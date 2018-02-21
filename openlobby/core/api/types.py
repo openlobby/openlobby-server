@@ -87,6 +87,7 @@ class User(graphene.ObjectType):
     openid_uid = graphene.String()
     first_name = graphene.String()
     last_name = graphene.String()
+    name_collision_id = graphene.Int()
     email = graphene.String()
     is_author = graphene.Boolean()
     extra = JSONString()
@@ -101,6 +102,7 @@ class User(graphene.ObjectType):
             openid_uid=user.openid_uid,
             first_name=user.first_name,
             last_name=user.last_name,
+            name_collision_id=user.name_collision_id,
             email=user.email,
             is_author=user.is_author,
             extra=user.extra,
@@ -118,6 +120,7 @@ class User(graphene.ObjectType):
 class Author(graphene.ObjectType):
     first_name = graphene.String()
     last_name = graphene.String()
+    name_collision_id = graphene.Int()
     total_reports = graphene.Int()
     extra = JSONString()
     reports = relay.ConnectionField(ReportConnection)
@@ -131,6 +134,7 @@ class Author(graphene.ObjectType):
             id=user.id,
             first_name=user.first_name,
             last_name=user.last_name,
+            name_collision_id=user.name_collision_id,
             extra=user.extra,
             total_reports=user.total_reports,
         )
