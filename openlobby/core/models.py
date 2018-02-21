@@ -18,9 +18,10 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         # deal with first name and last name collisions
         collisions = User.objects.filter(first_name=self.first_name, last_name=self.last_name)\
-            .order_by('-name_collision_id')[:1]
-        if len(collisions) > 0:
+            .order_by('-name_collision_id')
+        if len(collisions) > 0 and self not in collisions:
             self.name_collision_id = collisions[0].name_collision_id + 1
+        # TODO when we allow name change, it should also reset name_collision_id
         super().save(*args, **kwargs)
 
 

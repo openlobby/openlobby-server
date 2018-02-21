@@ -90,3 +90,14 @@ def test_user__name_collision():
     assert u1.name_collision_id == 0
     assert u2.name_collision_id == 1
     assert u3.name_collision_id == 2
+
+
+def test_user__name_collision_is_not_updated_for_existing_user():
+    u1 = User.objects.create(username='a', first_name='Ryan', last_name='Reynolds')
+    u2 = User.objects.create(username='b', first_name='Ryan', last_name='Reynolds')
+    assert u1.name_collision_id == 0
+    assert u2.name_collision_id == 1
+    u1.save()
+    u2.save()
+    assert u1.name_collision_id == 0
+    assert u2.name_collision_id == 1
