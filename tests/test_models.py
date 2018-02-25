@@ -18,6 +18,14 @@ def test_report__marks_user_as_author_on_save():
     assert user.is_author
 
 
+def test_report__marks_user_as_author_on_save__not_if_draft():
+    author = User.objects.create(id=1, is_author=False)
+    date = arrow.get(2018, 1, 1).datetime
+    Report.objects.create(author=author, is_draft=True, date=date, body='Lorem ipsum.')
+    user = User.objects.get(id=1)
+    assert not user.is_author
+
+
 def test_report__is_saved_in_elasticsearch():
     author = User.objects.create(id=6)
     date = arrow.get(2018, 1, 1).datetime
@@ -50,7 +58,7 @@ def test_report__is_saved_in_elasticsearch():
     assert doc.our_participants == 'me'
     assert doc.other_participants == 'them'
     assert doc.extra == {'a': 3}
-    assert doc.is_draft is False
+    assert not doc.is_draft
 
 
 def test_report__save_works_with_no_extra():

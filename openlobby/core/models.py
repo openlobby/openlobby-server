@@ -68,6 +68,6 @@ class Report(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if not self.author.is_author:
+        if not self.is_draft and not self.author.is_author:
             self.author.is_author = True
             self.author.save()
