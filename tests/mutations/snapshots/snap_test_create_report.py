@@ -9,7 +9,7 @@ snapshots = Snapshot()
 
 snapshots['test_unauthorized 1'] = {
     'data': {
-        'newReport': None
+        'createReport': None
     },
     'errors': [
         {
@@ -26,7 +26,7 @@ snapshots['test_unauthorized 1'] = {
 
 snapshots['test_full_report 1'] = {
     'data': {
-        'newReport': {
+        'createReport': {
             'report': {
                 'author': {
                     'extra': None,

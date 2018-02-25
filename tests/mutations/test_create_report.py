@@ -30,8 +30,8 @@ def call_api(client, query, input, username=None):
 
 def test_unauthorized(client, snapshot):
     query = """
-    mutation newReport ($input: NewReportInput!) {
-        newReport (input: $input) {
+    mutation createReport ($input: CreateReportInput!) {
+        createReport (input: $input) {
             report {
                 id
             }
@@ -51,8 +51,8 @@ def test_unauthorized(client, snapshot):
 
 def test_full_report(client, snapshot):
     query = """
-    mutation newReport ($input: NewReportInput!) {
-        newReport (input: $input) {
+    mutation createReport ($input: CreateReportInput!) {
+        createReport (input: $input) {
             report {
                 id
                 date
@@ -95,14 +95,12 @@ def test_full_report(client, snapshot):
 
     # published date is set on save, changing between test runs, so we strip it
     # from snapshot
-    published = response['data']['newReport']['report']['published']
-    response['data']['newReport']['report']['published'] = '__STRIPPED__'
+    published = response['data']['createReport']['report']['published']
+    response['data']['createReport']['report']['published'] = '__STRIPPED__'
 
-    # There is a strange issue with tests, that report get's ID 2 when all tests
-    # are run. Even when the there is just one Report in database. I tried to
-    # debug it, no luck to solve. So I just strip ID from snapshot and check it.
-    id = response['data']['newReport']['report']['id']
-    response['data']['newReport']['report']['id'] = '__STRIPPED__'
+    # strip random ID from snapshot and check it
+    id = response['data']['createReport']['report']['id']
+    response['data']['createReport']['report']['id'] = '__STRIPPED__'
     assert re.match(r'\w+', id)
 
     snapshot.assert_match(response)
@@ -118,12 +116,13 @@ def test_full_report(client, snapshot):
     assert report.our_participants == our_participants
     assert report.other_participants == other_participants
     assert report.extra is None
+    assert report.is_draft is False
 
 
 def test_input_sanitization(client):
     query = """
-    mutation newReport ($input: NewReportInput!) {
-        newReport (input: $input) {
+    mutation createReport ($input: CreateReportInput!) {
+        createReport (input: $input) {
             report {
                 id
             }

@@ -98,7 +98,7 @@ class Logout(relay.ClientIDMutation):
         return Logout(success=True)
 
 
-class NewReport(relay.ClientIDMutation):
+class CreateReport(relay.ClientIDMutation):
 
     class Input:
         title = graphene.String(required=True)
@@ -129,7 +129,7 @@ class NewReport(relay.ClientIDMutation):
             other_participants=strip_all_tags(input.get('other_participants', '')),
         )
 
-        return NewReport(report=types.Report.from_db(report))
+        return CreateReport(report=types.Report.from_db(report))
 
 
 class Mutation:
@@ -137,4 +137,4 @@ class Mutation:
     login_by_shortcut = LoginByShortcut.Field()
     # TODO
     # logout = Logout.Field()
-    new_report = NewReport.Field()
+    create_report = CreateReport.Field()
