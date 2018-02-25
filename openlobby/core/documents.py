@@ -33,4 +33,5 @@ class ReportDoc(DocType):
         fields = [
             'date',
             'published',
+            'is_draft',
         ]

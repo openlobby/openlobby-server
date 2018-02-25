@@ -64,6 +64,7 @@ class Report(models.Model):
     our_participants = models.TextField(null=True, blank=True)
     other_participants = models.TextField(null=True, blank=True)
     extra = JSONField(null=True, blank=True)
+    is_draft = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

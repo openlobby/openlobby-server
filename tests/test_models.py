@@ -34,6 +34,7 @@ def test_report__is_saved_in_elasticsearch():
         our_participants='me',
         other_participants='them',
         extra={'a': 3},
+        is_draft=False,
     )
     docs = list(ReportDoc.search())
     assert len(docs) == 1
@@ -49,6 +50,7 @@ def test_report__is_saved_in_elasticsearch():
     assert doc.our_participants == 'me'
     assert doc.other_participants == 'them'
     assert doc.extra == {'a': 3}
+    assert doc.is_draft is False
 
 
 def test_report__save_works_with_no_extra():
