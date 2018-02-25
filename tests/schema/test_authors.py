@@ -2,14 +2,14 @@ import pytest
 
 from openlobby.core.models import User
 
-from ..dummy import prepare_authors, prepare_report
+from ..dummy import prepare_reports
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 
 
 def test_all(client, snapshot):
-    prepare_authors()
+    prepare_reports()
     User.objects.create(id=4, is_author=False, username='x')
     res = client.post('/graphql', {'query': """
     query {
@@ -39,7 +39,7 @@ def test_all(client, snapshot):
 
 
 def test_first(client, snapshot):
-    prepare_authors()
+    prepare_reports()
     res = client.post('/graphql', {'query': """
     query {
         authors (first: 2) {
@@ -68,7 +68,7 @@ def test_first(client, snapshot):
 
 
 def test_first_after(client, snapshot):
-    prepare_authors()
+    prepare_reports()
     res = client.post('/graphql', {'query': """
     query {
         authors (first: 1, after: "MQ==") {
@@ -97,7 +97,7 @@ def test_first_after(client, snapshot):
 
 
 def test_last(client, snapshot):
-    prepare_authors()
+    prepare_reports()
     res = client.post('/graphql', {'query': """
     query {
         authors (last: 2) {
@@ -126,7 +126,7 @@ def test_last(client, snapshot):
 
 
 def test_last_before(client, snapshot):
-    prepare_authors()
+    prepare_reports()
     res = client.post('/graphql', {'query': """
     query {
         authors (last: 1, before: "Mw==") {
@@ -155,7 +155,7 @@ def test_last_before(client, snapshot):
 
 
 def test_with_reports(client, snapshot):
-    prepare_report()
+    prepare_reports()
     res = client.post('/graphql', {'query': """
     query {
         authors {

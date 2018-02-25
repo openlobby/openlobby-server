@@ -63,6 +63,18 @@ reports = [
         'our_participants': 'Aragorn',
         'other_participants': 'Sauron',
     },
+    {
+        'id': 4,
+        'date': arrow.get(2018, 1, 9).datetime,
+        'published': arrow.get(2018, 1, 11).datetime,
+        'title': 'The Silmarillion',
+        'body': 'Not finished yet.',
+        'received_benefit': '',
+        'provided_benefit': '',
+        'our_participants': '',
+        'other_participants': '',
+        'is_draft': True,
+    },
 ]
 
 
@@ -72,13 +84,5 @@ def prepare_reports():
     Report.objects.create(author=author1, **reports[0])
     Report.objects.create(author=author2, **reports[1])
     Report.objects.create(author=author1, **reports[2])
-
-
-def prepare_report():
-    author = User.objects.create(**authors[0])
-    Report.objects.create(author=author, **reports[0])
-
-
-def prepare_authors():
-    for author in authors:
-        User.objects.create(**author)
+    Report.objects.create(author=author1, **reports[3])
+    User.objects.create(**authors[2])

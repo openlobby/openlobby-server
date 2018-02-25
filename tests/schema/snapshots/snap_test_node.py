@@ -19,12 +19,12 @@ snapshots['test_login_shortcut 1'] = {
 snapshots['test_author 1'] = {
     'data': {
         'node': {
-            'extra': '{"x": 1}',
+            'extra': '{"movies": 1}',
             'firstName': 'Winston',
             'hasCollidingName': False,
-            'id': 'QXV0aG9yOjU=',
+            'id': 'QXV0aG9yOjE=',
             'lastName': 'Wolfe',
-            'totalReports': 0
+            'totalReports': 2
         }
     }
 }
@@ -44,7 +44,7 @@ snapshots['test_report 1'] = {
                 'hasCollidingName': False,
                 'id': 'QXV0aG9yOjE=',
                 'lastName': 'Wolfe',
-                'totalReports': 1
+                'totalReports': 2
             },
             'body': 'Long story short: we got the Ring!',
             'date': '2018-01-01 00:00:00+00:00',
