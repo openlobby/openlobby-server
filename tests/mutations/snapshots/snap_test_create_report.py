@@ -48,3 +48,28 @@ snapshots['test_full_report 1'] = {
         }
     }
 }
+
+snapshots['test_is_draft 1'] = {
+    'data': {
+        'createReport': {
+            'report': {
+                'author': {
+                    'extra': None,
+                    'firstName': 'Winston',
+                    'id': 'QXV0aG9yOjE=',
+                    'lastName': 'Wolfe'
+                },
+                'body': 'Niel deGrasse Tyson just visited me...',
+                'date': '2018-01-03 00:00:00+00:00',
+                'extra': None,
+                'id': '__STRIPPED__',
+                'otherParticipants': 'Neil deGrasse Tyson',
+                'ourParticipants': 'myself',
+                'providedBenefit': 'coffee',
+                'published': '__STRIPPED__',
+                'receivedBenefit': 'touch of the God',
+                'title': 'Visited by old friend'
+            }
+        }
+    }
+}

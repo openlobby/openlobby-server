@@ -148,3 +148,74 @@ def test_input_sanitization(client):
     assert report.provided_benefit == 'tea'
     assert report.our_participants == 'me, myself'
     assert report.other_participants == 'you!'
+
+
+def test_is_draft(client, snapshot):
+    query = """
+    mutation createReport ($input: CreateReportInput!) {
+        createReport (input: $input) {
+            report {
+                id
+                date
+                published
+                title
+                body
+                receivedBenefit
+                providedBenefit
+                ourParticipants
+                otherParticipants
+                extra
+                author {
+                    id
+                    firstName
+                    lastName
+                    extra
+                }
+            }
+        }
+    }
+    """
+    date = arrow.get(2018, 1, 3)
+    title = 'Visited by old friend'
+    body = 'Niel deGrasse Tyson just visited me...'
+    received_benefit = 'touch of the God'
+    provided_benefit = 'coffee'
+    our_participants = 'myself'
+    other_participants = 'Neil deGrasse Tyson'
+    input = {
+        'title': title,
+        'body': body,
+        'receivedBenefit': received_benefit,
+        'providedBenefit': provided_benefit,
+        'ourParticipants': our_participants,
+        'otherParticipants': other_participants,
+        'date': date.isoformat(),
+        'isDraft': True,
+    }
+
+    response = call_api(client, query, input, 'wolfe')
+
+    # published date is set on save, changing between test runs, so we strip it
+    # from snapshot
+    published = response['data']['createReport']['report']['published']
+    response['data']['createReport']['report']['published'] = '__STRIPPED__'
+
+    # strip random ID from snapshot and check it
+    id = response['data']['createReport']['report']['id']
+    response['data']['createReport']['report']['id'] = '__STRIPPED__'
+    assert re.match(r'\w+', id)
+
+    snapshot.assert_match(response)
+
+    report = Report.objects.get()
+    assert report.author_id == 1
+    assert report.date == date.datetime
+    assert report.published == arrow.get(published).datetime
+    assert report.title == title
+    assert report.body == body
+    assert report.received_benefit == received_benefit
+    assert report.provided_benefit == provided_benefit
+    assert report.our_participants == our_participants
+    assert report.other_participants == other_participants
+    assert report.extra is None
+    assert report.is_draft is True

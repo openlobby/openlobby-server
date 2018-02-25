@@ -108,6 +108,7 @@ class CreateReport(relay.ClientIDMutation):
         our_participants = graphene.String()
         other_participants = graphene.String()
         date = DateTime(required=True)
+        is_draft = graphene.Boolean(default_value=False)
 
     report = graphene.Field(types.Report)
 
@@ -127,6 +128,7 @@ class CreateReport(relay.ClientIDMutation):
             provided_benefit=strip_all_tags(input.get('provided_benefit', '')),
             our_participants=strip_all_tags(input.get('our_participants', '')),
             other_participants=strip_all_tags(input.get('other_participants', '')),
+            is_draft=input.get('is_draft'),
         )
 
         return CreateReport(report=types.Report.from_db(report))
