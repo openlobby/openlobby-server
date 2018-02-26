@@ -7,7 +7,7 @@ from ..models import OpenIdClient
 from .paginator import Paginator
 from .sanitizers import extract_text
 from .. import search
-from ..models import User
+from ..models import User, Report
 
 
 class AuthorsConnection(relay.Connection):
@@ -49,6 +49,10 @@ class Query:
     login_shortcuts = graphene.List(
         types.LoginShortcut,
         description='Shortcuts for login. Use with LoginByShortcut mutation.',
+    )
+    report_drafts = graphene.List(
+        types.Report,
+        description='Saved drafts of reports for Viewer.',
     )
 
     def resolve_authors(self, info, **kwargs):
@@ -100,3 +104,10 @@ class Query:
     def resolve_login_shortcuts(self, info, **kwargs):
         clients = OpenIdClient.objects.filter(is_shortcut=True).order_by('name')
         return [types.LoginShortcut.from_db(c) for c in clients]
+
+    def resolve_report_drafts(self, info, **kwargs):
+        if info.context.user.is_authenticated:
+            drafts = Report.objects.filter(author=info.context.user, is_draft=True)
+            return [types.Report.from_db(d) for d in drafts]
+        else:
+            return []
