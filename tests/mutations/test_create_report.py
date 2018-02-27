@@ -1,10 +1,10 @@
 import pytest
 import arrow
-import json
 import re
 
-from openlobby.core.auth import create_access_token
 from openlobby.core.models import User, Report
+
+from ..utils import call_api
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
@@ -14,18 +14,6 @@ pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 def setup():
     User.objects.create(id=1, is_author=True, username='wolfe',
         first_name='Winston', last_name='Wolfe', email='winston@wolfe.com')
-
-
-def call_api(client, query, input, username=None):
-    variables = json.dumps({'input': input})
-    if username is None:
-        res = client.post('/graphql', {'query': query, 'variables': variables})
-    else:
-        token = create_access_token(username)
-        auth_header = 'Bearer {}'.format(token)
-        res = client.post('/graphql', {'query': query, 'variables': variables},
-            HTTP_AUTHORIZATION=auth_header)
-    return res.json()
 
 
 def test_unauthorized(client, snapshot):

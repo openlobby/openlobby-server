@@ -71,6 +71,12 @@ class Report(graphene.ObjectType):
         except NotFoundError:
             return None
 
+        if report.is_draft:
+            if not info.context.user.is_authenticated:
+                return None
+            if report.author_id != info.context.user.id:
+                return None
+
         author_type = cls._meta.fields['author'].type
         author = author_type.get_node(info, report.author_id)
         return cls.from_es(report, author)

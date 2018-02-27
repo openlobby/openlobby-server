@@ -5,6 +5,7 @@ from openlobby.core.auth import create_access_token
 from openlobby.core.models import OpenIdClient, User
 
 from ..dummy import prepare_reports
+from ..utils import call_api
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
@@ -87,6 +88,51 @@ def test_report(client, snapshot):
     }}
     """.format(id=to_global_id('Report', 1))})
     snapshot.assert_match(res.json())
+
+
+def test_report__is_draft(client, snapshot):
+    prepare_reports()
+    query = """
+    query {{
+        node (id:"{id}") {{
+            ... on Report {{
+                id
+                title
+            }}
+        }}
+    }}
+    """.format(id=to_global_id('Report', 4))
+    snapshot.assert_match(call_api(client, query, username='Wolf'))
+
+
+def test_report__is_draft__unauthorized_viewer(client, snapshot):
+    prepare_reports()
+    query = """
+    query {{
+        node (id:"{id}") {{
+            ... on Report {{
+                id
+                title
+            }}
+        }}
+    }}
+    """.format(id=to_global_id('Report', 4))
+    snapshot.assert_match(call_api(client, query))
+
+
+def test_report__is_draft__viewer_is_not_author(client, snapshot):
+    prepare_reports()
+    query = """
+    query {{
+        node (id:"{id}") {{
+            ... on Report {{
+                id
+                title
+            }}
+        }}
+    }}
+    """.format(id=to_global_id('Report', 4))
+    snapshot.assert_match(call_api(client, query))
 
 
 def test_user__unauthorized(client, snapshot):

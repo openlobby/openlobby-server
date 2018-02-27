@@ -85,3 +85,24 @@ snapshots['test_user 1'] = {
         }
     }
 }
+
+snapshots['test_report__is_draft__unauthorized_viewer 1'] = {
+    'data': {
+        'node': None
+    }
+}
+
+snapshots['test_report__is_draft__viewer_is_not_author 1'] = {
+    'data': {
+        'node': None
+    }
+}
+
+snapshots['test_report__is_draft 1'] = {
+    'data': {
+        'node': {
+            'id': 'UmVwb3J0OjQ=',
+            'title': 'The Silmarillion'
+        }
+    }
+}
