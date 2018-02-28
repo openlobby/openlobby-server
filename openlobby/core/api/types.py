@@ -169,6 +169,9 @@ class Author(graphene.ObjectType):
 
         return ReportConnection(page_info=page_info, edges=edges, total_count=total)
 
+    def resolve_total_reports(self, info, **kwargs):
+        return models.Report.objects.filter(author_id=self.id, is_draft=False).count()
+
 
 class LoginShortcut(graphene.ObjectType):
     name = graphene.String()
