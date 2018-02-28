@@ -29,7 +29,7 @@ snapshots['test_full_report 1'] = {
         'createReport': {
             'report': {
                 'author': {
-                    'extra': None,
+                    'extra': '{"movies": 1}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjE=',
                     'lastName': 'Wolfe'
@@ -54,7 +54,7 @@ snapshots['test_is_draft 1'] = {
         'createReport': {
             'report': {
                 'author': {
-                    'extra': None,
+                    'extra': '{"movies": 1}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjE=',
                     'lastName': 'Wolfe'

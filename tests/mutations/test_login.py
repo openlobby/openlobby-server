@@ -7,6 +7,8 @@ from unittest.mock import patch
 from openlobby.core.models import OpenIdClient, LoginAttempt
 from openlobby.core.openid import register_client
 
+from ..utils import call_api
+
 
 pytestmark = pytest.mark.django_db
 
@@ -32,18 +34,18 @@ def test_login__known_openid_client(issuer, client, snapshot):
 
     app_redirect_uri = 'http://i.am.pirate'
     openid_uid = 'wolf@openid.provider'
+    query = """
+    mutation {{
+        login (input: {{ openidUid: "{uid}", redirectUri: "{uri}" }}) {{
+            authorizationUrl
+        }}
+    }}
+    """.format(uid=openid_uid, uri=app_redirect_uri)
     # Keycloak server used for tests does not support issuer discovery by UID, so we mock it
     with patch('openlobby.core.api.mutations.discover_issuer', return_value=issuer) as mock:
-        res = client.post('/graphql', {'query': """
-        mutation {{
-            login (input: {{ openidUid: "{uid}", redirectUri: "{uri}" }}) {{
-                authorizationUrl
-            }}
-        }}
-        """.format(uid=openid_uid, uri=app_redirect_uri)})
+        response = call_api(client, query)
         mock.assert_called_once_with(openid_uid)
 
-    response = res.json()
     assert 'errors' not in response
     authorization_url = response['data']['login']['authorizationUrl']
 
@@ -57,18 +59,18 @@ def test_login__known_openid_client(issuer, client, snapshot):
 def test_login__new_openid_client(issuer, client, snapshot):
     app_redirect_uri = 'http://i.am.pirate'
     openid_uid = 'wolf@openid.provider'
+    query = """
+    mutation {{
+        login (input: {{ openidUid: "{uid}", redirectUri: "{uri}" }}) {{
+            authorizationUrl
+        }}
+    }}
+    """.format(uid=openid_uid, uri=app_redirect_uri)
     # Keycloak server used for tests does not support issuer discovery by UID, so we mock it
     with patch('openlobby.core.api.mutations.discover_issuer', return_value=issuer) as mock:
-        res = client.post('/graphql', {'query': """
-        mutation {{
-            login (input: {{ openidUid: "{uid}", redirectUri: "{uri}" }}) {{
-                authorizationUrl
-            }}
-        }}
-        """.format(uid=openid_uid, uri=app_redirect_uri)})
+        response = call_api(client, query)
         mock.assert_called_once_with(openid_uid)
 
-    response = res.json()
     assert 'errors' not in response
     authorization_url = response['data']['login']['authorizationUrl']
 

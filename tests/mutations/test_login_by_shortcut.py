@@ -5,6 +5,7 @@ from openlobby.core.models import OpenIdClient, LoginAttempt
 from openlobby.core.openid import register_client
 
 from .test_login import check_authorization_url
+from ..utils import call_api
 
 pytestmark = pytest.mark.django_db
 
@@ -15,14 +16,15 @@ def test_login_by_shortcut(issuer, client, snapshot):
         issuer=issuer, client_id=oc.client_id, client_secret=oc.client_secret)
 
     app_redirect_uri = 'http://i.am.pirate'
-    res = client.post('/graphql', {'query': """
+    query = """
     mutation {{
         loginByShortcut (input: {{ shortcutId: "{id}", redirectUri: "{uri}" }}) {{
             authorizationUrl
         }}
     }}
-    """.format(id=to_global_id('LoginShortcut', oid_client.id), uri=app_redirect_uri)})
-    response = res.json()
+    """.format(id=to_global_id('LoginShortcut', oid_client.id), uri=app_redirect_uri)
+    response = call_api(client, query)
+
     assert 'errors' not in response
     authorization_url = response['data']['loginByShortcut']['authorizationUrl']
 

@@ -6,7 +6,7 @@ from openlobby.core.models import Report, User
 authors = [
     {
         'id': 1,
-        'username': 'Wolf',
+        'username': 'wolf',
         'first_name': 'Winston',
         'last_name': 'Wolfe',
         'is_author': True,
@@ -99,3 +99,7 @@ def prepare_reports():
     Report.objects.create(author=author1, **reports[2])
     Report.objects.create(author=author1, **reports[3])
     Report.objects.create(author=author3, **reports[4])
+
+
+def prepare_author():
+    User.objects.create(**authors[0])

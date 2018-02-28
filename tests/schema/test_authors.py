@@ -3,6 +3,7 @@ import pytest
 from openlobby.core.models import User
 
 from ..dummy import prepare_reports
+from ..utils import call_api
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
@@ -11,7 +12,7 @@ pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 def test_all(client, snapshot):
     prepare_reports()
     User.objects.create(id=4, is_author=False, username='x')
-    res = client.post('/graphql', {'query': """
+    query = """
     query {
         authors {
             totalCount
@@ -34,13 +35,14 @@ def test_all(client, snapshot):
             }
         }
     }
-    """})
-    snapshot.assert_match(res.json())
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
 
 
 def test_first(client, snapshot):
     prepare_reports()
-    res = client.post('/graphql', {'query': """
+    query = """
     query {
         authors (first: 2) {
             totalCount
@@ -63,13 +65,14 @@ def test_first(client, snapshot):
             }
         }
     }
-    """})
-    snapshot.assert_match(res.json())
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
 
 
 def test_first_after(client, snapshot):
     prepare_reports()
-    res = client.post('/graphql', {'query': """
+    query = """
     query {
         authors (first: 1, after: "MQ==") {
             totalCount
@@ -92,13 +95,14 @@ def test_first_after(client, snapshot):
             }
         }
     }
-    """})
-    snapshot.assert_match(res.json())
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
 
 
 def test_last(client, snapshot):
     prepare_reports()
-    res = client.post('/graphql', {'query': """
+    query = """
     query {
         authors (last: 2) {
             totalCount
@@ -121,13 +125,14 @@ def test_last(client, snapshot):
             }
         }
     }
-    """})
-    snapshot.assert_match(res.json())
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
 
 
 def test_last_before(client, snapshot):
     prepare_reports()
-    res = client.post('/graphql', {'query': """
+    query = """
     query {
         authors (last: 1, before: "Mw==") {
             totalCount
@@ -150,13 +155,14 @@ def test_last_before(client, snapshot):
             }
         }
     }
-    """})
-    snapshot.assert_match(res.json())
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
 
 
 def test_with_reports(client, snapshot):
     prepare_reports()
-    res = client.post('/graphql', {'query': """
+    query = """
     query {
         authors {
             edges {
@@ -189,5 +195,6 @@ def test_with_reports(client, snapshot):
             }
         }
     }
-    """})
-    snapshot.assert_match(res.json())
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)

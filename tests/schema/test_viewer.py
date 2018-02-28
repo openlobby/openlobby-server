@@ -3,32 +3,33 @@ import pytest
 from openlobby.core.auth import create_access_token
 from openlobby.core.models import User
 
+from ..utils import call_api
+
 
 pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture(autouse=True)
 def setup():
-    User.objects.create(id=1, is_author=True, username='wolfe', openid_uid='TheWolf',
+    User.objects.create(id=1, is_author=True, username='wolf', openid_uid='TheWolf',
         first_name='Winston', last_name='Wolfe', email='winston@wolfe.com',
         extra={'caliber': 45})
 
 
 def test_unauthenticated(client, snapshot):
-    res = client.post('/graphql', {'query': """
+    query = """
     query {
         viewer {
             id
         }
     }
-    """})
-    snapshot.assert_match(res.json())
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
 
 
 def test_authenticated(client, snapshot):
-    token = create_access_token('wolfe')
-    auth_header = 'Bearer {}'.format(token)
-    res = client.post('/graphql', {'query': """
+    query = """
     query {
         viewer {
             id
@@ -41,8 +42,9 @@ def test_authenticated(client, snapshot):
             extra
         }
     }
-    """}, HTTP_AUTHORIZATION=auth_header)
-    snapshot.assert_match(res.json())
+    """
+    response = call_api(client, query, username='wolf')
+    snapshot.assert_match(response)
 
 
 # integration tests of wrong authentication

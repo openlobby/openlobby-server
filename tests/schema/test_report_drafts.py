@@ -1,8 +1,7 @@
 import pytest
 
-from openlobby.core.auth import create_access_token
-
 from ..dummy import prepare_reports
+from ..utils import call_api
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
@@ -10,21 +9,20 @@ pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 
 def test_unauthenticated(client, snapshot):
     prepare_reports()
-    res = client.post('/graphql', {'query': """
+    query = """
     query {
         reportDrafts {
             id
         }
     }
-    """})
-    snapshot.assert_match(res.json())
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
 
 
 def test_authenticated(client, snapshot):
     prepare_reports()
-    token = create_access_token('Wolf')
-    auth_header = 'Bearer {}'.format(token)
-    res = client.post('/graphql', {'query': """
+    query = """
     query {
         reportDrafts {
             id
@@ -38,5 +36,6 @@ def test_authenticated(client, snapshot):
             otherParticipants
         }
     }
-    """}, HTTP_AUTHORIZATION=auth_header)
-    snapshot.assert_match(res.json())
+    """
+    response = call_api(client, query, username='wolf')
+    snapshot.assert_match(response)

@@ -2,8 +2,9 @@ import pytest
 import arrow
 import re
 
-from openlobby.core.models import User, Report
+from openlobby.core.models import Report
 
+from ..dummy import prepare_author
 from ..utils import call_api
 
 
@@ -12,8 +13,7 @@ pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 
 @pytest.fixture(autouse=True)
 def setup():
-    User.objects.create(id=1, is_author=True, username='wolfe',
-        first_name='Winston', last_name='Wolfe', email='winston@wolfe.com')
+    prepare_author()
 
 
 def test_unauthorized(client, snapshot):
@@ -31,9 +31,7 @@ def test_unauthorized(client, snapshot):
         'body': 'I told you!',
         'date': arrow.utcnow().isoformat(),
     }
-
     response = call_api(client, query, input)
-
     snapshot.assert_match(response)
 
 
@@ -79,7 +77,7 @@ def test_full_report(client, snapshot):
         'date': date.isoformat(),
     }
 
-    response = call_api(client, query, input, 'wolfe')
+    response = call_api(client, query, input, 'wolf')
 
     # published date is set on save, changing between test runs, so we strip it
     # from snapshot
@@ -127,7 +125,7 @@ def test_input_sanitization(client):
         'date': arrow.utcnow().isoformat(),
     }
 
-    call_api(client, query, input, 'wolfe')
+    call_api(client, query, input, 'wolf')
 
     report = Report.objects.get()
     assert report.title == 'No tags'
@@ -181,7 +179,7 @@ def test_is_draft(client, snapshot):
         'isDraft': True,
     }
 
-    response = call_api(client, query, input, 'wolfe')
+    response = call_api(client, query, input, 'wolf')
 
     # published date is set on save, changing between test runs, so we strip it
     # from snapshot
