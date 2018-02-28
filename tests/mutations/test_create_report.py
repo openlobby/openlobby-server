@@ -5,7 +5,7 @@ import re
 from openlobby.core.models import Report
 
 from ..dummy import prepare_author
-from ..utils import call_api
+from ..utils import call_api, strip_value
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
@@ -54,6 +54,7 @@ def test_full_report(client, snapshot):
                     id
                     firstName
                     lastName
+                    totalReports
                     extra
                 }
             }
@@ -81,12 +82,10 @@ def test_full_report(client, snapshot):
 
     # published date is set on save, changing between test runs, so we strip it
     # from snapshot
-    published = response['data']['createReport']['report']['published']
-    response['data']['createReport']['report']['published'] = '__STRIPPED__'
+    published = strip_value(response, 'data', 'createReport', 'report', 'published')
 
     # strip random ID from snapshot and check it
-    id = response['data']['createReport']['report']['id']
-    response['data']['createReport']['report']['id'] = '__STRIPPED__'
+    id = strip_value(response, 'data', 'createReport', 'report', 'id')
     assert re.match(r'\w+', id)
 
     snapshot.assert_match(response)
@@ -155,6 +154,7 @@ def test_is_draft(client, snapshot):
                     id
                     firstName
                     lastName
+                    totalReports
                     extra
                 }
             }
@@ -183,12 +183,10 @@ def test_is_draft(client, snapshot):
 
     # published date is set on save, changing between test runs, so we strip it
     # from snapshot
-    published = response['data']['createReport']['report']['published']
-    response['data']['createReport']['report']['published'] = '__STRIPPED__'
+    published = strip_value(response, 'data', 'createReport', 'report', 'published')
 
     # strip random ID from snapshot and check it
-    id = response['data']['createReport']['report']['id']
-    response['data']['createReport']['report']['id'] = '__STRIPPED__'
+    id = strip_value(response, 'data', 'createReport', 'report', 'id')
     assert re.match(r'\w+', id)
 
     snapshot.assert_match(response)

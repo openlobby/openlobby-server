@@ -32,7 +32,8 @@ snapshots['test_full_report 1'] = {
                     'extra': '{"movies": 1}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjE=',
-                    'lastName': 'Wolfe'
+                    'lastName': 'Wolfe',
+                    'totalReports': 1
                 },
                 'body': 'I visited Tesla factory and talked with Elon Musk.',
                 'date': '2018-01-01 00:00:00+00:00',
@@ -57,7 +58,8 @@ snapshots['test_is_draft 1'] = {
                     'extra': '{"movies": 1}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjE=',
-                    'lastName': 'Wolfe'
+                    'lastName': 'Wolfe',
+                    'totalReports': 0
                 },
                 'body': 'Niel deGrasse Tyson just visited me...',
                 'date': '2018-01-03 00:00:00+00:00',

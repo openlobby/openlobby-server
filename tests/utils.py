@@ -13,3 +13,13 @@ def call_api(client, query, input=None, username=None):
         res = client.post('/graphql', {'query': query, 'variables': variables},
             HTTP_AUTHORIZATION=auth_header)
     return res.json()
+
+
+def strip_value(data, *path):
+    element = path[0]
+    value = data.get(element)
+    if len(path) == 1:
+        data[element] = '__STRIPPED__'
+        return value
+    else:
+        return strip_value(value, *path[1:])
