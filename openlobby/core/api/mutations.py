@@ -1,3 +1,4 @@
+import arrow
 import graphene
 from graphene import relay
 from graphene.types.datetime import DateTime
@@ -134,9 +135,57 @@ class CreateReport(relay.ClientIDMutation):
         return CreateReport(report=types.Report.from_db(report))
 
 
+class UpdateReport(relay.ClientIDMutation):
+
+    class Input:
+        id = graphene.ID(required=True)
+        title = graphene.String(required=True)
+        body = graphene.String(required=True)
+        received_benefit = graphene.String()
+        provided_benefit = graphene.String()
+        our_participants = graphene.String()
+        other_participants = graphene.String()
+        date = DateTime(required=True)
+        is_draft = graphene.Boolean(default_value=False)
+
+    report = graphene.Field(types.Report)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        if not info.context.user.is_authenticated:
+            raise Exception('User must be logged in to perform this mutation.')
+
+        author = info.context.user
+        type, id = from_global_id(input.get('id'))
+
+        try:
+            report = Report.objects.select_related('author').get(id=id, author_id=author.id)
+        except Report.DoesNotExist:
+            raise Exception('Viewer is not the Author of this Report or Report does not exist.')
+
+        is_draft = input.get('is_draft')
+
+        if is_draft and not report.is_draft:
+            raise Exception('You cannot update published Report with draft.')
+
+        report.published = arrow.utcnow().datetime
+        report.date = input.get('date')
+        report.title = strip_all_tags(input.get('title', ''))
+        report.body = strip_all_tags(input.get('body', ''))
+        report.received_benefit = strip_all_tags(input.get('received_benefit', ''))
+        report.provided_benefit = strip_all_tags(input.get('provided_benefit', ''))
+        report.our_participants = strip_all_tags(input.get('our_participants', ''))
+        report.other_participants = strip_all_tags(input.get('other_participants', ''))
+        report.is_draft = is_draft
+        report.save()
+
+        return UpdateReport(report=types.Report.from_db(report))
+
+
 class Mutation:
     login = Login.Field()
     login_by_shortcut = LoginByShortcut.Field()
     # TODO
     # logout = Logout.Field()
     create_report = CreateReport.Field()
+    update_report = UpdateReport.Field()
