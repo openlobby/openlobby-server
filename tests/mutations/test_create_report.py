@@ -24,6 +24,7 @@ mutation createReport ($input: CreateReportInput!) {
             providedBenefit
             ourParticipants
             otherParticipants
+            isDraft
             extra
             author {
                 id

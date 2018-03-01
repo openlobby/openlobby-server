@@ -25,6 +25,7 @@ def test_all(client, snapshot):
                     providedBenefit
                     ourParticipants
                     otherParticipants
+                    isDraft
                     extra
                     author {
                         id
@@ -67,6 +68,7 @@ def test_query(client, snapshot):
                     providedBenefit
                     ourParticipants
                     otherParticipants
+                    isDraft
                     extra
                     author {
                         id
@@ -103,6 +105,7 @@ def test_highlight(client, snapshot):
                     providedBenefit
                     ourParticipants
                     otherParticipants
+                    isDraft
                     extra
                     author {
                         id

@@ -27,6 +27,7 @@ class Report(graphene.ObjectType):
     provided_benefit = graphene.String()
     our_participants = graphene.String()
     other_participants = graphene.String()
+    is_draft = graphene.Boolean()
     extra = JSONString()
 
     class Meta:
@@ -45,6 +46,7 @@ class Report(graphene.ObjectType):
             provided_benefit=get_higlighted(report, 'provided_benefit'),
             our_participants=get_higlighted(report, 'our_participants'),
             other_participants=get_higlighted(report, 'other_participants'),
+            is_draft=report.is_draft,
             extra=report.extra,
         )
 
@@ -61,6 +63,7 @@ class Report(graphene.ObjectType):
             provided_benefit=report.provided_benefit,
             our_participants=report.our_participants,
             other_participants=report.other_participants,
+            is_draft=report.is_draft,
             extra=report.extra,
         )
 

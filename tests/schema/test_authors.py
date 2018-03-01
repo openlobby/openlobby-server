@@ -187,6 +187,7 @@ def test_with_reports(client, snapshot):
                                 providedBenefit
                                 ourParticipants
                                 otherParticipants
+                                isDraft
                                 extra
                             }
                         }

@@ -76,6 +76,7 @@ def test_report(client, snapshot):
                 providedBenefit
                 ourParticipants
                 otherParticipants
+                isDraft
                 extra
                 author {{
                     id
@@ -101,6 +102,7 @@ def test_report__is_draft(client, snapshot):
             ... on Report {{
                 id
                 title
+                isDraft
             }}
         }}
     }}
@@ -117,6 +119,7 @@ def test_report__is_draft__unauthorized_viewer(client, snapshot):
             ... on Report {{
                 id
                 title
+                isDraft
             }}
         }}
     }}
@@ -133,6 +136,7 @@ def test_report__is_draft__viewer_is_not_author(client, snapshot):
             ... on Report {{
                 id
                 title
+                isDraft
             }}
         }}
     }}

@@ -34,6 +34,7 @@ def test_authenticated(client, snapshot):
             providedBenefit
             ourParticipants
             otherParticipants
+            isDraft
         }
     }
     """

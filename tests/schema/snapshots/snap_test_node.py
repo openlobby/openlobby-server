@@ -50,6 +50,7 @@ snapshots['test_report 1'] = {
             'date': '2018-01-01 00:00:00+00:00',
             'extra': None,
             'id': 'UmVwb3J0OjE=',
+            'isDraft': False,
             'otherParticipants': 'Saruman',
             'ourParticipants': 'Frodo, Gandalf',
             'providedBenefit': '',
@@ -102,6 +103,7 @@ snapshots['test_report__is_draft 1'] = {
     'data': {
         'node': {
             'id': 'UmVwb3J0OjQ=',
+            'isDraft': True,
             'title': 'The Silmarillion'
         }
     }
