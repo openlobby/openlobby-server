@@ -23,7 +23,7 @@ class LoginRedirectView(View):
         query_string = request.META['QUERY_STRING']
 
         # get login attempt
-        state = urllib.parse.parse_qs(query_string)['state'][0]
+        state = request.GET.get('state')
         la = LoginAttempt.objects.select_related('openid_client').get(state=state)
         app_redirect_uri = la.app_redirect_uri
 
