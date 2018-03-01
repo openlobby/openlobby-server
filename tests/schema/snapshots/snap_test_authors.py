@@ -197,14 +197,14 @@ snapshots['test_with_reports 1'] = {
                                     'cursor': 'MQ==',
                                     'node': {
                                         'body': 'Another long story.',
-                                        'date': '2018-01-05 00:00:00+00:00',
+                                        'date': '2018-01-03 00:00:00+00:00',
                                         'extra': '{"rings": 1}',
                                         'id': 'UmVwb3J0OjI=',
                                         'isDraft': False,
                                         'otherParticipants': 'Saruman, Sauron',
                                         'ourParticipants': 'Frodo, Gimli, Legolas',
                                         'providedBenefit': '',
-                                        'published': '2018-01-10 00:00:00+00:00',
+                                        'published': '2018-01-04 00:00:00+00:00',
                                         'receivedBenefit': 'Mithrill Jacket',
                                         'title': 'The Two Towers'
                                     }
@@ -228,14 +228,14 @@ snapshots['test_with_reports 1'] = {
                                     'cursor': 'MQ==',
                                     'node': {
                                         'body': 'Aragorn is the King. And we have lost the Ring.',
-                                        'date': '2018-01-07 00:00:00+00:00',
+                                        'date': '2018-01-05 00:00:00+00:00',
                                         'extra': None,
                                         'id': 'UmVwb3J0OjM=',
                                         'isDraft': False,
                                         'otherParticipants': 'Sauron',
                                         'ourParticipants': 'Aragorn',
                                         'providedBenefit': 'The Ring',
-                                        'published': '2018-01-08 00:00:00+00:00',
+                                        'published': '2018-01-06 00:00:00+00:00',
                                         'receivedBenefit': '',
                                         'title': 'The Return of the King'
                                     }

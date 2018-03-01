@@ -42,8 +42,8 @@ reports = [
     },
     {
         'id': 2,
-        'date': arrow.get(2018, 1, 5).datetime,
-        'published': arrow.get(2018, 1, 10).datetime,
+        'date': arrow.get(2018, 1, 3).datetime,
+        'published': arrow.get(2018, 1, 4).datetime,
         'title': 'The Two Towers',
         'body': 'Another long story.',
         'received_benefit': 'Mithrill Jacket',
@@ -54,8 +54,8 @@ reports = [
     },
     {
         'id': 3,
-        'date': arrow.get(2018, 1, 7).datetime,
-        'published': arrow.get(2018, 1, 8).datetime,
+        'date': arrow.get(2018, 1, 5).datetime,
+        'published': arrow.get(2018, 1, 6).datetime,
         'title': 'The Return of the King',
         'body': 'Aragorn is the King. And we have lost the Ring.',
         'received_benefit': '',
@@ -65,8 +65,8 @@ reports = [
     },
     {
         'id': 4,
-        'date': arrow.get(2018, 1, 9).datetime,
-        'published': arrow.get(2018, 1, 11).datetime,
+        'date': arrow.get(2018, 1, 7).datetime,
+        'published': arrow.get(2018, 1, 8).datetime,
         'title': 'The Silmarillion',
         'body': 'Not finished yet.',
         'received_benefit': '',
@@ -77,8 +77,8 @@ reports = [
     },
     {
         'id': 5,
-        'date': arrow.get(2018, 1, 12).datetime,
-        'published': arrow.get(2018, 1, 13).datetime,
+        'date': arrow.get(2018, 1, 9).datetime,
+        'published': arrow.get(2018, 1, 10).datetime,
         'title': 'The Hobbit',
         'body': 'Work in progress...',
         'received_benefit': '',

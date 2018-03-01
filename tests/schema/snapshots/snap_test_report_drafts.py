@@ -19,13 +19,13 @@ snapshots['test_authenticated 1'] = {
         'reportDrafts': [
             {
                 'body': 'Not finished yet.',
-                'date': '2018-01-09 00:00:00+00:00',
+                'date': '2018-01-07 00:00:00+00:00',
                 'id': 'UmVwb3J0OjQ=',
                 'isDraft': True,
                 'otherParticipants': '',
                 'ourParticipants': '',
                 'providedBenefit': '',
-                'published': '2018-01-11 00:00:00+00:00',
+                'published': '2018-01-08 00:00:00+00:00',
                 'receivedBenefit': '',
                 'title': 'The Silmarillion'
             }

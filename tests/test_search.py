@@ -10,8 +10,8 @@ pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 
 
 @pytest.mark.parametrize('query, expected_ids', [
-    ('', [2, 3, 1]),
-    ('sauron', [2, 3]),
+    ('', [3, 2, 1]),
+    ('sauron', [3, 2]),
     ('towers', [2]),
     ('Aragorn Gandalf', [3, 1]),
 ])
@@ -33,8 +33,8 @@ def test_query_reports__highlight():
 
 
 @pytest.mark.parametrize('first, after, expected_ids', [
-    (2, None, [2, 3]),
-    (2, encode_cursor(1), [3, 1]),
+    (2, None, [3, 2]),
+    (2, encode_cursor(1), [2, 1]),
 ])
 def test_query_reports__pagination(first, after, expected_ids):
     prepare_reports()
