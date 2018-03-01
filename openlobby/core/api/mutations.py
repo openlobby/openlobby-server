@@ -168,6 +168,9 @@ class UpdateReport(relay.ClientIDMutation):
         if is_draft and not report.is_draft:
             raise Exception('You cannot update published Report with draft.')
 
+        # TODO updating published report older than like a hour should create
+        # new revision in history of report
+
         report.published = arrow.utcnow().datetime
         report.date = input.get('date')
         report.title = strip_all_tags(input.get('title', ''))

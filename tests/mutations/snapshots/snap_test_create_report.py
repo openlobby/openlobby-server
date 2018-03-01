@@ -15,7 +15,7 @@ snapshots['test_unauthorized 1'] = {
         {
             'locations': [
                 {
-                    'column': 9,
+                    'column': 5,
                     'line': 3
                 }
             ],

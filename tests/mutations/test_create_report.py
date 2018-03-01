@@ -11,21 +11,39 @@ from ..utils import call_api, strip_value
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 
 
+query = """
+mutation createReport ($input: CreateReportInput!) {
+    createReport (input: $input) {
+        report {
+            id
+            date
+            published
+            title
+            body
+            receivedBenefit
+            providedBenefit
+            ourParticipants
+            otherParticipants
+            extra
+            author {
+                id
+                firstName
+                lastName
+                totalReports
+                extra
+            }
+        }
+    }
+}
+"""
+
+
 @pytest.fixture(autouse=True)
 def setup():
     prepare_author()
 
 
 def test_unauthorized(client, snapshot):
-    query = """
-    mutation createReport ($input: CreateReportInput!) {
-        createReport (input: $input) {
-            report {
-                id
-            }
-        }
-    }
-    """
     input = {
         'title': 'Short Story',
         'body': 'I told you!',
@@ -36,31 +54,6 @@ def test_unauthorized(client, snapshot):
 
 
 def test_full_report(client, snapshot):
-    query = """
-    mutation createReport ($input: CreateReportInput!) {
-        createReport (input: $input) {
-            report {
-                id
-                date
-                published
-                title
-                body
-                receivedBenefit
-                providedBenefit
-                ourParticipants
-                otherParticipants
-                extra
-                author {
-                    id
-                    firstName
-                    lastName
-                    totalReports
-                    extra
-                }
-            }
-        }
-    }
-    """
     date = arrow.get(2018, 1, 1)
     title = 'Free Tesla'
     body = 'I visited Tesla factory and talked with Elon Musk.'
@@ -80,11 +73,8 @@ def test_full_report(client, snapshot):
 
     response = call_api(client, query, input, 'wolf')
 
-    # published date is set on save, changing between test runs, so we strip it
-    # from snapshot
     published = strip_value(response, 'data', 'createReport', 'report', 'published')
 
-    # strip random ID from snapshot and check it
     id = strip_value(response, 'data', 'createReport', 'report', 'id')
     assert re.match(r'\w+', id)
 
@@ -105,15 +95,6 @@ def test_full_report(client, snapshot):
 
 
 def test_input_sanitization(client):
-    query = """
-    mutation createReport ($input: CreateReportInput!) {
-        createReport (input: $input) {
-            report {
-                id
-            }
-        }
-    }
-    """
     input = {
         'title': '<s>No</s> tags',
         'body': 'some <a href="http://foo">link</a> <br>in body',
@@ -136,31 +117,6 @@ def test_input_sanitization(client):
 
 
 def test_is_draft(client, snapshot):
-    query = """
-    mutation createReport ($input: CreateReportInput!) {
-        createReport (input: $input) {
-            report {
-                id
-                date
-                published
-                title
-                body
-                receivedBenefit
-                providedBenefit
-                ourParticipants
-                otherParticipants
-                extra
-                author {
-                    id
-                    firstName
-                    lastName
-                    totalReports
-                    extra
-                }
-            }
-        }
-    }
-    """
     date = arrow.get(2018, 1, 3)
     title = 'Visited by old friend'
     body = 'Niel deGrasse Tyson just visited me...'
@@ -181,11 +137,8 @@ def test_is_draft(client, snapshot):
 
     response = call_api(client, query, input, 'wolf')
 
-    # published date is set on save, changing between test runs, so we strip it
-    # from snapshot
     published = strip_value(response, 'data', 'createReport', 'report', 'published')
 
-    # strip random ID from snapshot and check it
     id = strip_value(response, 'data', 'createReport', 'report', 'id')
     assert re.match(r'\w+', id)
 
