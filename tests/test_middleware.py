@@ -48,7 +48,8 @@ def test_wrong_header(snapshot):
 
     request.META.get.assert_called_once_with('HTTP_AUTHORIZATION')
     assert response.status_code == 400
-    snapshot.assert_match(json.loads(response.content))
+    as_str = response.content.decode() if hasattr(response.content, 'decode') else response.content
+    snapshot.assert_match(json.loads(as_str))
 
 
 def test_invalid_token(snapshot):
@@ -61,7 +62,8 @@ def test_invalid_token(snapshot):
 
     request.META.get.assert_called_once_with('HTTP_AUTHORIZATION')
     assert response.status_code == 401
-    snapshot.assert_match(json.loads(response.content))
+    as_str = response.content.decode() if hasattr(response.content,'decode') else response.content
+    snapshot.assert_match(json.loads(as_str))
 
 
 def test_unknown_user(snapshot):
