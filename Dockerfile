@@ -19,7 +19,7 @@ RUN pip install -r requirements.txt && \
 
 ADD . /code/
 
-RUN DATABASE_URL=none python manage.py collectstatic --noinput
+RUN DATABASE_URL=none SECRET_KEY=xxx python manage.py collectstatic --noinput
 
 COPY conf/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 COPY conf/nginx.conf /etc/nginx/conf.d/openlobby-server.conf
