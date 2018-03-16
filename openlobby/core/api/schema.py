@@ -9,6 +9,15 @@ from .sanitizers import extract_text
 from .. import search
 from ..models import User, Report
 
+AUTHOR_SORT_LAST_NAME_ID = 1
+AUTHOR_SORT_TOTAL_REPORTS_ID = 2
+
+class AuthorSortEnum(graphene.Enum):
+    LAST_NAME = AUTHOR_SORT_LAST_NAME_ID
+    TOTAL_REPORTS = AUTHOR_SORT_TOTAL_REPORTS_ID
+
+    class Meta:
+        description = 'Sort by field.'
 
 class AuthorsConnection(relay.Connection):
     total_count = graphene.Int()
@@ -38,6 +47,8 @@ class Query:
     authors = relay.ConnectionField(
         AuthorsConnection,
         description='List of Authors. Returns first 10 nodes if pagination is not specified.',
+        sort=AuthorSortEnum(),
+        reversed=graphene.Boolean(default_value=False, description="Reverse order of sort")
     )
     search_reports = relay.ConnectionField(
         SearchReportsConnection,
@@ -59,10 +70,12 @@ class Query:
         paginator = Paginator(**kwargs)
 
         total = User.objects.filter(is_author=True).count()
-        authors = User.objects.filter(is_author=True)\
-            .annotate(total_reports=Count('report', filter=Q(report__is_draft=False)))\
-            .order_by('last_name', 'first_name')[
-            paginator.slice_from:paginator.slice_to]
+
+        authors = User.objects\
+                      .sorted(**kwargs)\
+                      .filter(is_author=True)\
+                    .annotate(total_reports=Count('report', filter=Q(report__is_draft=False)))[
+                  paginator.slice_from:paginator.slice_to]
 
         page_info = paginator.get_page_info(total)
 

@@ -266,3 +266,248 @@ snapshots['test_with_reports 1'] = {
         }
     }
 }
+
+snapshots['test_sort_by_last_name 1'] = {
+    'data': {
+        'authors': {
+            'edges': [
+                {
+                    'cursor': 'MQ==',
+                    'node': {
+                        'extra': None,
+                        'firstName': 'Shaun',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjM=',
+                        'lastName': 'Sheep',
+                        'totalReports': 0
+                    }
+                },
+                {
+                    'cursor': 'Mg==',
+                    'node': {
+                        'extra': None,
+                        'firstName': 'Spongebob',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjI=',
+                        'lastName': 'Squarepants',
+                        'totalReports': 1
+                    }
+                },
+                {
+                    'cursor': 'Mw==',
+                    'node': {
+                        'extra': '{"movies": 1}',
+                        'firstName': 'Winston',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjE=',
+                        'lastName': 'Wolfe',
+                        'totalReports': 2
+                    }
+                }
+            ],
+            'pageInfo': {
+                'endCursor': 'Mw==',
+                'hasNextPage': False,
+                'hasPreviousPage': False,
+                'startCursor': 'MQ=='
+            },
+            'totalCount': 3
+        }
+    }
+}
+
+snapshots['test_sort_by_last_name_reversed 1'] = {
+    'data': {
+        'authors': {
+            'edges': [
+                {
+                    'cursor': 'MQ==',
+                    'node': {
+                        'extra': '{"movies": 1}',
+                        'firstName': 'Winston',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjE=',
+                        'lastName': 'Wolfe',
+                        'totalReports': 2
+                    }
+                },
+                {
+                    'cursor': 'Mg==',
+                    'node': {
+                        'extra': None,
+                        'firstName': 'Spongebob',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjI=',
+                        'lastName': 'Squarepants',
+                        'totalReports': 1
+                    }
+                },
+                {
+                    'cursor': 'Mw==',
+                    'node': {
+                        'extra': None,
+                        'firstName': 'Shaun',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjM=',
+                        'lastName': 'Sheep',
+                        'totalReports': 0
+                    }
+                }
+            ],
+            'pageInfo': {
+                'endCursor': 'Mw==',
+                'hasNextPage': False,
+                'hasPreviousPage': False,
+                'startCursor': 'MQ=='
+            },
+            'totalCount': 3
+        }
+    }
+}
+
+snapshots['test_sort_by_total_reports 1'] = {
+    'data': {
+        'authors': {
+            'edges': [
+                {
+                    'cursor': 'MQ==',
+                    'node': {
+                        'extra': '{"movies": 1}',
+                        'firstName': 'Winston',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjE=',
+                        'lastName': 'Wolfe',
+                        'totalReports': 2
+                    }
+                },
+                {
+                    'cursor': 'Mg==',
+                    'node': {
+                        'extra': None,
+                        'firstName': 'Spongebob',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjI=',
+                        'lastName': 'Squarepants',
+                        'totalReports': 1
+                    }
+                },
+                {
+                    'cursor': 'Mw==',
+                    'node': {
+                        'extra': None,
+                        'firstName': 'Shaun',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjM=',
+                        'lastName': 'Sheep',
+                        'totalReports': 0
+                    }
+                }
+            ],
+            'pageInfo': {
+                'endCursor': 'Mw==',
+                'hasNextPage': False,
+                'hasPreviousPage': False,
+                'startCursor': 'MQ=='
+            },
+            'totalCount': 3
+        }
+    }
+}
+
+snapshots['test_sort_by_total_reports_reversed 1'] = {
+    'data': {
+        'authors': {
+            'edges': [
+                {
+                    'cursor': 'MQ==',
+                    'node': {
+                        'extra': None,
+                        'firstName': 'Shaun',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjM=',
+                        'lastName': 'Sheep',
+                        'totalReports': 0
+                    }
+                },
+                {
+                    'cursor': 'Mg==',
+                    'node': {
+                        'extra': None,
+                        'firstName': 'Spongebob',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjI=',
+                        'lastName': 'Squarepants',
+                        'totalReports': 1
+                    }
+                },
+                {
+                    'cursor': 'Mw==',
+                    'node': {
+                        'extra': '{"movies": 1}',
+                        'firstName': 'Winston',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjE=',
+                        'lastName': 'Wolfe',
+                        'totalReports': 2
+                    }
+                }
+            ],
+            'pageInfo': {
+                'endCursor': 'Mw==',
+                'hasNextPage': False,
+                'hasPreviousPage': False,
+                'startCursor': 'MQ=='
+            },
+            'totalCount': 3
+        }
+    }
+}
+
+snapshots['test_sort_by_default_reversed 1'] = {
+    'data': {
+        'authors': {
+            'edges': [
+                {
+                    'cursor': 'MQ==',
+                    'node': {
+                        'extra': '{"movies": 1}',
+                        'firstName': 'Winston',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjE=',
+                        'lastName': 'Wolfe',
+                        'totalReports': 2
+                    }
+                },
+                {
+                    'cursor': 'Mg==',
+                    'node': {
+                        'extra': None,
+                        'firstName': 'Spongebob',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjI=',
+                        'lastName': 'Squarepants',
+                        'totalReports': 1
+                    }
+                },
+                {
+                    'cursor': 'Mw==',
+                    'node': {
+                        'extra': None,
+                        'firstName': 'Shaun',
+                        'hasCollidingName': False,
+                        'id': 'QXV0aG9yOjM=',
+                        'lastName': 'Sheep',
+                        'totalReports': 0
+                    }
+                }
+            ],
+            'pageInfo': {
+                'endCursor': 'Mw==',
+                'hasNextPage': False,
+                'hasPreviousPage': False,
+                'startCursor': 'MQ=='
+            },
+            'totalCount': 3
+        }
+    }
+}
