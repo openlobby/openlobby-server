@@ -12,12 +12,27 @@ from ..models import User, Report
 AUTHOR_SORT_LAST_NAME_ID = 1
 AUTHOR_SORT_TOTAL_REPORTS_ID = 2
 
+REPORT_SORT_DATE_ID = 'date'
+REPORT_SORT_PUBLISHED_ID = 'published'
+REPORT_SORT_RELEVANCE_ID = '_score'
+
+
 class AuthorSortEnum(graphene.Enum):
     LAST_NAME = AUTHOR_SORT_LAST_NAME_ID
     TOTAL_REPORTS = AUTHOR_SORT_TOTAL_REPORTS_ID
 
     class Meta:
         description = 'Sort by field.'
+
+
+class ReportSortEnum(graphene.Enum):
+    DATE = REPORT_SORT_DATE_ID
+    PUBLISHED = REPORT_SORT_PUBLISHED_ID
+    RELEVANCE = REPORT_SORT_RELEVANCE_ID
+
+    class Meta:
+        description = 'Sort by field.'
+
 
 class AuthorsConnection(relay.Connection):
     total_count = graphene.Int()
@@ -34,14 +49,14 @@ class SearchReportsConnection(relay.Connection):
 
 
 def _get_authors_cache(ids):
-    authors = User.objects.filter(id__in=ids)\
+    authors = User.objects.filter(id__in=ids) \
         .annotate(total_reports=Count('report', filter=Q(report__is_draft=False)))
     return {a.id: types.Author.from_db(a) for a in authors}
 
 
 class Query:
     highlight_help = ('Whether search matches should be marked with tag <mark>.'
-        ' Default: false')
+                      ' Default: false')
 
     node = relay.Node.Field()
     authors = relay.ConnectionField(
@@ -55,6 +70,8 @@ class Query:
         description='Fulltext search in Reports. Returns first 10 nodes if pagination is not specified.',
         query=graphene.String(description='Text to search for.'),
         highlight=graphene.Boolean(default_value=False, description=highlight_help),
+        sort=ReportSortEnum(),
+        reversed=graphene.Boolean(default_value=False, description="Reverse order of sort")
     )
     viewer = graphene.Field(types.User, description='Active user viewing API.')
     login_shortcuts = graphene.List(
@@ -71,8 +88,8 @@ class Query:
 
         total = User.objects.filter(is_author=True).count()
 
-        authors = User.objects\
-                      .sorted(**kwargs)\
+        authors = User.objects \
+                      .sorted(**kwargs) \
                       .filter(is_author=True)[paginator.slice_from:paginator.slice_to]
 
         page_info = paginator.get_page_info(total)
@@ -91,6 +108,8 @@ class Query:
         query = extract_text(query)
         params = {
             'highlight': kwargs.get('highlight'),
+            'sort': kwargs.get('sort', REPORT_SORT_DATE_ID),
+            'reversed': kwargs.get('reversed', False)
         }
         response = search.query_reports(query, paginator, **params)
         total = response.hits.total

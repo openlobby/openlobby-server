@@ -26,6 +26,13 @@ authors = [
         'last_name': 'Sheep',
         'is_author': True,
     },
+    {
+        'id': 4,
+        'username': 'phony',
+        'first_name': 'Steven',
+        'last_name': 'Erikson',
+        'is_author': True,
+    },
 ]
 
 reports = [
@@ -87,6 +94,18 @@ reports = [
         'other_participants': '',
         'is_draft': True,
     },
+    {
+        'id': 6,
+        'date': arrow.get(2018, 1, 9).datetime,
+        'published': arrow.get(2017, 1, 1).datetime,
+        'title': 'Gardens of the moon',
+        'body': 'Putting Gandalf to shame?',
+        'received_benefit': '',
+        'provided_benefit': '',
+        'our_participants': 'Not Gandalf',
+        'other_participants': 'Still no Gandalf',
+        'is_draft': True,
+    },
 ]
 
 
@@ -94,11 +113,13 @@ def prepare_reports():
     author1 = User.objects.create(**authors[0])
     author2 = User.objects.create(**authors[1])
     author3 = User.objects.create(**authors[2])
+    author4 = User.objects.create(**authors[3])
     Report.objects.create(author=author1, **reports[0])
     Report.objects.create(author=author2, **reports[1])
     Report.objects.create(author=author1, **reports[2])
     Report.objects.create(author=author1, **reports[3])
     Report.objects.create(author=author3, **reports[4])
+    Report.objects.create(author=author4, **reports[5])
 
 
 def prepare_author():

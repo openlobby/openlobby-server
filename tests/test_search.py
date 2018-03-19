@@ -1,6 +1,8 @@
 import pytest
 
 from openlobby.core.api.paginator import Paginator, encode_cursor
+from openlobby.core.api.schema import REPORT_SORT_DATE_ID, REPORT_SORT_PUBLISHED_ID
+from openlobby.core.models import Report
 from openlobby.core.search import query_reports, reports_by_author
 
 from .dummy import prepare_reports
@@ -62,3 +64,40 @@ def test_reports_by_author__pagination(first, after, expected_ids):
     paginator = Paginator(first=first, after=after)
     response = reports_by_author(author_id, paginator)
     assert expected_ids == [int(r.meta.id) for r in response]
+
+
+@pytest.mark.parametrize('query, expected_ids', [
+    ('', [3, 2, 1]),
+    ('sauron', [3, 2]),
+    ('towers', [2]),
+    ('Aragorn Gandalf', [3, 1]),
+])
+def test_query_reports_sort_date(query, expected_ids):
+    prepare_reports()
+    paginator = Paginator()
+    response = query_reports(query, paginator, sort=REPORT_SORT_DATE_ID)
+    assert expected_ids == [int(r.meta.id) for r in response]
+
+    response = query_reports(query, paginator, sort=REPORT_SORT_DATE_ID, reversed=False)
+    assert expected_ids == [int(r.meta.id) for r in response]
+
+    # reversing expected_ids, notice ...reversed(response)
+    response = query_reports(query, paginator, sort=REPORT_SORT_DATE_ID, reversed=True)
+    assert expected_ids == [int(r.meta.id) for r in reversed(response)]
+
+
+@pytest.mark.parametrize('query, expected_ids', [
+    ('Gandalf', [1, 6]),
+])
+def test_query_reports_sort_published(query, expected_ids):
+    prepare_reports()
+    paginator = Paginator()
+    response = query_reports(query, paginator, sort=REPORT_SORT_PUBLISHED_ID)
+    assert expected_ids == [int(r.meta.id) for r in response]
+
+    response = query_reports(query, paginator, sort=REPORT_SORT_PUBLISHED_ID, reversed=False)
+    assert expected_ids == [int(r.meta.id) for r in response]
+
+    # reversing expected_ids, notice ...reversed(response)
+    response = query_reports(query, paginator, sort=REPORT_SORT_PUBLISHED_ID, reversed=True)
+    assert expected_ids == [int(r.meta.id) for r in reversed(response)]

@@ -1,6 +1,5 @@
 from .documents import ReportDoc
 
-
 HIGHLIGHT_PARAMS = {
     'number_of_fragments': 0,
     'pre_tags': ['<mark>'],
@@ -8,16 +7,16 @@ HIGHLIGHT_PARAMS = {
 }
 
 
-def query_reports(query, paginator, *, highlight=False):
+def query_reports(query, paginator, *, highlight=False, sort='date', reversed=False):
     fields = ['title', 'body', 'received_benefit', 'provided_benefit',
-        'our_participants', 'other_participants']
+              'our_participants', 'other_participants']
     s = ReportDoc.search()
     s = s.exclude('term', is_draft=True)
     if query != '':
         s = s.query('multi_match', query=query, fields=fields)
     if highlight:
         s = s.highlight(*fields, **HIGHLIGHT_PARAMS)
-    s = s.sort('-date')
+    s = s.sort('{reversed}{field}'.format(reversed='' if reversed else '-', field=sort))
     s = s[paginator.slice_from:paginator.slice_to]
     return s.execute()
 
