@@ -1,17 +1,20 @@
-from django.conf import settings
-from django.contrib.auth.base_user import BaseUserManager
-from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.contrib.postgres.fields import JSONField
-from django.utils import timezone
 import time
 
-class UserManager(BaseUserManager):
+from django.conf import settings
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import JSONField
+from django.db import models
+from django.db.models import Count
+from django.db.models import Q
+from django.utils import timezone
 
+
+class UserManager(BaseUserManager):
     def sorted(self, **kwargs):
         # inline import intentionally
         from openlobby.core.api.schema import AUTHOR_SORT_LAST_NAME_ID, AUTHOR_SORT_TOTAL_REPORTS_ID
-        qs = self.get_queryset()
+        qs = self.get_queryset().annotate(total_reports=Count('report', filter=Q(report__is_draft=False)))
         sort_field = kwargs.get('sort', AUTHOR_SORT_LAST_NAME_ID)
         if sort_field == AUTHOR_SORT_LAST_NAME_ID:
             return qs.order_by('{}last_name'.format('-' if kwargs.get('reversed', False) else ''), 'first_name')
@@ -34,7 +37,7 @@ class User(AbstractUser):
         # deal with first name and last name collisions
         if self.is_author:
             collisions = User.objects.filter(first_name=self.first_name, last_name=self.last_name,
-                is_author=True).exclude(id=self.id)
+                                             is_author=True).exclude(id=self.id)
             if collisions.count() > 0:
                 self.has_colliding_name = True
                 collisions.update(has_colliding_name=True)

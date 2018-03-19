@@ -1,12 +1,12 @@
 import graphene
-from graphene import relay
 from django.db.models import Count, Q
+from graphene import relay
 
 from . import types
-from ..models import OpenIdClient
 from .paginator import Paginator
 from .sanitizers import extract_text
 from .. import search
+from ..models import OpenIdClient
 from ..models import User, Report
 
 AUTHOR_SORT_LAST_NAME_ID = 1
@@ -73,9 +73,7 @@ class Query:
 
         authors = User.objects\
                       .sorted(**kwargs)\
-                      .filter(is_author=True)\
-                    .annotate(total_reports=Count('report', filter=Q(report__is_draft=False)))[
-                  paginator.slice_from:paginator.slice_to]
+                      .filter(is_author=True)[paginator.slice_from:paginator.slice_to]
 
         page_info = paginator.get_page_info(total)
 
