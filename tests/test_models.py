@@ -1,11 +1,11 @@
-import pytest
-import arrow
-from django.conf import settings
 from unittest.mock import patch
 
-from openlobby.core.models import Report, User, OpenIdClient, LoginAttempt
+import arrow
+import pytest
+from django.conf import settings
+from openlobby.core.api.schema import AUTHOR_SORT_LAST_NAME_ID, AUTHOR_SORT_TOTAL_REPORTS_ID
 from openlobby.core.documents import ReportDoc
-
+from openlobby.core.models import Report, User, OpenIdClient, LoginAttempt
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 
@@ -82,7 +82,7 @@ def test_login_attempt__default_expiration():
     client = OpenIdClient.objects.create(name='a', client_id='b', client_secret='c')
     with patch('openlobby.core.models.time.time', return_value=10000):
         attempt = LoginAttempt.objects.create(openid_client=client, state='foo',
-            app_redirect_uri='http://openlobby/app')
+                                              app_redirect_uri='http://openlobby/app')
     assert attempt.expiration == 10000 + settings.LOGIN_ATTEMPT_EXPIRATION
 
 
@@ -118,3 +118,42 @@ def test_user__name_collision_excludes_self_on_update():
     u = User.objects.create(username='a', is_author=True, first_name='Ryan', last_name='Gosling')
     u.save()
     assert User.objects.get(username='a').has_colliding_name is False
+
+
+def test_user__sorted_default():
+    User.objects.create(username='a', is_author=False, first_name='Ryan', last_name='AGosling')
+    User.objects.create(username='b', is_author=True, first_name='Ryan', last_name='BGosling')
+    User.objects.create(username='c', is_author=False, first_name='Ryan', last_name='CGosling')
+    assert User.objects.sorted()[0].username == 'a'
+
+
+def test_user__sorted_default_reversed():
+    User.objects.create(username='a', is_author=False, first_name='Ryan', last_name='AGosling')
+    User.objects.create(username='b', is_author=True, first_name='Ryan', last_name='BGosling')
+    User.objects.create(username='c', is_author=False, first_name='Ryan', last_name='CGosling')
+    assert User.objects.sorted(reversed=True)[0].username == 'c'
+
+
+def test_user__sorted_last_name():
+    User.objects.create(username='a', is_author=False, first_name='Ryan', last_name='AGosling')
+    User.objects.create(username='b', is_author=True, first_name='Ryan', last_name='BGosling')
+    User.objects.create(username='c', is_author=False, first_name='Ryan', last_name='CGosling')
+    assert User.objects.sorted(sort=AUTHOR_SORT_LAST_NAME_ID)[0].username == 'a'
+    assert User.objects.sorted(sort=AUTHOR_SORT_LAST_NAME_ID, reversed=False)[0].username == 'a'
+    assert User.objects.sorted(sort=AUTHOR_SORT_LAST_NAME_ID, reversed=True)[0].username == 'c'
+
+
+def test_user__sorted_total_reports():
+    author = User.objects.create(username='a', is_author=True, first_name='Ryan', last_name='AGosling')
+    User.objects.create(username='b', is_author=True, first_name='Ryan', last_name='BGosling')
+    date = arrow.get(2018, 1, 1).datetime
+    Report.objects.create(
+        id=7,
+        author=author,
+        date=date,
+        published=date,
+        body='Lorem ipsum.',
+    )
+    assert User.objects.sorted(sort=AUTHOR_SORT_TOTAL_REPORTS_ID)[0].username == 'a'
+    assert User.objects.sorted(sort=AUTHOR_SORT_TOTAL_REPORTS_ID, reversed=False)[0].username == 'a'
+    assert User.objects.sorted(sort=AUTHOR_SORT_TOTAL_REPORTS_ID, reversed=True)[0].username == 'b'

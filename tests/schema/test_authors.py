@@ -199,3 +199,148 @@ def test_with_reports(client, snapshot):
     """
     response = call_api(client, query)
     snapshot.assert_match(response)
+
+def test_sort_by_last_name(client, snapshot):
+    prepare_reports()
+    query = """
+    query {
+        authors(sort: LAST_NAME) {
+            totalCount
+            edges {
+                cursor
+                node {
+                    id
+                    firstName
+                    lastName
+                    hasCollidingName
+                    totalReports
+                    extra
+                }
+            }
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+        }
+    }
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
+
+def test_sort_by_last_name_reversed(client, snapshot):
+    prepare_reports()
+    query = """
+    query {
+        authors(sort: LAST_NAME, reversed: true) {
+            totalCount
+            edges {
+                cursor
+                node {
+                    id
+                    firstName
+                    lastName
+                    hasCollidingName
+                    totalReports
+                    extra
+                }
+            }
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+        }
+    }
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
+
+def test_sort_by_total_reports(client, snapshot):
+    prepare_reports()
+    query = """
+    query {
+        authors(sort: TOTAL_REPORTS, reversed: false) {
+            totalCount
+            edges {
+                cursor
+                node {
+                    id
+                    firstName
+                    lastName
+                    hasCollidingName
+                    totalReports
+                    extra
+                }
+            }
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+        }
+    }
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
+
+def test_sort_by_total_reports_reversed(client, snapshot):
+    prepare_reports()
+    query = """
+    query {
+        authors(sort: TOTAL_REPORTS, reversed: true) {
+            totalCount
+            edges {
+                cursor
+                node {
+                    id
+                    firstName
+                    lastName
+                    hasCollidingName
+                    totalReports
+                    extra
+                }
+            }
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+        }
+    }
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
+
+def test_sort_by_default_reversed(client, snapshot):
+    prepare_reports()
+    query = """
+    query {
+        authors(reversed: true) {
+            totalCount
+            edges {
+                cursor
+                node {
+                    id
+                    firstName
+                    lastName
+                    hasCollidingName
+                    totalReports
+                    extra
+                }
+            }
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+        }
+    }
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
