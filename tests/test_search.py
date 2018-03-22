@@ -2,11 +2,10 @@ import pytest
 
 from openlobby.core.api.paginator import Paginator, encode_cursor
 from openlobby.core.api.schema import REPORT_SORT_DATE_ID, REPORT_SORT_PUBLISHED_ID
-from openlobby.core.models import Report
+from openlobby.core.models import Report, User
 from openlobby.core.search import query_reports, reports_by_author
 
-from .dummy import prepare_reports
-
+from .dummy import prepare_reports, authors, reports
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
 
@@ -91,6 +90,9 @@ def test_query_reports_sort_date(query, expected_ids):
 ])
 def test_query_reports_sort_published(query, expected_ids):
     prepare_reports()
+    author4 = User.objects.create(**authors[3])
+    Report.objects.create(author=author4, **reports[5])
+
     paginator = Paginator()
     response = query_reports(query, paginator, sort=REPORT_SORT_PUBLISHED_ID)
     assert expected_ids == [int(r.meta.id) for r in response]
