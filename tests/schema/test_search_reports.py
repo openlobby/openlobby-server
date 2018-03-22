@@ -86,6 +86,48 @@ def test_query(client, snapshot):
     response = call_api(client, query)
     snapshot.assert_match(response)
 
+def test_all_sort(client, snapshot):
+    prepare_reports()
+    query = """
+    query {
+        searchReports {
+            totalCount
+            edges {
+                cursor
+                node {
+                    id
+                    date
+                    published
+                    title
+                    body
+                    receivedBenefit
+                    providedBenefit
+                    ourParticipants
+                    otherParticipants
+                    isDraft
+                    extra
+                    author {
+                        id
+                        firstName
+                        lastName
+                        hasCollidingName
+                        totalReports
+                        extra
+                    }
+                }
+            }
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+        }
+    }
+    """
+    response = call_api(client, query)
+    snapshot.assert_match(response)
+
 
 def test_highlight(client, snapshot):
     prepare_reports()

@@ -99,9 +99,9 @@ reports = [
         'date': arrow.get(2018, 1, 9).datetime,
         'published': arrow.get(2017, 1, 1).datetime,
         'title': 'Gardens of the moon',
-        'body': 'Putting Gandalf to shame?',
-        'received_benefit': '',
-        'provided_benefit': '',
+        'body': 'Putting Gandalf to shame? Good story...',
+        'received_benefit': 'story',
+        'provided_benefit': 'story',
         'our_participants': 'Not Gandalf',
         'other_participants': 'Still no Gandalf',
         'is_draft': False,
@@ -113,6 +113,7 @@ def prepare_reports():
     author1 = User.objects.create(**authors[0])
     author2 = User.objects.create(**authors[1])
     author3 = User.objects.create(**authors[2])
+
     Report.objects.create(author=author1, **reports[0])
     Report.objects.create(author=author2, **reports[1])
     Report.objects.create(author=author1, **reports[2])

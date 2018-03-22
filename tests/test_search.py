@@ -1,7 +1,7 @@
 import pytest
 
 from openlobby.core.api.paginator import Paginator, encode_cursor
-from openlobby.core.api.schema import REPORT_SORT_DATE_ID, REPORT_SORT_PUBLISHED_ID
+from openlobby.core.api.schema import REPORT_SORT_DATE_ID, REPORT_SORT_PUBLISHED_ID, REPORT_SORT_RELEVANCE_ID
 from openlobby.core.models import Report, User
 from openlobby.core.search import query_reports, reports_by_author
 
@@ -102,4 +102,43 @@ def test_query_reports_sort_published(query, expected_ids):
 
     # reversing expected_ids, notice ...reversed(response)
     response = query_reports(query, paginator, sort=REPORT_SORT_PUBLISHED_ID, reversed=True)
+    assert expected_ids == [int(r.meta.id) for r in reversed(response)]
+
+@pytest.mark.parametrize('query, expected_ids', [
+    ('Gandalf', [6, 1])
+])
+def test_query_reports_sort_date(query, expected_ids):
+    prepare_reports()
+    author4 = User.objects.create(**authors[3])
+    Report.objects.create(author=author4, **reports[5])
+
+    paginator = Paginator()
+    response = query_reports(query, paginator, sort=REPORT_SORT_DATE_ID)
+    assert expected_ids == [int(r.meta.id) for r in response]
+
+    response = query_reports(query, paginator, sort=REPORT_SORT_DATE_ID, reversed=False)
+    assert expected_ids == [int(r.meta.id) for r in response]
+
+    # reversing expected_ids, notice ...reversed(response)
+    response = query_reports(query, paginator, sort=REPORT_SORT_DATE_ID, reversed=True)
+    assert expected_ids == [int(r.meta.id) for r in reversed(response)]
+
+@pytest.mark.parametrize('query, expected_ids', [
+    ('Gandalf', [6, 1]),
+    ('story', [6, 2, 1]),
+])
+def test_query_reports_sort_relevance(query, expected_ids):
+    prepare_reports()
+    author4 = User.objects.create(**authors[3])
+    Report.objects.create(author=author4, **reports[5])
+
+    paginator = Paginator()
+    response = query_reports(query, paginator, sort=REPORT_SORT_RELEVANCE_ID)
+    assert expected_ids == [int(r.meta.id) for r in response]
+
+    response = query_reports(query, paginator, sort=REPORT_SORT_RELEVANCE_ID, reversed=False)
+    assert expected_ids == [int(r.meta.id) for r in response]
+
+    # reversing expected_ids, notice ...reversed(response)
+    response = query_reports(query, paginator, sort=REPORT_SORT_RELEVANCE_ID, reversed=True)
     assert expected_ids == [int(r.meta.id) for r in reversed(response)]
