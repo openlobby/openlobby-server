@@ -1,7 +1,7 @@
 import arrow
+from openlobby.core.api.schema import REPORT_SORT_DATE_ID
 
 from openlobby.core.models import Report, User
-
 
 authors = [
     {
@@ -121,7 +121,6 @@ def prepare_reports():
     Report.objects.create(author=author3, **reports[4])
 
 
-
 def prepare_author():
     User.objects.create(**authors[0])
 
@@ -129,3 +128,48 @@ def prepare_author():
 def prepare_report(is_draft=False):
     author = User.objects.create(**authors[0])
     Report.objects.create(author=author, is_draft=is_draft, **reports[0])
+
+
+def search_reports_query(sort):
+    template = """
+    query {
+        searchReports%s {
+            totalCount
+            edges {
+                cursor
+                node {
+                    id
+                    date
+                    published
+                    title
+                    body
+                    receivedBenefit
+                    providedBenefit
+                    ourParticipants
+                    otherParticipants
+                    isDraft
+                    extra
+                    author {
+                        id
+                        firstName
+                        lastName
+                        hasCollidingName
+                        totalReports
+                        extra
+                    }
+                }
+            }
+            pageInfo {
+                hasPreviousPage
+                hasNextPage
+                startCursor
+                endCursor
+            }
+        }
+    }
+    """
+    yield template % ''
+    yield template % '(sort:{sort})'.format(sort=sort)
+    yield template % '(sort:{sort}, reversed:true)'.format(sort=sort)
+    yield template % '(sort:{sort}, reversed:false)'.format(sort=sort)
+
