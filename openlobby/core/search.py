@@ -16,7 +16,7 @@ def query_reports(query, paginator, *, highlight=False, sort='date', reversed=Fa
         s = s.query('multi_match', query=query, fields=fields)
     if highlight:
         s = s.highlight(*fields, **HIGHLIGHT_PARAMS)
-    # the following exercise is because -_score simply does not work, so a workaround is used
+    # the following exercise is because `-_score` simply does not work, so the following workaround is used
     sort_dict = dict()
     sort_dict[sort] = dict(order='asc' if reversed else 'desc')
 
