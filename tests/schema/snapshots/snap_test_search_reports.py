@@ -1616,3 +1616,93 @@ snapshots['test_all_sort_by_relevance 4'] = {
         }
     }
 }
+
+snapshots['test_all_sort_by_date 5'] = {
+    'errors': [
+        {
+            'locations': [
+                {
+                    'column': 28,
+                    'line': 3
+                }
+            ],
+            'message': '''Argument "sort" has invalid value CHAOS.
+Expected type "ReportSortEnum", found CHAOS.'''
+        }
+    ]
+}
+
+snapshots['test_all_sort_by_date 6'] = {
+    'errors': [
+        {
+            'locations': [
+                {
+                    'column': 43,
+                    'line': 3
+                }
+            ],
+            'message': '''Argument "reversed" has invalid value f_a_l_s_e.
+Expected type "Boolean", found f_a_l_s_e.'''
+        }
+    ]
+}
+
+snapshots['test_all_sort_by_published 5'] = {
+    'errors': [
+        {
+            'locations': [
+                {
+                    'column': 28,
+                    'line': 3
+                }
+            ],
+            'message': '''Argument "sort" has invalid value CHAOS.
+Expected type "ReportSortEnum", found CHAOS.'''
+        }
+    ]
+}
+
+snapshots['test_all_sort_by_published 6'] = {
+    'errors': [
+        {
+            'locations': [
+                {
+                    'column': 48,
+                    'line': 3
+                }
+            ],
+            'message': '''Argument "reversed" has invalid value f_a_l_s_e.
+Expected type "Boolean", found f_a_l_s_e.'''
+        }
+    ]
+}
+
+snapshots['test_all_sort_by_relevance 5'] = {
+    'errors': [
+        {
+            'locations': [
+                {
+                    'column': 28,
+                    'line': 3
+                }
+            ],
+            'message': '''Argument "sort" has invalid value CHAOS.
+Expected type "ReportSortEnum", found CHAOS.'''
+        }
+    ]
+}
+
+snapshots['test_all_sort_by_relevance 6'] = {
+    'errors': [
+        {
+            'locations': [
+                {
+                    'column': 48,
+                    'line': 3
+                }
+            ],
+            'message': '''Argument "reversed" has invalid value f_a_l_s_e.
+Expected type "Boolean", found f_a_l_s_e.'''
+        }
+    ]
+}

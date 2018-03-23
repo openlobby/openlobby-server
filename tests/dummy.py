@@ -168,8 +168,12 @@ def search_reports_query(sort):
         }
     }
     """
-    yield template % ''
-    yield template % '(sort:{sort})'.format(sort=sort)
-    yield template % '(sort:{sort}, reversed:true)'.format(sort=sort)
-    yield template % '(sort:{sort}, reversed:false)'.format(sort=sort)
 
+    return [
+        template % '',
+        template % '(sort:{sort})'.format(sort=sort),
+        template % '(sort:{sort}, reversed:true)'.format(sort=sort),
+        template % '(sort:{sort}, reversed:false)'.format(sort=sort),
+        template % '(sort:CHAOS, reversed:false)',  # broken intentionally
+        template % '(sort:{sort}, reversed:f_a_l_s_e)'.format(sort=sort),  # broken intentionally
+    ]
