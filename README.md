@@ -94,3 +94,7 @@ Hosts", turn off "Host Sending Client Registration Request Must Match" and save
 it.
 
 Now run: `pytest --issuer=http://localhost:8080/auth/realms/master`
+
+### Code formatting
+
+We are using [Black](https://github.com/ambv/black) for code formatting.
