@@ -13,13 +13,25 @@ from django.utils import timezone
 class UserManager(BaseUserManager):
     def sorted(self, **kwargs):
         # inline import intentionally
-        from openlobby.core.api.schema import AUTHOR_SORT_LAST_NAME_ID, AUTHOR_SORT_TOTAL_REPORTS_ID
-        qs = self.get_queryset().annotate(total_reports=Count('report', filter=Q(report__is_draft=False)))
-        sort_field = kwargs.get('sort', AUTHOR_SORT_LAST_NAME_ID)
+        from openlobby.core.api.schema import (
+            AUTHOR_SORT_LAST_NAME_ID,
+            AUTHOR_SORT_TOTAL_REPORTS_ID,
+        )
+
+        qs = self.get_queryset().annotate(
+            total_reports=Count("report", filter=Q(report__is_draft=False))
+        )
+        sort_field = kwargs.get("sort", AUTHOR_SORT_LAST_NAME_ID)
         if sort_field == AUTHOR_SORT_LAST_NAME_ID:
-            return qs.order_by('{}last_name'.format('-' if kwargs.get('reversed', False) else ''), 'first_name')
+            return qs.order_by(
+                "{}last_name".format("-" if kwargs.get("reversed", False) else ""),
+                "first_name",
+            )
         elif sort_field == AUTHOR_SORT_TOTAL_REPORTS_ID:
-            return qs.order_by('{}total_reports'.format('' if kwargs.get('reversed', False) else '-'), 'last_name')
+            return qs.order_by(
+                "{}total_reports".format("" if kwargs.get("reversed", False) else "-"),
+                "last_name",
+            )
         raise NotImplemented("Other sort types are not implemented")
 
 
@@ -27,6 +39,7 @@ class User(AbstractUser):
     """Custom user model. For simplicity we store OpenID 'sub' identifier in
     username field.
     """
+
     openid_uid = models.CharField(max_length=255, null=True)
     extra = JSONField(null=True, blank=True)
     is_author = models.BooleanField(default=False)
@@ -36,8 +49,9 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         # deal with first name and last name collisions
         if self.is_author:
-            collisions = User.objects.filter(first_name=self.first_name, last_name=self.last_name,
-                                             is_author=True).exclude(id=self.id)
+            collisions = User.objects.filter(
+                first_name=self.first_name, last_name=self.last_name, is_author=True
+            ).exclude(id=self.id)
             if collisions.count() > 0:
                 self.has_colliding_name = True
                 collisions.update(has_colliding_name=True)
@@ -48,6 +62,7 @@ class OpenIdClient(models.Model):
     """Stores connection parameters for OpenID Clients. Some may be used as
     login shortcuts.
     """
+
     name = models.CharField(max_length=255)
     is_shortcut = models.BooleanField(default=False)
     client_id = models.CharField(max_length=255)
@@ -64,6 +79,7 @@ def get_login_attempt_expiration():
 
 class LoginAttempt(models.Model):
     """Temporary login attempt details which persists redirects."""
+
     openid_client = models.ForeignKey(OpenIdClient, on_delete=models.CASCADE)
     state = models.CharField(max_length=50, unique=True, db_index=True)
     app_redirect_uri = models.CharField(max_length=255)

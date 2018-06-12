@@ -12,12 +12,14 @@ from ..models import User, Report
 AUTHOR_SORT_LAST_NAME_ID = 1
 AUTHOR_SORT_TOTAL_REPORTS_ID = 2
 
+
 class AuthorSortEnum(graphene.Enum):
     LAST_NAME = AUTHOR_SORT_LAST_NAME_ID
     TOTAL_REPORTS = AUTHOR_SORT_TOTAL_REPORTS_ID
 
     class Meta:
-        description = 'Sort by field.'
+        description = "Sort by field."
+
 
 class AuthorsConnection(relay.Connection):
     total_count = graphene.Int()
@@ -34,36 +36,39 @@ class SearchReportsConnection(relay.Connection):
 
 
 def _get_authors_cache(ids):
-    authors = User.objects.filter(id__in=ids)\
-        .annotate(total_reports=Count('report', filter=Q(report__is_draft=False)))
+    authors = User.objects.filter(id__in=ids).annotate(
+        total_reports=Count("report", filter=Q(report__is_draft=False))
+    )
     return {a.id: types.Author.from_db(a) for a in authors}
 
 
 class Query:
-    highlight_help = ('Whether search matches should be marked with tag <mark>.'
-        ' Default: false')
+    highlight_help = (
+        "Whether search matches should be marked with tag <mark>." " Default: false"
+    )
 
     node = relay.Node.Field()
     authors = relay.ConnectionField(
         AuthorsConnection,
-        description='List of Authors. Returns first 10 nodes if pagination is not specified.',
+        description="List of Authors. Returns first 10 nodes if pagination is not specified.",
         sort=AuthorSortEnum(),
-        reversed=graphene.Boolean(default_value=False, description="Reverse order of sort")
+        reversed=graphene.Boolean(
+            default_value=False, description="Reverse order of sort"
+        ),
     )
     search_reports = relay.ConnectionField(
         SearchReportsConnection,
-        description='Fulltext search in Reports. Returns first 10 nodes if pagination is not specified.',
-        query=graphene.String(description='Text to search for.'),
+        description="Fulltext search in Reports. Returns first 10 nodes if pagination is not specified.",
+        query=graphene.String(description="Text to search for."),
         highlight=graphene.Boolean(default_value=False, description=highlight_help),
     )
-    viewer = graphene.Field(types.User, description='Active user viewing API.')
+    viewer = graphene.Field(types.User, description="Active user viewing API.")
     login_shortcuts = graphene.List(
         types.LoginShortcut,
-        description='Shortcuts for login. Use with LoginByShortcut mutation.',
+        description="Shortcuts for login. Use with LoginByShortcut mutation.",
     )
     report_drafts = graphene.List(
-        types.Report,
-        description='Saved drafts of reports for Viewer.',
+        types.Report, description="Saved drafts of reports for Viewer."
     )
 
     def resolve_authors(self, info, **kwargs):
@@ -71,9 +76,9 @@ class Query:
 
         total = User.objects.filter(is_author=True).count()
 
-        authors = User.objects\
-                      .sorted(**kwargs)\
-                      .filter(is_author=True)[paginator.slice_from:paginator.slice_to]
+        authors = User.objects.sorted(**kwargs).filter(is_author=True)[
+            paginator.slice_from : paginator.slice_to
+        ]
 
         page_info = paginator.get_page_info(total)
 
@@ -87,11 +92,9 @@ class Query:
 
     def resolve_search_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
-        query = kwargs.get('query', '')
+        query = kwargs.get("query", "")
         query = extract_text(query)
-        params = {
-            'highlight': kwargs.get('highlight'),
-        }
+        params = {"highlight": kwargs.get("highlight")}
         response = search.query_reports(query, paginator, **params)
         total = response.hits.total
         page_info = paginator.get_page_info(total)
@@ -104,7 +107,9 @@ class Query:
                 node = types.Report.from_es(report, author=authors[report.author_id])
                 edges.append(SearchReportsConnection.Edge(node=node, cursor=cursor))
 
-        return SearchReportsConnection(page_info=page_info, edges=edges, total_count=total)
+        return SearchReportsConnection(
+            page_info=page_info, edges=edges, total_count=total
+        )
 
     def resolve_viewer(self, info, **kwargs):
         if info.context.user.is_authenticated:
@@ -113,7 +118,7 @@ class Query:
             return None
 
     def resolve_login_shortcuts(self, info, **kwargs):
-        clients = OpenIdClient.objects.filter(is_shortcut=True).order_by('name')
+        clients = OpenIdClient.objects.filter(is_shortcut=True).order_by("name")
         return [types.LoginShortcut.from_db(c) for c in clients]
 
     def resolve_report_drafts(self, info, **kwargs):

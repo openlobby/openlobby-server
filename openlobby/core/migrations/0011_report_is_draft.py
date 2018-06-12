@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0010_user_has_colliding_name'),
-    ]
+    dependencies = [("core", "0010_user_has_colliding_name")]
 
     operations = [
         migrations.AddField(
-            model_name='report',
-            name='is_draft',
+            model_name="report",
+            name="is_draft",
             field=models.BooleanField(default=False),
-        ),
+        )
     ]

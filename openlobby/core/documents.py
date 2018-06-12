@@ -5,7 +5,7 @@ import json
 from .models import Report
 
 
-report = Index('{}-reports'.format(settings.ES_INDEX))
+report = Index("{}-reports".format(settings.ES_INDEX))
 
 
 @report.doc_type
@@ -30,8 +30,4 @@ class ReportDoc(DocType):
     class Meta:
         model = Report
 
-        fields = [
-            'date',
-            'published',
-            'is_draft',
-        ]
+        fields = ["date", "published", "is_draft"]

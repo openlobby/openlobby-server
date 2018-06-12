@@ -6,44 +6,42 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0001_initial'),
-    ]
+    dependencies = [("core", "0001_initial")]
 
     operations = [
         migrations.AlterField(
-            model_name='report',
-            name='extra',
+            model_name="report",
+            name="extra",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='report',
-            name='other_participants',
+            model_name="report",
+            name="other_participants",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='report',
-            name='our_participants',
+            model_name="report",
+            name="our_participants",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='report',
-            name='provided_benefit',
+            model_name="report",
+            name="provided_benefit",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='report',
-            name='received_benefit',
+            model_name="report",
+            name="received_benefit",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='report',
-            name='title',
+            model_name="report",
+            name="title",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='extras',
+            model_name="user",
+            name="extras",
             field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True),
         ),
     ]

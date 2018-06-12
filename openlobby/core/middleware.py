@@ -12,18 +12,20 @@ class TokenAuthMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        auth_header = request.META.get('HTTP_AUTHORIZATION')
+        auth_header = request.META.get("HTTP_AUTHORIZATION")
         if auth_header is not None:
-            m = re.match(r'Bearer (?P<token>.+)', auth_header)
+            m = re.match(r"Bearer (?P<token>.+)", auth_header)
             if m:
-                token = m.group('token')
+                token = m.group("token")
             else:
-                return graphql_error_response('Wrong Authorization header. Expected: "Bearer <token>"')
+                return graphql_error_response(
+                    'Wrong Authorization header. Expected: "Bearer <token>"'
+                )
 
             try:
                 username = parse_access_token(token)
             except Exception:
-                return graphql_error_response('Invalid Token.', 401)
+                return graphql_error_response("Invalid Token.", 401)
 
             try:
                 request.user = User.objects.get(username=username)

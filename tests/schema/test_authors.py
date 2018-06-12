@@ -6,12 +6,12 @@ from ..dummy import prepare_reports
 from ..utils import call_api
 
 
-pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
+pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures("django_es")]
 
 
 def test_all(client, snapshot):
     prepare_reports()
-    User.objects.create(id=4, is_author=False, username='x')
+    User.objects.create(id=4, is_author=False, username="x")
     query = """
     query {
         authors {
@@ -200,6 +200,7 @@ def test_with_reports(client, snapshot):
     response = call_api(client, query)
     snapshot.assert_match(response)
 
+
 def test_sort_by_last_name(client, snapshot):
     prepare_reports()
     query = """
@@ -228,6 +229,7 @@ def test_sort_by_last_name(client, snapshot):
     """
     response = call_api(client, query)
     snapshot.assert_match(response)
+
 
 def test_sort_by_last_name_reversed(client, snapshot):
     prepare_reports()
@@ -258,6 +260,7 @@ def test_sort_by_last_name_reversed(client, snapshot):
     response = call_api(client, query)
     snapshot.assert_match(response)
 
+
 def test_sort_by_total_reports(client, snapshot):
     prepare_reports()
     query = """
@@ -287,6 +290,7 @@ def test_sort_by_total_reports(client, snapshot):
     response = call_api(client, query)
     snapshot.assert_match(response)
 
+
 def test_sort_by_total_reports_reversed(client, snapshot):
     prepare_reports()
     query = """
@@ -315,6 +319,7 @@ def test_sort_by_total_reports_reversed(client, snapshot):
     """
     response = call_api(client, query)
     snapshot.assert_match(response)
+
 
 def test_sort_by_default_reversed(client, snapshot):
     prepare_reports()

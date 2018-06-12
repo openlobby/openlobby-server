@@ -24,14 +24,17 @@ def django_es():
 
 
 def pytest_addoption(parser):
-    parser.addoption('--issuer', action='store',
-        help='OpenID Provider (server) issuer URL. Provider must allow client registration.')
+    parser.addoption(
+        "--issuer",
+        action="store",
+        help="OpenID Provider (server) issuer URL. Provider must allow client registration.",
+    )
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def issuer(request):
     """OpenID Provider issuer URL."""
-    url = request.config.getoption('--issuer')
+    url = request.config.getoption("--issuer")
     if url is None:
-        pytest.skip('Missing OpenID Provider URL.')
+        pytest.skip("Missing OpenID Provider URL.")
     return url

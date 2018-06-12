@@ -12,21 +12,28 @@ pytestmark = pytest.mark.django_db
 
 def test_login_by_shortcut(issuer, client, snapshot):
     oc = register_client(issuer)
-    oid_client = OpenIdClient.objects.create(name='Test', is_shortcut=True,
-        issuer=issuer, client_id=oc.client_id, client_secret=oc.client_secret)
+    oid_client = OpenIdClient.objects.create(
+        name="Test",
+        is_shortcut=True,
+        issuer=issuer,
+        client_id=oc.client_id,
+        client_secret=oc.client_secret,
+    )
 
-    app_redirect_uri = 'http://i.am.pirate'
+    app_redirect_uri = "http://i.am.pirate"
     query = """
     mutation {{
         loginByShortcut (input: {{ shortcutId: "{id}", redirectUri: "{uri}" }}) {{
             authorizationUrl
         }}
     }}
-    """.format(id=to_global_id('LoginShortcut', oid_client.id), uri=app_redirect_uri)
+    """.format(
+        id=to_global_id("LoginShortcut", oid_client.id), uri=app_redirect_uri
+    )
     response = call_api(client, query)
 
-    assert 'errors' not in response
-    authorization_url = response['data']['loginByShortcut']['authorizationUrl']
+    assert "errors" not in response
+    authorization_url = response["data"]["loginByShortcut"]["authorizationUrl"]
 
     la = LoginAttempt.objects.get(openid_client__id=oid_client.id)
     assert la.app_redirect_uri == app_redirect_uri

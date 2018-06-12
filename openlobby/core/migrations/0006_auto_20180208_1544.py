@@ -6,14 +6,14 @@ import openlobby.core.models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0005_auto_20180208_1210'),
-    ]
+    dependencies = [("core", "0005_auto_20180208_1210")]
 
     operations = [
         migrations.AlterField(
-            model_name='loginattempt',
-            name='expiration',
-            field=models.IntegerField(default=openlobby.core.models.get_login_attempt_expiration),
-        ),
+            model_name="loginattempt",
+            name="expiration",
+            field=models.IntegerField(
+                default=openlobby.core.models.get_login_attempt_expiration
+            ),
+        )
     ]

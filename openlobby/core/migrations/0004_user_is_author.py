@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0003_auto_20180117_0030'),
-    ]
+    dependencies = [("core", "0003_auto_20180117_0030")]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='is_author',
+            model_name="user",
+            name="is_author",
             field=models.BooleanField(default=False),
-        ),
+        )
     ]

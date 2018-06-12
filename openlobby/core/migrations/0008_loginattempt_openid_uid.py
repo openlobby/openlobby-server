@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0007_auto_20180209_1809'),
-    ]
+    dependencies = [("core", "0007_auto_20180209_1809")]
 
     operations = [
         migrations.AddField(
-            model_name='loginattempt',
-            name='openid_uid',
+            model_name="loginattempt",
+            name="openid_uid",
             field=models.CharField(max_length=255, null=True),
-        ),
+        )
     ]

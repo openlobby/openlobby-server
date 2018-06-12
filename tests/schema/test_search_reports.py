@@ -4,7 +4,7 @@ from ..dummy import prepare_reports
 from ..utils import call_api
 
 
-pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
+pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures("django_es")]
 
 
 def test_all(client, snapshot):

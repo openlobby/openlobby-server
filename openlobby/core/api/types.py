@@ -12,9 +12,9 @@ from .. import search
 
 def get_higlighted(hit, field):
     """Returns higlighted text of field if search is higlighted."""
-    if hasattr(hit.meta, 'highlight') and field in hit.meta.highlight:
+    if hasattr(hit.meta, "highlight") and field in hit.meta.highlight:
         return hit.meta.highlight[field][0]
-    return hit[field] if field in hit else ''
+    return hit[field] if field in hit else ""
 
 
 class Report(graphene.ObjectType):
@@ -31,7 +31,7 @@ class Report(graphene.ObjectType):
     extra = JSONString()
 
     class Meta:
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
 
     @classmethod
     def from_es(cls, report, author=None):
@@ -40,12 +40,12 @@ class Report(graphene.ObjectType):
             author=author,
             date=report.date,
             published=report.published,
-            title=get_higlighted(report, 'title'),
-            body=get_higlighted(report, 'body'),
-            received_benefit=get_higlighted(report, 'received_benefit'),
-            provided_benefit=get_higlighted(report, 'provided_benefit'),
-            our_participants=get_higlighted(report, 'our_participants'),
-            other_participants=get_higlighted(report, 'other_participants'),
+            title=get_higlighted(report, "title"),
+            body=get_higlighted(report, "body"),
+            received_benefit=get_higlighted(report, "received_benefit"),
+            provided_benefit=get_higlighted(report, "provided_benefit"),
+            our_participants=get_higlighted(report, "our_participants"),
+            other_participants=get_higlighted(report, "other_participants"),
             is_draft=report.is_draft,
             extra=report.extra,
         )
@@ -80,7 +80,7 @@ class Report(graphene.ObjectType):
             if report.author_id != info.context.user.id:
                 return None
 
-        author_type = cls._meta.fields['author'].type
+        author_type = cls._meta.fields["author"].type
         author = author_type.get_node(info, report.author_id)
         return cls.from_es(report, author)
 
@@ -102,7 +102,7 @@ class User(graphene.ObjectType):
     extra = JSONString()
 
     class Meta:
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
 
     @classmethod
     def from_db(cls, user):
@@ -135,7 +135,7 @@ class Author(graphene.ObjectType):
     reports = relay.ConnectionField(ReportConnection)
 
     class Meta:
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
 
     @classmethod
     def from_db(cls, user):
@@ -151,9 +151,9 @@ class Author(graphene.ObjectType):
     @classmethod
     def get_node(cls, info, id):
         try:
-            author = models.User.objects\
-                .annotate(total_reports=Count('report', filter=Q(report__is_draft=False)))\
-                .get(id=id, is_author=True)
+            author = models.User.objects.annotate(
+                total_reports=Count("report", filter=Q(report__is_draft=False))
+            ).get(id=id, is_author=True)
             return cls.from_db(author)
         except models.User.DoesNotExist:
             return None
@@ -180,7 +180,7 @@ class LoginShortcut(graphene.ObjectType):
     name = graphene.String()
 
     class Meta:
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
 
     @classmethod
     def from_db(cls, openid_client):

@@ -8,4 +8,4 @@ def strip_all_tags(value):
 
 def extract_text(value):
     value = strip_all_tags(value)
-    return ' '.join(re.findall(r'(\b\w+)', value))
+    return " ".join(re.findall(r"(\b\w+)", value))

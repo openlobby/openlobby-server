@@ -4,7 +4,7 @@ from ..dummy import prepare_reports
 from ..utils import call_api
 
 
-pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures('django_es')]
+pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures("django_es")]
 
 
 def test_unauthenticated(client, snapshot):
@@ -38,5 +38,5 @@ def test_authenticated(client, snapshot):
         }
     }
     """
-    response = call_api(client, query, username='wolf')
+    response = call_api(client, query, username="wolf")
     snapshot.assert_match(response)

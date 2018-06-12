@@ -7,6 +7,6 @@ from snapshottest import Snapshot, GenericRepr
 
 snapshots = Snapshot()
 
-snapshots['test_report_is_saved_in_elasticsearch 1'] = [
+snapshots["test_report_is_saved_in_elasticsearch 1"] = [
     GenericRepr("ReportDoc(index='report_ded_test', doc_type='report_doc', id='2')")
 ]

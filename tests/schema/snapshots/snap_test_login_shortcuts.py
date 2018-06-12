@@ -7,20 +7,8 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['test_returns_only_shortcuts 1'] = {
-    'data': {
-        'loginShortcuts': [
-            {
-                'id': 'TG9naW5TaG9ydGN1dDoyMA==',
-                'name': 'bar'
-            }
-        ]
-    }
+snapshots["test_returns_only_shortcuts 1"] = {
+    "data": {"loginShortcuts": [{"id": "TG9naW5TaG9ydGN1dDoyMA==", "name": "bar"}]}
 }
 
-snapshots['test_none 1'] = {
-    'data': {
-        'loginShortcuts': [
-        ]
-    }
-}
+snapshots["test_none 1"] = {"data": {"loginShortcuts": []}}

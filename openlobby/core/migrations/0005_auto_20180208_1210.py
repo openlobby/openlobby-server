@@ -6,19 +6,17 @@ import django.utils.timezone
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0004_user_is_author'),
-    ]
+    dependencies = [("core", "0004_user_is_author")]
 
     operations = [
         migrations.RenameField(
-            model_name='loginattempt',
-            old_name='redirect_uri',
-            new_name='app_redirect_uri',
+            model_name="loginattempt",
+            old_name="redirect_uri",
+            new_name="app_redirect_uri",
         ),
         migrations.AlterField(
-            model_name='report',
-            name='published',
+            model_name="report",
+            name="published",
             field=models.DateTimeField(default=django.utils.timezone.now),
         ),
     ]

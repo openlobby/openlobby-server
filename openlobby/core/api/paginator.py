@@ -10,16 +10,24 @@ class MissingBeforeValueError(Exception):
 
 
 def encode_cursor(num):
-    return base64.b64encode(str(num).encode('utf-8')).decode('utf-8')
+    return base64.b64encode(str(num).encode("utf-8")).decode("utf-8")
 
 
 def decode_cursor(cursor):
-    return int(base64.b64decode(cursor).decode('utf-8'))
+    return int(base64.b64decode(cursor).decode("utf-8"))
 
 
 class Paginator:
-
-    def __init__(self, *, first=None, after=None, last=None, before=None, per_page=PER_PAGE, **kwargs):
+    def __init__(
+        self,
+        *,
+        first=None,
+        after=None,
+        last=None,
+        before=None,
+        per_page=PER_PAGE,
+        **kwargs
+    ):
         self.per_page = per_page
 
         slice_from = 0
@@ -32,7 +40,9 @@ class Paginator:
 
         elif last is not None:
             if before is None:
-                raise MissingBeforeValueError('Pagination "last" works only in combination with "before" argument.')
+                raise MissingBeforeValueError(
+                    'Pagination "last" works only in combination with "before" argument.'
+                )
 
             slice_to = decode_cursor(before) - 1
             slice_from = slice_to - last
@@ -62,8 +72,12 @@ class Paginator:
             if self.slice_to < total:
                 has_next_page = True
 
-        return PageInfo(has_previous_page=has_previous_page, has_next_page=has_next_page,
-                        start_cursor=start_cursor, end_cursor=end_cursor)
+        return PageInfo(
+            has_previous_page=has_previous_page,
+            has_next_page=has_next_page,
+            start_cursor=start_cursor,
+            end_cursor=end_cursor,
+        )
 
     def get_edge_cursor(self, num):
         return encode_cursor(self.slice_from + num)
