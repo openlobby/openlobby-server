@@ -1,0 +1,17 @@
+Django
+graphene
+graphene-django
+elasticsearch-dsl>=5.3.0,<6.0.0
+django-elasticsearch-dsl
+django-extensions
+pytest
+pytest-django
+pytest-env
+oic
+pyjwt
+iso8601
+arrow
+bleach
+snapshottest
+psycopg2
+dsnparse
