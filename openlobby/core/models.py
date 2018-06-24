@@ -1,8 +1,7 @@
 import time
 
 from django.conf import settings
-from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models import Count
@@ -10,7 +9,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 
-class UserManager(BaseUserManager):
+class CustomUserManager(UserManager):
     def sorted(self, **kwargs):
         # inline import intentionally
         from openlobby.core.api.schema import (
@@ -22,6 +21,7 @@ class UserManager(BaseUserManager):
             total_reports=Count("report", filter=Q(report__is_draft=False))
         )
         sort_field = kwargs.get("sort", AUTHOR_SORT_LAST_NAME_ID)
+
         if sort_field == AUTHOR_SORT_LAST_NAME_ID:
             return qs.order_by(
                 "{}last_name".format("-" if kwargs.get("reversed", False) else ""),
@@ -32,7 +32,8 @@ class UserManager(BaseUserManager):
                 "{}total_reports".format("" if kwargs.get("reversed", False) else "-"),
                 "last_name",
             )
-        raise NotImplemented("Other sort types are not implemented")
+
+        raise NotImplementedError("Other sort types are not implemented")
 
 
 class User(AbstractUser):
@@ -44,7 +45,7 @@ class User(AbstractUser):
     extra = JSONField(null=True, blank=True)
     is_author = models.BooleanField(default=False)
     has_colliding_name = models.BooleanField(default=False)
-    objects = UserManager()
+    objects = CustomUserManager()
 
     def save(self, *args, **kwargs):
         # deal with first name and last name collisions
