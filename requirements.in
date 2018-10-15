@@ -1,7 +1,7 @@
 Django
 graphene
 graphene-django
-elasticsearch-dsl>=5.3.0,<6.0.0
+elasticsearch-dsl==6.1.0
 django-elasticsearch-dsl
 django-extensions
 pytest

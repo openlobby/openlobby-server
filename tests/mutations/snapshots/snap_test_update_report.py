@@ -13,6 +13,7 @@ snapshots["test_unauthorized 1"] = {
         {
             "locations": [{"column": 5, "line": 3}],
             "message": "User must be logged in to perform this mutation.",
+            "path": ["updateReport"],
         }
     ],
 }
@@ -23,6 +24,7 @@ snapshots["test_not_author 1"] = {
         {
             "locations": [{"column": 5, "line": 3}],
             "message": "Viewer is not the Author of this Report or Report does not exist.",
+            "path": ["updateReport"],
         }
     ],
 }
@@ -33,6 +35,7 @@ snapshots["test_report_does_not_exist 1"] = {
         {
             "locations": [{"column": 5, "line": 3}],
             "message": "Viewer is not the Author of this Report or Report does not exist.",
+            "path": ["updateReport"],
         }
     ],
 }
@@ -43,6 +46,7 @@ snapshots["test_update_published_with_draft 1"] = {
         {
             "locations": [{"column": 5, "line": 3}],
             "message": "You cannot update published Report with draft.",
+            "path": ["updateReport"],
         }
     ],
 }

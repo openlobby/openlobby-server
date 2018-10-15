@@ -13,6 +13,7 @@ snapshots["test_unauthorized 1"] = {
         {
             "locations": [{"column": 5, "line": 3}],
             "message": "User must be logged in to perform this mutation.",
+            "path": ["createReport"],
         }
     ],
 }

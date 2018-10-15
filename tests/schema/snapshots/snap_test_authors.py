@@ -127,6 +127,7 @@ snapshots["test_last 1"] = {
         {
             "locations": [{"column": 9, "line": 3}],
             "message": 'Pagination "last" works only in combination with "before" argument.',
+            "path": ["authors"],
         }
     ],
 }

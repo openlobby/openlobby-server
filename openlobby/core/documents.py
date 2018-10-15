@@ -5,7 +5,7 @@ import json
 from .models import Report
 
 
-report = Index("{}-reports".format(settings.ES_INDEX))
+report = Index(f"{settings.ES_INDEX}-reports")
 
 
 @report.doc_type

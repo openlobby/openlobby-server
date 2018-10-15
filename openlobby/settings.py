@@ -130,7 +130,7 @@ GRAPHENE = {"SCHEMA": "openlobby.schema.schema"}
 ###############################################################################
 # Custom settings
 
-# Elasticsearch index with reports
+# Elasticsearch index prefix
 ES_INDEX = os.environ.get("ES_INDEX", "openlobby")
 
 # default analyzer for text fields
