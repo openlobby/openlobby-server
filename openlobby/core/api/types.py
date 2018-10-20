@@ -154,9 +154,7 @@ class Author(graphene.ObjectType):
     @classmethod
     def get_node(cls, info, id):
         try:
-            author = models.User.objects.annotate(
-                total_reports=Count("report", filter=Q(report__is_draft=False))
-            ).get(id=id, is_author=True)
+            author = models.User.objects.with_total_reports().get(id=id, is_author=True)
             return cls.from_db(author)
         except models.User.DoesNotExist:
             return None
@@ -176,7 +174,9 @@ class Author(graphene.ObjectType):
         return ReportConnection(page_info=page_info, edges=edges, total_count=total)
 
     def resolve_total_reports(self, info, **kwargs):
-        return models.Report.objects.filter(author_id=self.id, is_draft=False).count()
+        return models.Report.objects.filter(
+            author_id=self.id, is_draft=False, superseded_by=None
+        ).count()
 
 
 class LoginShortcut(graphene.ObjectType):

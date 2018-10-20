@@ -10,6 +10,8 @@ from openlobby.core.api.schema import (
 from openlobby.core.documents import ReportDoc
 from openlobby.core.models import Report, User, OpenIdClient, LoginAttempt
 
+from .dummy import prepare_reports
+
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures("django_es")]
 
 
@@ -34,6 +36,7 @@ def test_report__is_saved_in_elasticsearch():
     date = arrow.get(2018, 1, 1).datetime
     published = arrow.get(2018, 1, 2).datetime
     edited = arrow.get(2018, 1, 3).datetime
+    replacement = Report.objects.create(id=4, author=author, date=date, body="IDDQD")
     Report.objects.create(
         id=3,
         author=author,
@@ -48,12 +51,14 @@ def test_report__is_saved_in_elasticsearch():
         other_participants="them",
         extra={"a": 3},
         is_draft=False,
+        superseded_by=replacement,
     )
     docs = list(ReportDoc.search())
-    assert len(docs) == 1
-    doc = docs[0]
+    assert len(docs) == 2
+    doc = docs[1]
     assert doc.meta.id == "3"
     assert doc.author_id == 6
+    assert doc.superseded_by_id == 4
     assert doc.date == date
     assert doc.published == published
     assert doc.edited == edited
@@ -141,74 +146,39 @@ def test_user__name_collision_excludes_self_on_update():
     assert User.objects.get(username="a").has_colliding_name is False
 
 
-def test_user__sorted_default():
-    User.objects.create(
-        username="a", is_author=False, first_name="Ryan", last_name="AGosling"
-    )
-    User.objects.create(
-        username="b", is_author=True, first_name="Ryan", last_name="BGosling"
-    )
-    User.objects.create(
-        username="c", is_author=False, first_name="Ryan", last_name="CGosling"
-    )
-    assert User.objects.sorted()[0].username == "a"
+@pytest.mark.parametrize(
+    "params, expected",
+    [
+        ({}, ["Sheep", "Squarepants", "Wolfe"]),
+        ({"reversed": False}, ["Sheep", "Squarepants", "Wolfe"]),
+        ({"reversed": True}, ["Wolfe", "Squarepants", "Sheep"]),
+        ({"sort": AUTHOR_SORT_LAST_NAME_ID}, ["Sheep", "Squarepants", "Wolfe"]),
+        (
+            {"sort": AUTHOR_SORT_LAST_NAME_ID, "reversed": False},
+            ["Sheep", "Squarepants", "Wolfe"],
+        ),
+        (
+            {"sort": AUTHOR_SORT_LAST_NAME_ID, "reversed": True},
+            ["Wolfe", "Squarepants", "Sheep"],
+        ),
+        ({"sort": AUTHOR_SORT_TOTAL_REPORTS_ID}, ["Wolfe", "Sheep", "Squarepants"]),
+        (
+            {"sort": AUTHOR_SORT_TOTAL_REPORTS_ID, "reversed": False},
+            ["Wolfe", "Sheep", "Squarepants"],
+        ),
+        (
+            {"sort": AUTHOR_SORT_TOTAL_REPORTS_ID, "reversed": True},
+            ["Squarepants", "Sheep", "Wolfe"],
+        ),
+    ],
+)
+def test_user__sorted(params, expected):
+    prepare_reports()
+    last_names = User.objects.sorted(**params).values_list("last_name", flat=True)
+    assert list(last_names) == expected
 
 
-def test_user__sorted_default_reversed():
-    User.objects.create(
-        username="a", is_author=False, first_name="Ryan", last_name="AGosling"
-    )
-    User.objects.create(
-        username="b", is_author=True, first_name="Ryan", last_name="BGosling"
-    )
-    User.objects.create(
-        username="c", is_author=False, first_name="Ryan", last_name="CGosling"
-    )
-    assert User.objects.sorted(reversed=True)[0].username == "c"
-
-
-def test_user__sorted_last_name():
-    User.objects.create(
-        username="a", is_author=False, first_name="Ryan", last_name="AGosling"
-    )
-    User.objects.create(
-        username="b", is_author=True, first_name="Ryan", last_name="BGosling"
-    )
-    User.objects.create(
-        username="c", is_author=False, first_name="Ryan", last_name="CGosling"
-    )
-    assert User.objects.sorted(sort=AUTHOR_SORT_LAST_NAME_ID)[0].username == "a"
-    assert (
-        User.objects.sorted(sort=AUTHOR_SORT_LAST_NAME_ID, reversed=False)[0].username
-        == "a"
-    )
-    assert (
-        User.objects.sorted(sort=AUTHOR_SORT_LAST_NAME_ID, reversed=True)[0].username
-        == "c"
-    )
-
-
-def test_user__sorted_total_reports():
-    author = User.objects.create(
-        username="a", is_author=True, first_name="Ryan", last_name="AGosling"
-    )
-    User.objects.create(
-        username="b", is_author=True, first_name="Ryan", last_name="BGosling"
-    )
-    date = arrow.get(2018, 1, 1).datetime
-    Report.objects.create(
-        id=7, author=author, date=date, published=date, body="Lorem ipsum."
-    )
-    assert User.objects.sorted(sort=AUTHOR_SORT_TOTAL_REPORTS_ID)[0].username == "a"
-    assert (
-        User.objects.sorted(sort=AUTHOR_SORT_TOTAL_REPORTS_ID, reversed=False)[
-            0
-        ].username
-        == "a"
-    )
-    assert (
-        User.objects.sorted(sort=AUTHOR_SORT_TOTAL_REPORTS_ID, reversed=True)[
-            0
-        ].username
-        == "b"
-    )
+def test_user__with_total_reports():
+    prepare_reports()
+    users = User.objects.with_total_reports().values_list("last_name", "total_reports")
+    assert set(users) == {("Wolfe", 2), ("Sheep", 1), ("Squarepants", 0)}

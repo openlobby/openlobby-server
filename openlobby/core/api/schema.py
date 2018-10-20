@@ -36,9 +36,7 @@ class SearchReportsConnection(relay.Connection):
 
 
 def _get_authors_cache(ids):
-    authors = User.objects.filter(id__in=ids).annotate(
-        total_reports=Count("report", filter=Q(report__is_draft=False))
-    )
+    authors = User.objects.with_total_reports().filter(id__in=ids)
     return {a.id: types.Author.from_db(a) for a in authors}
 
 

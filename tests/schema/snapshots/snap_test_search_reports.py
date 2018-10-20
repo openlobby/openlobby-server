@@ -41,10 +41,10 @@ snapshots["test_all 1"] = {
                     "node": {
                         "author": {
                             "extra": None,
-                            "firstName": "Spongebob",
+                            "firstName": "Shaun",
                             "hasCollidingName": False,
                             "id": "QXV0aG9yOjI=",
-                            "lastName": "Squarepants",
+                            "lastName": "Sheep",
                             "totalReports": 1,
                         },
                         "body": "Another long story.",
@@ -107,10 +107,10 @@ snapshots["test_query 1"] = {
                     "node": {
                         "author": {
                             "extra": None,
-                            "firstName": "Spongebob",
+                            "firstName": "Shaun",
                             "hasCollidingName": False,
                             "id": "QXV0aG9yOjI=",
-                            "lastName": "Squarepants",
+                            "lastName": "Sheep",
                             "totalReports": 1,
                         },
                         "body": "Another long story.",

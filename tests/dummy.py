@@ -14,16 +14,16 @@ authors = [
     },
     {
         "id": 2,
-        "username": "sponge",
-        "first_name": "Spongebob",
-        "last_name": "Squarepants",
+        "username": "shaun",
+        "first_name": "Shaun",
+        "last_name": "Sheep",
         "is_author": True,
     },
     {
         "id": 3,
-        "username": "shaun",
-        "first_name": "Shaun",
-        "last_name": "Sheep",
+        "username": "sponge",
+        "first_name": "Spongebob",
+        "last_name": "Squarepants",
         "is_author": True,
     },
 ]
@@ -92,6 +92,47 @@ reports = [
         "other_participants": "",
         "is_draft": True,
     },
+    {
+        "id": 6,
+        "superseded_by_id": 2,
+        "date": arrow.get(2018, 1, 3).datetime,
+        "published": arrow.get(2018, 1, 4).datetime,
+        "edited": arrow.get(2018, 2, 1).datetime,
+        "title": "The Two Towers",
+        "body": "Another long story in progress.",
+        "received_benefit": "Mithrill Jacket",
+        "provided_benefit": "The Ring",
+        "our_participants": "Frodo, Gimli, Legolas",
+        "other_participants": "Saruman, Sauron",
+        "extra": {"rings": 2},
+    },
+    {
+        "id": 7,
+        "superseded_by_id": 2,
+        "date": arrow.get(2018, 1, 3).datetime,
+        "published": arrow.get(2018, 1, 4).datetime,
+        "edited": arrow.get(2018, 2, 5).datetime,
+        "title": "The Towels",
+        "body": "What am I doing?",
+        "received_benefit": "Jacket",
+        "provided_benefit": "The Ringo",
+        "our_participants": "Ringo Starr",
+        "other_participants": "",
+        "extra": {"rings": 1},
+    },
+    {
+        "id": 8,
+        "superseded_by_id": 1,
+        "date": arrow.get(2018, 1, 1).datetime,
+        "published": arrow.get(2018, 1, 2).datetime,
+        "edited": arrow.get(2018, 1, 3).datetime,
+        "title": "The Fellowship of the Ringing Bell",
+        "body": "The bell is ringing!",
+        "received_benefit": "bell",
+        "provided_benefit": "noise",
+        "our_participants": "",
+        "other_participants": "",
+    },
 ]
 
 
@@ -104,6 +145,9 @@ def prepare_reports():
     Report.objects.create(author=author1, **reports[2])
     Report.objects.create(author=author1, **reports[3])
     Report.objects.create(author=author3, **reports[4])
+    Report.objects.create(author=author2, **reports[5])
+    Report.objects.create(author=author2, **reports[6])
+    Report.objects.create(author=author1, **reports[7])
 
 
 def prepare_author():

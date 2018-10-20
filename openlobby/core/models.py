@@ -10,6 +10,14 @@ from django.utils import timezone
 
 
 class CustomUserManager(UserManager):
+    def with_total_reports(self):
+        return self.get_queryset().annotate(
+            total_reports=Count(
+                "report",
+                filter=Q(report__is_draft=False) & Q(report__superseded_by=None),
+            )
+        )
+
     def sorted(self, **kwargs):
         # inline import intentionally
         from openlobby.core.api.schema import (
@@ -17,9 +25,7 @@ class CustomUserManager(UserManager):
             AUTHOR_SORT_TOTAL_REPORTS_ID,
         )
 
-        qs = self.get_queryset().annotate(
-            total_reports=Count("report", filter=Q(report__is_draft=False))
-        )
+        qs = self.with_total_reports()
         sort_field = kwargs.get("sort", AUTHOR_SORT_LAST_NAME_ID)
 
         if sort_field == AUTHOR_SORT_LAST_NAME_ID:

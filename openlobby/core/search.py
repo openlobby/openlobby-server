@@ -19,6 +19,7 @@ def query_reports(query, paginator, *, highlight=False):
     ]
     s = ReportDoc.search()
     s = s.exclude("term", is_draft=True)
+    s = s.exclude("exists", field="superseded_by_id")
     if query != "":
         s = s.query("multi_match", query=query, fields=fields)
     if highlight:
@@ -31,6 +32,7 @@ def query_reports(query, paginator, *, highlight=False):
 def reports_by_author(author_id, paginator):
     s = ReportDoc.search()
     s = s.exclude("term", is_draft=True)
+    s = s.exclude("exists", field="superseded_by_id")
     s = s.filter("term", author_id=author_id)
     s = s.sort("-date")
     s = s[paginator.slice_from : paginator.slice_to]
