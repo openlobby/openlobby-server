@@ -3,12 +3,8 @@ from unittest.mock import patch
 import arrow
 import pytest
 from django.conf import settings
-from openlobby.core.api.schema import (
-    AUTHOR_SORT_LAST_NAME_ID,
-    AUTHOR_SORT_TOTAL_REPORTS_ID,
-)
 from openlobby.core.documents import ReportDoc
-from openlobby.core.models import Report, User, OpenIdClient, LoginAttempt
+from openlobby.core.models import Report, User, OpenIdClient, LoginAttempt, UserSort
 
 from .dummy import prepare_reports
 
@@ -152,22 +148,22 @@ def test_user__name_collision_excludes_self_on_update():
         ({}, ["Sheep", "Squarepants", "Wolfe"]),
         ({"reversed": False}, ["Sheep", "Squarepants", "Wolfe"]),
         ({"reversed": True}, ["Wolfe", "Squarepants", "Sheep"]),
-        ({"sort": AUTHOR_SORT_LAST_NAME_ID}, ["Sheep", "Squarepants", "Wolfe"]),
+        ({"sort": UserSort.LAST_NAME}, ["Sheep", "Squarepants", "Wolfe"]),
         (
-            {"sort": AUTHOR_SORT_LAST_NAME_ID, "reversed": False},
+            {"sort": UserSort.LAST_NAME, "reversed": False},
             ["Sheep", "Squarepants", "Wolfe"],
         ),
         (
-            {"sort": AUTHOR_SORT_LAST_NAME_ID, "reversed": True},
+            {"sort": UserSort.LAST_NAME, "reversed": True},
             ["Wolfe", "Squarepants", "Sheep"],
         ),
-        ({"sort": AUTHOR_SORT_TOTAL_REPORTS_ID}, ["Wolfe", "Sheep", "Squarepants"]),
+        ({"sort": UserSort.TOTAL_REPORTS}, ["Wolfe", "Sheep", "Squarepants"]),
         (
-            {"sort": AUTHOR_SORT_TOTAL_REPORTS_ID, "reversed": False},
+            {"sort": UserSort.TOTAL_REPORTS, "reversed": False},
             ["Wolfe", "Sheep", "Squarepants"],
         ),
         (
-            {"sort": AUTHOR_SORT_TOTAL_REPORTS_ID, "reversed": True},
+            {"sort": UserSort.TOTAL_REPORTS, "reversed": True},
             ["Squarepants", "Sheep", "Wolfe"],
         ),
     ],

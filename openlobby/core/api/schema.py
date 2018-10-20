@@ -1,5 +1,4 @@
 import graphene
-from django.db.models import Count, Q
 from graphene import relay
 
 from . import types
@@ -7,18 +6,10 @@ from .paginator import Paginator
 from .sanitizers import extract_text
 from .. import search
 from ..models import OpenIdClient
-from ..models import User, Report
-
-AUTHOR_SORT_LAST_NAME_ID = 1
-AUTHOR_SORT_TOTAL_REPORTS_ID = 2
+from ..models import User, Report, UserSort
 
 
-class AuthorSortEnum(graphene.Enum):
-    LAST_NAME = AUTHOR_SORT_LAST_NAME_ID
-    TOTAL_REPORTS = AUTHOR_SORT_TOTAL_REPORTS_ID
-
-    class Meta:
-        description = "Sort by field."
+UserSortEnum = graphene.Enum.from_enum(UserSort)
 
 
 class AuthorsConnection(relay.Connection):
@@ -49,9 +40,9 @@ class Query:
     authors = relay.ConnectionField(
         AuthorsConnection,
         description="List of Authors. Returns first 10 nodes if pagination is not specified.",
-        sort=AuthorSortEnum(),
+        sort=UserSortEnum(),
         reversed=graphene.Boolean(
-            default_value=False, description="Reverse order of sort"
+            default_value=False, description="Reverse order of sort."
         ),
     )
     search_reports = relay.ConnectionField(
@@ -70,6 +61,9 @@ class Query:
     )
 
     def resolve_authors(self, info, **kwargs):
+        if "sort" in kwargs:
+            kwargs["sort"] = UserSort(kwargs["sort"])
+
         paginator = Paginator(**kwargs)
 
         total = User.objects.filter(is_author=True).count()

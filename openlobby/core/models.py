@@ -1,3 +1,4 @@
+from enum import Enum
 import time
 
 from django.conf import settings
@@ -7,6 +8,11 @@ from django.db import models
 from django.db.models import Count
 from django.db.models import Q
 from django.utils import timezone
+
+
+class UserSort(Enum):
+    LAST_NAME = "last_name"
+    TOTAL_REPORTS = "total_reports"
 
 
 class CustomUserManager(UserManager):
@@ -19,21 +25,15 @@ class CustomUserManager(UserManager):
         )
 
     def sorted(self, **kwargs):
-        # inline import intentionally
-        from openlobby.core.api.schema import (
-            AUTHOR_SORT_LAST_NAME_ID,
-            AUTHOR_SORT_TOTAL_REPORTS_ID,
-        )
-
         qs = self.with_total_reports()
-        sort_field = kwargs.get("sort", AUTHOR_SORT_LAST_NAME_ID)
+        sort_choice = kwargs.get("sort", UserSort.LAST_NAME)
 
-        if sort_field == AUTHOR_SORT_LAST_NAME_ID:
+        if sort_choice == UserSort.LAST_NAME:
             return qs.order_by(
                 "{}last_name".format("-" if kwargs.get("reversed", False) else ""),
                 "first_name",
             )
-        elif sort_field == AUTHOR_SORT_TOTAL_REPORTS_ID:
+        elif sort_choice == UserSort.TOTAL_REPORTS:
             return qs.order_by(
                 "{}total_reports".format("" if kwargs.get("reversed", False) else "-"),
                 "last_name",
