@@ -29,6 +29,7 @@ class Report(graphene.ObjectType):
     other_participants = graphene.String()
     is_draft = graphene.Boolean()
     extra = JSONString()
+    edited = graphene.String()
 
     class Meta:
         interfaces = (relay.Node,)
@@ -48,6 +49,7 @@ class Report(graphene.ObjectType):
             other_participants=get_higlighted(report, "other_participants"),
             is_draft=report.is_draft,
             extra=report.extra,
+            edited=report.edited,
         )
 
     @classmethod
@@ -65,6 +67,7 @@ class Report(graphene.ObjectType):
             other_participants=report.other_participants,
             is_draft=report.is_draft,
             extra=report.extra,
+            edited=report.edited,
         )
 
     @classmethod

@@ -35,6 +35,7 @@ def test_authenticated(client, snapshot):
             ourParticipants
             otherParticipants
             isDraft
+            edited
         }
     }
     """

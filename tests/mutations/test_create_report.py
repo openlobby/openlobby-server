@@ -26,6 +26,7 @@ mutation createReport ($input: CreateReportInput!) {
             otherParticipants
             isDraft
             extra
+            edited
             author {
                 id
                 firstName
@@ -75,6 +76,7 @@ def test_full_report(client, snapshot):
     response = call_api(client, query, input, "wolf")
 
     published = strip_value(response, "data", "createReport", "report", "published")
+    edited = strip_value(response, "data", "createReport", "report", "edited")
 
     id = strip_value(response, "data", "createReport", "report", "id")
     assert re.match(r"\w+", id)
@@ -85,6 +87,7 @@ def test_full_report(client, snapshot):
     assert report.author_id == 1
     assert report.date == date.datetime
     assert report.published == arrow.get(published).datetime
+    assert report.edited == arrow.get(edited).datetime
     assert report.title == title
     assert report.body == body
     assert report.received_benefit == received_benefit
@@ -139,6 +142,7 @@ def test_is_draft(client, snapshot):
     response = call_api(client, query, input, "wolf")
 
     published = strip_value(response, "data", "createReport", "report", "published")
+    edited = strip_value(response, "data", "createReport", "report", "edited")
 
     id = strip_value(response, "data", "createReport", "report", "id")
     assert re.match(r"\w+", id)
@@ -149,6 +153,7 @@ def test_is_draft(client, snapshot):
     assert report.author_id == 1
     assert report.date == date.datetime
     assert report.published == arrow.get(published).datetime
+    assert report.edited == arrow.get(edited).datetime
     assert report.title == title
     assert report.body == body
     assert report.received_benefit == received_benefit

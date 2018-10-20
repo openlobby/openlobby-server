@@ -100,6 +100,8 @@ class Report(models.Model):
     other_participants = models.TextField(null=True, blank=True)
     extra = JSONField(null=True, blank=True)
     is_draft = models.BooleanField(default=False)
+    superseded_by = models.ForeignKey("self", on_delete=models.CASCADE, null=True)
+    edited = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

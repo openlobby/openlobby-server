@@ -19,6 +19,7 @@ class ReportDoc(DocType):
     other_participants = fields.TextField(analyzer=settings.ES_TEXT_ANALYZER)
     # there is no support for JSONField now, so we serialize it to keyword
     extra_serialized = fields.KeywordField()
+    superseded_by = fields.IntegerField()
 
     def prepare_extra_serialized(self, instance):
         return json.dumps(instance.extra)
@@ -30,4 +31,4 @@ class ReportDoc(DocType):
     class Meta:
         model = Report
 
-        fields = ["date", "published", "is_draft"]
+        fields = ["date", "published", "is_draft", "edited"]

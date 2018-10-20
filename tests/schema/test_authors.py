@@ -189,6 +189,7 @@ def test_with_reports(client, snapshot):
                                 otherParticipants
                                 isDraft
                                 extra
+                                edited
                             }
                         }
                     }

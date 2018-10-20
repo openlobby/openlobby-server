@@ -27,6 +27,7 @@ mutation updateReport ($input: UpdateReportInput!) {
             otherParticipants
             isDraft
             extra
+            edited
             author {
                 id
                 firstName
@@ -39,7 +40,8 @@ mutation updateReport ($input: UpdateReportInput!) {
 }
 """
 
-published = arrow.get(2018, 3, 8)
+published = arrow.get(2018, 1, 2)
+edited = arrow.get(2018, 3, 8, 12)
 
 date = arrow.get(2018, 3, 3)
 title = "Free Tesla"
@@ -64,11 +66,12 @@ def get_input(is_draft=False, id=1):
     }
 
 
-def assert_report(is_draft=False):
+def assert_report(is_draft, published, edited):
     report = Report.objects.get(id=1)
     assert report.author_id == 1
     assert report.date == date.datetime
     assert report.published == published.datetime
+    assert report.edited == edited.datetime
     assert report.title == title
     assert report.body == body
     assert report.received_benefit == received_benefit
@@ -111,28 +114,28 @@ def test_update_published_with_draft(client, snapshot):
 def test_update_draft_with_draft(client, snapshot):
     prepare_report(is_draft=True)
     input = get_input(is_draft=True)
-    with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=published):
+    with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=edited):
         response = call_api(client, query, input, "wolf")
     snapshot.assert_match(response)
-    assert_report(is_draft=True)
+    assert_report(True, edited, edited)
 
 
 def test_update_draft_with_published(client, snapshot):
     prepare_report(is_draft=True)
     input = get_input()
-    with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=published):
+    with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=edited):
         response = call_api(client, query, input, "wolf")
     snapshot.assert_match(response)
-    assert_report()
+    assert_report(False, edited, edited)
 
 
 def test_update_published_with_published(client, snapshot):
     prepare_report()
     input = get_input()
-    with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=published):
+    with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=edited):
         response = call_api(client, query, input, "wolf")
     snapshot.assert_match(response)
-    assert_report()
+    assert_report(False, published, edited)
 
 
 def test_input_sanitization(client, snapshot):
@@ -148,7 +151,7 @@ def test_input_sanitization(client, snapshot):
         "date": date.isoformat(),
     }
 
-    with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=published):
+    with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=edited):
         response = call_api(client, query, input, "wolf")
 
     snapshot.assert_match(response)

@@ -123,10 +123,13 @@ class CreateReport(relay.ClientIDMutation):
             raise Exception("User must be logged in to perform this mutation.")
 
         author = info.context.user
+        now = arrow.utcnow().datetime
 
         report = Report.objects.create(
             author=author,
             date=input.get("date"),
+            published=now,
+            edited=now,
             title=strip_all_tags(input.get("title", "")),
             body=strip_all_tags(input.get("body", "")),
             received_benefit=strip_all_tags(input.get("received_benefit", "")),
@@ -178,7 +181,11 @@ class UpdateReport(relay.ClientIDMutation):
         # TODO updating published report older than like a hour should create
         # new revision in history of report
 
-        report.published = arrow.utcnow().datetime
+        report.edited = arrow.utcnow().datetime
+
+        if is_draft or report.is_draft:
+            report.published = report.edited
+
         report.date = input.get("date")
         report.title = strip_all_tags(input.get("title", ""))
         report.body = strip_all_tags(input.get("body", ""))

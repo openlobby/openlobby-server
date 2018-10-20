@@ -33,11 +33,13 @@ def test_report__is_saved_in_elasticsearch():
     author = User.objects.create(id=6)
     date = arrow.get(2018, 1, 1).datetime
     published = arrow.get(2018, 1, 2).datetime
+    edited = arrow.get(2018, 1, 3).datetime
     Report.objects.create(
         id=3,
         author=author,
         date=date,
         published=published,
+        edited=edited,
         title="It happened",
         body="Lorem ipsum.",
         received_benefit="coffee",
@@ -54,6 +56,7 @@ def test_report__is_saved_in_elasticsearch():
     assert doc.author_id == 6
     assert doc.date == date
     assert doc.published == published
+    assert doc.edited == edited
     assert doc.title == "It happened"
     assert doc.body == "Lorem ipsum."
     assert doc.received_benefit == "coffee"

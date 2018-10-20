@@ -84,6 +84,7 @@ def test_report(client, snapshot):
                 otherParticipants
                 isDraft
                 extra
+                edited
                 author {{
                     id
                     firstName
