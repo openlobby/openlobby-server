@@ -2,7 +2,7 @@ init-env:
 	python3 -m venv .env
 
 install:
-	pip install --upgrade -r requirements.txt
+	pip install --upgrade -r requirements.txt -r test-requirements.txt
 	pip install -e .
 
 run:

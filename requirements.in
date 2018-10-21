@@ -4,14 +4,10 @@ graphene-django
 elasticsearch-dsl==6.1.0
 django-elasticsearch-dsl
 django-extensions
-pytest
-pytest-django
-pytest-env
 oic
 pyjwt
 iso8601
 arrow
 bleach
-snapshottest
 psycopg2
 dsnparse
