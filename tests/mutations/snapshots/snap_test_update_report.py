@@ -58,22 +58,22 @@ snapshots["test_update_draft_with_draft 1"] = {
                 "author": {
                     "extra": '{"movies": 1}',
                     "firstName": "Winston",
-                    "id": "QXV0aG9yOjE=",
+                    "id": "QXV0aG9yOjQy",
                     "lastName": "Wolfe",
                     "totalReports": 0,
                 },
-                "body": "I visited Tesla factory and talked with Elon Musk.",
+                "body": "Rewrited",
                 "date": "2018-03-03 00:00:00+00:00",
-                "edited": "2018-03-08 12:00:00+00:00",
+                "edited": "2018-01-02 05:50:00+00:00",
                 "extra": None,
-                "id": "UmVwb3J0OjE=",
+                "id": "UmVwb3J0OjY2Ng==",
                 "isDraft": True,
-                "otherParticipants": "Elon Musk",
-                "ourParticipants": "me",
-                "providedBenefit": "nothing",
-                "published": "2018-03-08 12:00:00+00:00",
-                "receivedBenefit": "Tesla Model S",
-                "title": "Free Tesla",
+                "otherParticipants": "grandchilds",
+                "ourParticipants": "kids",
+                "providedBenefit": "water",
+                "published": "2018-01-02 05:50:00+00:00",
+                "receivedBenefit": "cake",
+                "title": "New title",
             }
         }
     }
@@ -86,22 +86,22 @@ snapshots["test_update_draft_with_published 1"] = {
                 "author": {
                     "extra": '{"movies": 1}',
                     "firstName": "Winston",
-                    "id": "QXV0aG9yOjE=",
+                    "id": "QXV0aG9yOjQy",
                     "lastName": "Wolfe",
                     "totalReports": 1,
                 },
-                "body": "I visited Tesla factory and talked with Elon Musk.",
+                "body": "Rewrited",
                 "date": "2018-03-03 00:00:00+00:00",
-                "edited": "2018-03-08 12:00:00+00:00",
+                "edited": "2018-01-02 05:50:00+00:00",
                 "extra": None,
-                "id": "UmVwb3J0OjE=",
+                "id": "UmVwb3J0OjY2Ng==",
                 "isDraft": False,
-                "otherParticipants": "Elon Musk",
-                "ourParticipants": "me",
-                "providedBenefit": "nothing",
-                "published": "2018-03-08 12:00:00+00:00",
-                "receivedBenefit": "Tesla Model S",
-                "title": "Free Tesla",
+                "otherParticipants": "grandchilds",
+                "ourParticipants": "kids",
+                "providedBenefit": "water",
+                "published": "2018-01-02 05:50:00+00:00",
+                "receivedBenefit": "cake",
+                "title": "New title",
             }
         }
     }
@@ -114,22 +114,22 @@ snapshots["test_update_published_with_published 1"] = {
                 "author": {
                     "extra": '{"movies": 1}',
                     "firstName": "Winston",
-                    "id": "QXV0aG9yOjE=",
+                    "id": "QXV0aG9yOjQy",
                     "lastName": "Wolfe",
                     "totalReports": 1,
                 },
-                "body": "I visited Tesla factory and talked with Elon Musk.",
+                "body": "Rewrited",
                 "date": "2018-03-03 00:00:00+00:00",
-                "edited": "2018-03-08 12:00:00+00:00",
+                "edited": "2018-01-02 05:50:00+00:00",
                 "extra": None,
-                "id": "UmVwb3J0OjE=",
+                "id": "UmVwb3J0OjY2Ng==",
                 "isDraft": False,
-                "otherParticipants": "Elon Musk",
-                "ourParticipants": "me",
-                "providedBenefit": "nothing",
+                "otherParticipants": "grandchilds",
+                "ourParticipants": "kids",
+                "providedBenefit": "water",
                 "published": "2018-01-02 00:00:00+00:00",
-                "receivedBenefit": "Tesla Model S",
-                "title": "Free Tesla",
+                "receivedBenefit": "cake",
+                "title": "New title",
             }
         }
     }
@@ -142,15 +142,15 @@ snapshots["test_input_sanitization 1"] = {
                 "author": {
                     "extra": '{"movies": 1}',
                     "firstName": "Winston",
-                    "id": "QXV0aG9yOjE=",
+                    "id": "QXV0aG9yOjQy",
                     "lastName": "Wolfe",
                     "totalReports": 1,
                 },
                 "body": "some link in body",
                 "date": "2018-03-03 00:00:00+00:00",
-                "edited": "2018-03-08 12:00:00+00:00",
+                "edited": "2018-01-02 05:50:00+00:00",
                 "extra": None,
-                "id": "UmVwb3J0OjE=",
+                "id": "UmVwb3J0OjY2Ng==",
                 "isDraft": False,
                 "otherParticipants": "you!",
                 "ourParticipants": "me, myself",
@@ -161,4 +161,236 @@ snapshots["test_input_sanitization 1"] = {
             }
         }
     }
+}
+
+snapshots["test_update_draft_with_draft__late_edit 1"] = {
+    "data": {
+        "updateReport": {
+            "report": {
+                "author": {
+                    "extra": '{"movies": 1}',
+                    "firstName": "Winston",
+                    "id": "QXV0aG9yOjQy",
+                    "lastName": "Wolfe",
+                    "totalReports": 0,
+                },
+                "body": "Rewrited",
+                "date": "2018-03-03 00:00:00+00:00",
+                "edited": "2018-01-02 06:10:00+00:00",
+                "extra": None,
+                "id": "UmVwb3J0OjY2Ng==",
+                "isDraft": True,
+                "otherParticipants": "grandchilds",
+                "ourParticipants": "kids",
+                "providedBenefit": "water",
+                "published": "2018-01-02 06:10:00+00:00",
+                "receivedBenefit": "cake",
+                "title": "New title",
+            }
+        }
+    }
+}
+
+snapshots["test_update_draft_with_published__late_edit 1"] = {
+    "data": {
+        "updateReport": {
+            "report": {
+                "author": {
+                    "extra": '{"movies": 1}',
+                    "firstName": "Winston",
+                    "id": "QXV0aG9yOjQy",
+                    "lastName": "Wolfe",
+                    "totalReports": 1,
+                },
+                "body": "Rewrited",
+                "date": "2018-03-03 00:00:00+00:00",
+                "edited": "2018-01-02 06:10:00+00:00",
+                "extra": None,
+                "id": "UmVwb3J0OjY2Ng==",
+                "isDraft": False,
+                "otherParticipants": "grandchilds",
+                "ourParticipants": "kids",
+                "providedBenefit": "water",
+                "published": "2018-01-02 06:10:00+00:00",
+                "receivedBenefit": "cake",
+                "title": "New title",
+            }
+        }
+    }
+}
+
+snapshots["test_update_draft_with_draft 2"] = [
+    {
+        "author_id": 42,
+        "body": "Rewrited",
+        "date": "2018-03-03T00:00:00+00:00",
+        "edited": "2018-01-02T05:50:00+00:00",
+        "extra": None,
+        "id": 666,
+        "is_draft": True,
+        "other_participants": "grandchilds",
+        "our_participants": "kids",
+        "provided_benefit": "water",
+        "published": "2018-01-02T05:50:00+00:00",
+        "received_benefit": "cake",
+        "superseded_by_id": None,
+        "title": "New title",
+    }
+]
+
+snapshots["test_update_draft_with_draft__late_edit 2"] = [
+    {
+        "author_id": 42,
+        "body": "Rewrited",
+        "date": "2018-03-03T00:00:00+00:00",
+        "edited": "2018-01-02T06:10:00+00:00",
+        "extra": None,
+        "id": 666,
+        "is_draft": True,
+        "other_participants": "grandchilds",
+        "our_participants": "kids",
+        "provided_benefit": "water",
+        "published": "2018-01-02T06:10:00+00:00",
+        "received_benefit": "cake",
+        "superseded_by_id": None,
+        "title": "New title",
+    }
+]
+
+snapshots["test_update_draft_with_published 2"] = [
+    {
+        "author_id": 42,
+        "body": "Rewrited",
+        "date": "2018-03-03T00:00:00+00:00",
+        "edited": "2018-01-02T05:50:00+00:00",
+        "extra": None,
+        "id": 666,
+        "is_draft": False,
+        "other_participants": "grandchilds",
+        "our_participants": "kids",
+        "provided_benefit": "water",
+        "published": "2018-01-02T05:50:00+00:00",
+        "received_benefit": "cake",
+        "superseded_by_id": None,
+        "title": "New title",
+    }
+]
+
+snapshots["test_update_draft_with_published__late_edit 2"] = [
+    {
+        "author_id": 42,
+        "body": "Rewrited",
+        "date": "2018-03-03T00:00:00+00:00",
+        "edited": "2018-01-02T06:10:00+00:00",
+        "extra": None,
+        "id": 666,
+        "is_draft": False,
+        "other_participants": "grandchilds",
+        "our_participants": "kids",
+        "provided_benefit": "water",
+        "published": "2018-01-02T06:10:00+00:00",
+        "received_benefit": "cake",
+        "superseded_by_id": None,
+        "title": "New title",
+    }
+]
+
+snapshots["test_update_published_with_published 2"] = [
+    {
+        "author_id": 42,
+        "body": "Rewrited",
+        "date": "2018-03-03T00:00:00+00:00",
+        "edited": "2018-01-02T05:50:00+00:00",
+        "extra": None,
+        "id": 666,
+        "is_draft": False,
+        "other_participants": "grandchilds",
+        "our_participants": "kids",
+        "provided_benefit": "water",
+        "published": "2018-01-02T00:00:00+00:00",
+        "received_benefit": "cake",
+        "superseded_by_id": None,
+        "title": "New title",
+    }
+]
+
+snapshots["test_update_published_with_published__late_edit 1"] = {
+    "data": {
+        "updateReport": {
+            "report": {
+                "author": {
+                    "extra": '{"movies": 1}',
+                    "firstName": "Winston",
+                    "id": "QXV0aG9yOjQy",
+                    "lastName": "Wolfe",
+                    "totalReports": 1,
+                },
+                "body": "Rewrited",
+                "date": "2018-03-03 00:00:00+00:00",
+                "edited": "2018-01-02 06:10:00+00:00",
+                "extra": None,
+                "id": "UmVwb3J0OjY2Ng==",
+                "isDraft": False,
+                "otherParticipants": "grandchilds",
+                "ourParticipants": "kids",
+                "providedBenefit": "water",
+                "published": "2018-01-02 00:00:00+00:00",
+                "receivedBenefit": "cake",
+                "title": "New title",
+            }
+        }
+    }
+}
+
+snapshots["test_update_published_with_published__late_edit 2"] = {
+    "author_id": 42,
+    "body": "Rewrited",
+    "date": "2018-03-03T00:00:00+00:00",
+    "edited": "2018-01-02T06:10:00+00:00",
+    "extra": None,
+    "id": 666,
+    "is_draft": False,
+    "other_participants": "grandchilds",
+    "our_participants": "kids",
+    "provided_benefit": "water",
+    "published": "2018-01-02T00:00:00+00:00",
+    "received_benefit": "cake",
+    "superseded_by_id": None,
+    "title": "New title",
+}
+
+snapshots["test_input_sanitization 2"] = [
+    {
+        "author_id": 42,
+        "body": "some link in body",
+        "date": "2018-03-03T00:00:00+00:00",
+        "edited": "2018-01-02T05:50:00+00:00",
+        "extra": None,
+        "id": 666,
+        "is_draft": False,
+        "other_participants": "you!",
+        "our_participants": "me, myself",
+        "provided_benefit": "tea",
+        "published": "2018-01-02T00:00:00+00:00",
+        "received_benefit": "coffee",
+        "superseded_by_id": None,
+        "title": "No tags",
+    }
+]
+
+snapshots["test_update_published_with_published__late_edit 3"] = {
+    "author_id": 42,
+    "body": "Previous body.",
+    "date": "2018-01-01T00:00:00+00:00",
+    "edited": "2018-01-02T05:00:00+00:00",
+    "extra": None,
+    "id": "__STRIPPED__",
+    "is_draft": False,
+    "other_participants": "grandma",
+    "our_participants": "grandpa",
+    "provided_benefit": "old tea",
+    "published": "2018-01-02T00:00:00+00:00",
+    "received_benefit": "old coffee",
+    "superseded_by_id": 666,
+    "title": "Original",
 }

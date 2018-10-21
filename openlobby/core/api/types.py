@@ -1,4 +1,3 @@
-from django.db.models import Count, Q
 from elasticsearch import NotFoundError
 import graphene
 from graphene import relay

@@ -1,4 +1,5 @@
 import arrow
+from django.conf import settings
 import graphene
 from graphene import relay
 from graphene.types.datetime import DateTime
@@ -178,11 +179,21 @@ class UpdateReport(relay.ClientIDMutation):
         if is_draft and not report.is_draft:
             raise Exception("You cannot update published Report with draft.")
 
-        # TODO updating published report older than like a hour should create
-        # new revision in history of report
+        free_edit_deadline = arrow.utcnow().shift(minutes=-settings.FREE_EDIT_MINUTES)
+        if (
+            not (is_draft or report.is_draft)
+            and free_edit_deadline.datetime > report.edited
+        ):
+            original_id = report.id
+            # save historical revision copy
+            report.id = None
+            report.superseded_by_id = original_id
+            report.save()
+            # restore id so this can be updated
+            report.id = original_id
+            report.superseded_by_id = None
 
         report.edited = arrow.utcnow().datetime
-
         if is_draft or report.is_draft:
             report.published = report.edited
 

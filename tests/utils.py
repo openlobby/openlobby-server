@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 
 from openlobby.core.auth import create_access_token
@@ -26,3 +27,10 @@ def strip_value(data, *path):
         return value
     else:
         return strip_value(value, *path[1:])
+
+
+def dates_to_iso(data):
+    for key, val in data.items():
+        if isinstance(val, datetime):
+            data[key] = val.isoformat()
+    return data

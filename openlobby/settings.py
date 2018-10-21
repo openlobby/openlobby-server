@@ -150,3 +150,6 @@ SITE_NAME = os.environ.get("SITE_NAME", "Open Lobby")
 
 # redirect URI used in OpenID authentication
 REDIRECT_URI = os.environ.get("REDIRECT_URI", "http://localhost:8010/login-redirect")
+
+# edit will save historical revision after this time since last edit
+FREE_EDIT_MINUTES = os.environ.get("FREE_EDIT_MINUTES", 60)
