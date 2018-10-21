@@ -1,5 +1,15 @@
 import pytest
+from pytest_factoryboy import register
 from django_elasticsearch_dsl.test import ESTestCase
+import json
+
+from openlobby.core.auth import create_access_token
+
+from . import factories
+
+register(factories.UserFactory)
+register(factories.AuthorFactory)
+register(factories.ReportFactory)
 
 
 class DummyTestCase:
@@ -38,3 +48,30 @@ def issuer(request):
     if url is None:
         pytest.skip("Missing OpenID Provider URL.")
     return url
+
+
+@pytest.fixture
+def author_fix(author_factory):
+    return author_factory(
+        id=42,
+        username="wolfe",
+        first_name="Winston",
+        last_name="Wolfe",
+        extra={"movies": 1},
+    )
+
+
+@pytest.fixture
+def call_api(client):
+    def _call_api(query, input=None, user=None):
+        variables = json.dumps({"input": input or {}})
+        payload = {"query": query, "variables": variables}
+        if user is None:
+            res = client.post("/graphql", payload)
+        else:
+            token = create_access_token(user.username)
+            auth_header = "Bearer {}".format(token)
+            res = client.post("/graphql", payload, HTTP_AUTHORIZATION=auth_header)
+        return res.json()
+
+    return _call_api
