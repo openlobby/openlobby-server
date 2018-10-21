@@ -28,6 +28,7 @@ def test_all(client, snapshot):
                     isDraft
                     extra
                     edited
+                    hasRevisions
                     author {
                         id
                         firstName
@@ -72,6 +73,7 @@ def test_query(client, snapshot):
                     isDraft
                     extra
                     edited
+                    hasRevisions
                     author {
                         id
                         firstName
@@ -110,6 +112,7 @@ def test_highlight(client, snapshot):
                     isDraft
                     extra
                     edited
+                    hasRevisions
                     author {
                         id
                         firstName

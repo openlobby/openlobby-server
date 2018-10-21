@@ -27,6 +27,21 @@ mutation updateReport ($input: UpdateReportInput!) {
             isDraft
             extra
             edited
+            hasRevisions
+            revisions {
+                id
+                date
+                published
+                title
+                body
+                receivedBenefit
+                providedBenefit
+                ourParticipants
+                otherParticipants
+                isDraft
+                extra
+                edited
+            }
             author {
                 id
                 firstName
@@ -171,6 +186,7 @@ def test_update_published_with_published__late_edit(
     with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=late_edited):
         response = call_api(query, input, original_report.author)
 
+    strip_value(response, "data", "updateReport", "report", "revisions", "id")
     snapshot.assert_match(response)
     assert Report.objects.count() == 2
     updated = Report.objects.filter(id=original_report.id).values()[0]

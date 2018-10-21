@@ -160,6 +160,71 @@ def test_report__is_draft__viewer_is_not_author(client, snapshot):
     snapshot.assert_match(response)
 
 
+def test_report__without_revisions(client, snapshot):
+    prepare_reports()
+    query = """
+    query {{
+        node (id:"{id}") {{
+            ... on Report {{
+                id
+                title
+                hasRevisions
+                revisions {{
+                    id
+                }}
+            }}
+        }}
+    }}
+    """.format(
+        id=to_global_id("Report", 3)
+    )
+    response = call_api(client, query)
+    snapshot.assert_match(response)
+
+
+def test_report__with_revisions(client, snapshot):
+    prepare_reports()
+    query = """
+    query {{
+        node (id:"{id}") {{
+            ... on Report {{
+                id
+                date
+                published
+                title
+                body
+                receivedBenefit
+                providedBenefit
+                ourParticipants
+                otherParticipants
+                isDraft
+                extra
+                edited
+                hasRevisions
+                revisions {{
+                    id
+                    date
+                    published
+                    title
+                    body
+                    receivedBenefit
+                    providedBenefit
+                    ourParticipants
+                    otherParticipants
+                    isDraft
+                    extra
+                    edited
+                }}
+            }}
+        }}
+    }}
+    """.format(
+        id=to_global_id("Report", 2)
+    )
+    response = call_api(client, query)
+    snapshot.assert_match(response)
+
+
 def test_user__unauthorized(client, snapshot):
     User.objects.create(
         id=8,

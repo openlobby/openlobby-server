@@ -29,6 +29,8 @@ class Report(graphene.ObjectType):
     is_draft = graphene.Boolean()
     extra = JSONString()
     edited = graphene.String()
+    has_revisions = graphene.Boolean()
+    revisions = graphene.List(lambda: Report)
 
     class Meta:
         interfaces = (relay.Node,)
@@ -36,7 +38,7 @@ class Report(graphene.ObjectType):
     @classmethod
     def from_es(cls, report, author=None):
         return cls(
-            id=report.meta.id,
+            id=int(report.meta.id),
             author=author,
             date=report.date,
             published=report.published,
@@ -85,6 +87,15 @@ class Report(graphene.ObjectType):
         author_type = cls._meta.fields["author"].type
         author = author_type.get_node(info, report.author_id)
         return cls.from_es(report, author)
+
+    def resolve_has_revisions(self, info, **kwargs):
+        return models.Report.objects.filter(superseded_by_id=self.id).count() > 0
+
+    def resolve_revisions(self, info, **kwargs):
+        revisions = models.Report.objects.filter(superseded_by_id=self.id).order_by(
+            "-edited"
+        )
+        return [Report.from_db(r) for r in revisions]
 
 
 class ReportConnection(relay.Connection):

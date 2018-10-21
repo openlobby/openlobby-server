@@ -26,7 +26,12 @@ def strip_value(data, *path):
         data[element] = "__STRIPPED__"
         return value
     else:
-        return strip_value(value, *path[1:])
+        if isinstance(value, dict):
+            return strip_value(value, *path[1:])
+        elif isinstance(value, list):
+            return [strip_value(item, *path[1:]) for item in value]
+        else:
+            raise NotImplementedError()
 
 
 def dates_to_iso(data):

@@ -109,3 +109,65 @@ snapshots['test_report__is_draft 1'] = {
         }
     }
 }
+
+snapshots['test_report__without_revisions 1'] = {
+    'data': {
+        'node': {
+            'hasRevisions': False,
+            'id': 'UmVwb3J0OjM=',
+            'revisions': [
+            ],
+            'title': 'The Return of the King'
+        }
+    }
+}
+
+snapshots['test_report__with_revisions 1'] = {
+    'data': {
+        'node': {
+            'body': 'Another long story.',
+            'date': '2018-01-03 00:00:00+00:00',
+            'edited': '2018-01-04 05:00:00+00:00',
+            'extra': '{"rings": 1}',
+            'hasRevisions': True,
+            'id': 'UmVwb3J0OjI=',
+            'isDraft': False,
+            'otherParticipants': 'Saruman, Sauron',
+            'ourParticipants': 'Frodo, Gimli, Legolas',
+            'providedBenefit': '',
+            'published': '2018-01-04 00:00:00+00:00',
+            'receivedBenefit': 'Mithrill Jacket',
+            'revisions': [
+                {
+                    'body': 'What am I doing?',
+                    'date': '2018-01-03 00:00:00+00:00',
+                    'edited': '2018-02-05 00:00:00+00:00',
+                    'extra': '{"rings": 1}',
+                    'id': 'UmVwb3J0Ojc=',
+                    'isDraft': False,
+                    'otherParticipants': '',
+                    'ourParticipants': 'Ringo Starr',
+                    'providedBenefit': 'The Ringo',
+                    'published': '2018-01-04 00:00:00+00:00',
+                    'receivedBenefit': 'Jacket',
+                    'title': 'The Towels'
+                },
+                {
+                    'body': 'Nothing yet.',
+                    'date': '2018-01-03 00:00:00+00:00',
+                    'edited': '2018-02-01 00:00:00+00:00',
+                    'extra': None,
+                    'id': 'UmVwb3J0OjY=',
+                    'isDraft': False,
+                    'otherParticipants': '',
+                    'ourParticipants': '',
+                    'providedBenefit': '',
+                    'published': '2018-01-04 00:00:00+00:00',
+                    'receivedBenefit': 'old bread',
+                    'title': 'Oldest story'
+                }
+            ],
+            'title': 'The Two Towers'
+        }
+    }
+}

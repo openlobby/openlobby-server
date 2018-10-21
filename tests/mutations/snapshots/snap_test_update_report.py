@@ -102,6 +102,7 @@ snapshots['test_update_draft_with_draft 1'] = {
                 'date': '2018-03-03 00:00:00+00:00',
                 'edited': '2018-01-02 05:50:00+00:00',
                 'extra': None,
+                'hasRevisions': False,
                 'id': 'UmVwb3J0OjY2Ng==',
                 'isDraft': True,
                 'otherParticipants': 'grandchilds',
@@ -109,6 +110,8 @@ snapshots['test_update_draft_with_draft 1'] = {
                 'providedBenefit': 'water',
                 'published': '2018-01-02 05:50:00+00:00',
                 'receivedBenefit': 'cake',
+                'revisions': [
+                ],
                 'title': 'New title'
             }
         }
@@ -130,6 +133,7 @@ snapshots['test_update_draft_with_published 1'] = {
                 'date': '2018-03-03 00:00:00+00:00',
                 'edited': '2018-01-02 05:50:00+00:00',
                 'extra': None,
+                'hasRevisions': False,
                 'id': 'UmVwb3J0OjY2Ng==',
                 'isDraft': False,
                 'otherParticipants': 'grandchilds',
@@ -137,6 +141,8 @@ snapshots['test_update_draft_with_published 1'] = {
                 'providedBenefit': 'water',
                 'published': '2018-01-02 05:50:00+00:00',
                 'receivedBenefit': 'cake',
+                'revisions': [
+                ],
                 'title': 'New title'
             }
         }
@@ -158,6 +164,7 @@ snapshots['test_update_published_with_published 1'] = {
                 'date': '2018-03-03 00:00:00+00:00',
                 'edited': '2018-01-02 05:50:00+00:00',
                 'extra': None,
+                'hasRevisions': False,
                 'id': 'UmVwb3J0OjY2Ng==',
                 'isDraft': False,
                 'otherParticipants': 'grandchilds',
@@ -165,6 +172,8 @@ snapshots['test_update_published_with_published 1'] = {
                 'providedBenefit': 'water',
                 'published': '2018-01-02 00:00:00+00:00',
                 'receivedBenefit': 'cake',
+                'revisions': [
+                ],
                 'title': 'New title'
             }
         }
@@ -186,6 +195,7 @@ snapshots['test_input_sanitization 1'] = {
                 'date': '2018-03-03 00:00:00+00:00',
                 'edited': '2018-01-02 05:50:00+00:00',
                 'extra': None,
+                'hasRevisions': False,
                 'id': 'UmVwb3J0OjY2Ng==',
                 'isDraft': False,
                 'otherParticipants': 'you!',
@@ -193,6 +203,8 @@ snapshots['test_input_sanitization 1'] = {
                 'providedBenefit': 'tea',
                 'published': '2018-01-02 00:00:00+00:00',
                 'receivedBenefit': 'coffee',
+                'revisions': [
+                ],
                 'title': 'No tags'
             }
         }
@@ -214,6 +226,7 @@ snapshots['test_update_draft_with_draft__late_edit 1'] = {
                 'date': '2018-03-03 00:00:00+00:00',
                 'edited': '2018-01-02 06:10:00+00:00',
                 'extra': None,
+                'hasRevisions': False,
                 'id': 'UmVwb3J0OjY2Ng==',
                 'isDraft': True,
                 'otherParticipants': 'grandchilds',
@@ -221,6 +234,8 @@ snapshots['test_update_draft_with_draft__late_edit 1'] = {
                 'providedBenefit': 'water',
                 'published': '2018-01-02 06:10:00+00:00',
                 'receivedBenefit': 'cake',
+                'revisions': [
+                ],
                 'title': 'New title'
             }
         }
@@ -242,6 +257,7 @@ snapshots['test_update_draft_with_published__late_edit 1'] = {
                 'date': '2018-03-03 00:00:00+00:00',
                 'edited': '2018-01-02 06:10:00+00:00',
                 'extra': None,
+                'hasRevisions': False,
                 'id': 'UmVwb3J0OjY2Ng==',
                 'isDraft': False,
                 'otherParticipants': 'grandchilds',
@@ -249,6 +265,8 @@ snapshots['test_update_draft_with_published__late_edit 1'] = {
                 'providedBenefit': 'water',
                 'published': '2018-01-02 06:10:00+00:00',
                 'receivedBenefit': 'cake',
+                'revisions': [
+                ],
                 'title': 'New title'
             }
         }
@@ -365,6 +383,7 @@ snapshots['test_update_published_with_published__late_edit 1'] = {
                 'date': '2018-03-03 00:00:00+00:00',
                 'edited': '2018-01-02 06:10:00+00:00',
                 'extra': None,
+                'hasRevisions': True,
                 'id': 'UmVwb3J0OjY2Ng==',
                 'isDraft': False,
                 'otherParticipants': 'grandchilds',
@@ -372,6 +391,22 @@ snapshots['test_update_published_with_published__late_edit 1'] = {
                 'providedBenefit': 'water',
                 'published': '2018-01-02 00:00:00+00:00',
                 'receivedBenefit': 'cake',
+                'revisions': [
+                    {
+                        'body': 'Previous body.',
+                        'date': '2018-01-01 00:00:00+00:00',
+                        'edited': '2018-01-02 05:00:00+00:00',
+                        'extra': None,
+                        'id': '__STRIPPED__',
+                        'isDraft': False,
+                        'otherParticipants': 'grandma',
+                        'ourParticipants': 'grandpa',
+                        'providedBenefit': 'old tea',
+                        'published': '2018-01-02 00:00:00+00:00',
+                        'receivedBenefit': 'old coffee',
+                        'title': 'Original'
+                    }
+                ],
                 'title': 'New title'
             }
         }
