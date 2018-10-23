@@ -77,8 +77,15 @@ def original_report(author_fix, report_factory):
 
 
 @pytest.fixture
-def original_report_draft(original_report):
+def original_draft(original_report):
     original_report.is_draft = True
+    original_report.save()
+    return original_report
+
+
+@pytest.fixture
+def original_superseded(report, original_report):
+    original_report.superseded_by_id = report.id
     original_report.save()
     return original_report
 
@@ -121,46 +128,56 @@ def test_update_published_with_draft(call_api, snapshot, original_report):
     snapshot.assert_match(response)
 
 
-def test_update_draft_with_draft(call_api, snapshot, original_report_draft):
-    input = prepare_input(id=original_report_draft.id, is_draft=True)
+def test_update_superseded_with_draft(call_api, snapshot, original_superseded):
+    input = prepare_input(id=original_superseded.id, is_draft=True)
+    response = call_api(query, input, original_superseded.author)
+    snapshot.assert_match(response)
+
+
+def test_update_superseded_with_published(call_api, snapshot, original_superseded):
+    input = prepare_input(id=original_superseded.id)
+    response = call_api(query, input, original_superseded.author)
+    snapshot.assert_match(response)
+
+
+def test_update_draft_with_draft(call_api, snapshot, original_draft):
+    input = prepare_input(id=original_draft.id, is_draft=True)
 
     with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=edited):
-        response = call_api(query, input, original_report_draft.author)
+        response = call_api(query, input, original_draft.author)
 
     snapshot.assert_match(response)
     reports = list(map(dates_to_iso, Report.objects.all().values()))
     snapshot.assert_match(reports)
 
 
-def test_update_draft_with_draft__late_edit(call_api, snapshot, original_report_draft):
-    input = prepare_input(id=original_report_draft.id, is_draft=True)
+def test_update_draft_with_draft__late_edit(call_api, snapshot, original_draft):
+    input = prepare_input(id=original_draft.id, is_draft=True)
 
     with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=late_edited):
-        response = call_api(query, input, original_report_draft.author)
+        response = call_api(query, input, original_draft.author)
 
     snapshot.assert_match(response)
     reports = list(map(dates_to_iso, Report.objects.all().values()))
     snapshot.assert_match(reports)
 
 
-def test_update_draft_with_published(call_api, snapshot, original_report_draft):
-    input = prepare_input(id=original_report_draft.id)
+def test_update_draft_with_published(call_api, snapshot, original_draft):
+    input = prepare_input(id=original_draft.id)
 
     with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=edited):
-        response = call_api(query, input, original_report_draft.author)
+        response = call_api(query, input, original_draft.author)
 
     snapshot.assert_match(response)
     reports = list(map(dates_to_iso, Report.objects.all().values()))
     snapshot.assert_match(reports)
 
 
-def test_update_draft_with_published__late_edit(
-    call_api, snapshot, original_report_draft
-):
-    input = prepare_input(id=original_report_draft.id)
+def test_update_draft_with_published__late_edit(call_api, snapshot, original_draft):
+    input = prepare_input(id=original_draft.id)
 
     with patch("openlobby.core.api.mutations.arrow.utcnow", return_value=late_edited):
-        response = call_api(query, input, original_report_draft.author)
+        response = call_api(query, input, original_draft.author)
 
     snapshot.assert_match(response)
     reports = list(map(dates_to_iso, Report.objects.all().values()))

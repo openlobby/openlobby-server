@@ -174,6 +174,9 @@ class UpdateReport(relay.ClientIDMutation):
                 "Viewer is not the Author of this Report or Report does not exist."
             )
 
+        if report.superseded_by_id is not None:
+            raise Exception("You cannot update superseded Report.")
+
         is_draft = input.get("is_draft")
 
         if is_draft and not report.is_draft:

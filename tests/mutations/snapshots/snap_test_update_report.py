@@ -465,3 +465,43 @@ snapshots['test_update_published_with_published__late_edit 3'] = {
     'superseded_by_id': 666,
     'title': 'Original'
 }
+
+snapshots['test_update_superseded_with_draft 1'] = {
+    'data': {
+        'updateReport': None
+    },
+    'errors': [
+        {
+            'locations': [
+                {
+                    'column': 5,
+                    'line': 3
+                }
+            ],
+            'message': 'You cannot update superseded Report.',
+            'path': [
+                'updateReport'
+            ]
+        }
+    ]
+}
+
+snapshots['test_update_superseded_with_published 1'] = {
+    'data': {
+        'updateReport': None
+    },
+    'errors': [
+        {
+            'locations': [
+                {
+                    'column': 5,
+                    'line': 3
+                }
+            ],
+            'message': 'You cannot update superseded Report.',
+            'path': [
+                'updateReport'
+            ]
+        }
+    ]
+}
