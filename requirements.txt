@@ -32,7 +32,7 @@ mako==1.0.7               # via oic
 markupsafe==1.0           # via mako
 oic==0.14.0
 promise==2.2.1            # via graphene, graphene-django, graphql-core, graphql-relay
-psycopg2==2.7.5
+psycopg2-binary==2.7.5
 pycparser==2.19           # via cffi
 pycryptodomex==3.6.6      # via oic, pyjwkest
 pyjwkest==1.4.0           # via oic

@@ -1,3 +1,4 @@
+psycopg2-binary
 Django
 graphene
 graphene-django
@@ -9,5 +10,4 @@ pyjwt
 iso8601
 arrow
 bleach
-psycopg2
 dsnparse
