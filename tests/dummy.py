@@ -149,10 +149,6 @@ def prepare_reports():
     Report.objects.create(author=author1, **reports[7])
 
 
-def prepare_author():
-    User.objects.create(**authors[0])
-
-
 def prepare_report(is_draft=False):
     author = User.objects.create(**authors[0])
     Report.objects.create(author=author, is_draft=is_draft, **reports[0])

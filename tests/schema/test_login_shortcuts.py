@@ -2,13 +2,11 @@ import pytest
 
 from openlobby.core.models import OpenIdClient
 
-from ..utils import call_api
-
 
 pytestmark = pytest.mark.django_db
 
 
-def test_returns_only_shortcuts(client, snapshot):
+def test_returns_only_shortcuts(call_api, snapshot):
     OpenIdClient.objects.create(id=10, name="foo", issuer="foo")
     OpenIdClient.objects.create(id=20, name="bar", issuer="bar", is_shortcut=True)
     query = """
@@ -19,11 +17,11 @@ def test_returns_only_shortcuts(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_none(client, snapshot):
+def test_none(call_api, snapshot):
     OpenIdClient.objects.create(id=10, name="foo")
     query = """
     query {
@@ -33,5 +31,5 @@ def test_none(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)

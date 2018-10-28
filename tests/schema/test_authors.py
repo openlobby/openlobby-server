@@ -3,13 +3,12 @@ import pytest
 from openlobby.core.models import User
 
 from ..dummy import prepare_reports
-from ..utils import call_api
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures("django_es")]
 
 
-def test_all(client, snapshot):
+def test_all(call_api, snapshot):
     prepare_reports()
     User.objects.create(id=4, is_author=False, username="x")
     query = """
@@ -36,11 +35,11 @@ def test_all(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_first(client, snapshot):
+def test_first(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -66,11 +65,11 @@ def test_first(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_first_after(client, snapshot):
+def test_first_after(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -96,11 +95,11 @@ def test_first_after(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_last(client, snapshot):
+def test_last(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -126,11 +125,11 @@ def test_last(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_last_before(client, snapshot):
+def test_last_before(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -156,11 +155,11 @@ def test_last_before(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_with_reports(client, snapshot):
+def test_with_reports(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -198,11 +197,11 @@ def test_with_reports(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_sort_by_last_name(client, snapshot):
+def test_sort_by_last_name(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -228,11 +227,11 @@ def test_sort_by_last_name(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_sort_by_last_name_reversed(client, snapshot):
+def test_sort_by_last_name_reversed(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -258,11 +257,11 @@ def test_sort_by_last_name_reversed(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_sort_by_total_reports(client, snapshot):
+def test_sort_by_total_reports(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -288,11 +287,11 @@ def test_sort_by_total_reports(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_sort_by_total_reports_reversed(client, snapshot):
+def test_sort_by_total_reports_reversed(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -318,11 +317,11 @@ def test_sort_by_total_reports_reversed(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_sort_by_default_reversed(client, snapshot):
+def test_sort_by_default_reversed(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -348,5 +347,5 @@ def test_sort_by_default_reversed(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)

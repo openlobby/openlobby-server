@@ -92,7 +92,7 @@ snapshots['test_update_draft_with_draft 1'] = {
         'updateReport': {
             'report': {
                 'author': {
-                    'extra': '{"movies": 1}',
+                    'extra': '{"caliber": 45}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjQy',
                     'lastName': 'Wolfe',
@@ -123,7 +123,7 @@ snapshots['test_update_draft_with_published 1'] = {
         'updateReport': {
             'report': {
                 'author': {
-                    'extra': '{"movies": 1}',
+                    'extra': '{"caliber": 45}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjQy',
                     'lastName': 'Wolfe',
@@ -154,7 +154,7 @@ snapshots['test_update_published_with_published 1'] = {
         'updateReport': {
             'report': {
                 'author': {
-                    'extra': '{"movies": 1}',
+                    'extra': '{"caliber": 45}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjQy',
                     'lastName': 'Wolfe',
@@ -185,7 +185,7 @@ snapshots['test_input_sanitization 1'] = {
         'updateReport': {
             'report': {
                 'author': {
-                    'extra': '{"movies": 1}',
+                    'extra': '{"caliber": 45}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjQy',
                     'lastName': 'Wolfe',
@@ -216,7 +216,7 @@ snapshots['test_update_draft_with_draft__late_edit 1'] = {
         'updateReport': {
             'report': {
                 'author': {
-                    'extra': '{"movies": 1}',
+                    'extra': '{"caliber": 45}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjQy',
                     'lastName': 'Wolfe',
@@ -247,7 +247,7 @@ snapshots['test_update_draft_with_published__late_edit 1'] = {
         'updateReport': {
             'report': {
                 'author': {
-                    'extra': '{"movies": 1}',
+                    'extra': '{"caliber": 45}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjQy',
                     'lastName': 'Wolfe',
@@ -373,7 +373,7 @@ snapshots['test_update_published_with_published__late_edit 1'] = {
         'updateReport': {
             'report': {
                 'author': {
-                    'extra': '{"movies": 1}',
+                    'extra': '{"caliber": 45}',
                     'firstName': 'Winston',
                     'id': 'QXV0aG9yOjQy',
                     'lastName': 'Wolfe',

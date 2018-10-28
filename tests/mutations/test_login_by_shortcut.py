@@ -5,12 +5,11 @@ from openlobby.core.models import OpenIdClient, LoginAttempt
 from openlobby.core.openid import register_client
 
 from .test_login import check_authorization_url
-from ..utils import call_api
 
 pytestmark = pytest.mark.django_db
 
 
-def test_login_by_shortcut(issuer, client, snapshot):
+def test_login_by_shortcut(issuer, call_api, snapshot):
     oc = register_client(issuer)
     oid_client = OpenIdClient.objects.create(
         name="Test",
@@ -30,7 +29,7 @@ def test_login_by_shortcut(issuer, client, snapshot):
     """.format(
         id=to_global_id("LoginShortcut", oid_client.id), uri=app_redirect_uri
     )
-    response = call_api(client, query)
+    response = call_api(query)
 
     assert "errors" not in response
     authorization_url = response["data"]["loginByShortcut"]["authorizationUrl"]

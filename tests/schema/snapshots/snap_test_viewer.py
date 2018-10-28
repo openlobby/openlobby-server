@@ -20,7 +20,7 @@ snapshots['test_authenticated 1'] = {
             'extra': '{"caliber": 45}',
             'firstName': 'Winston',
             'hasCollidingName': False,
-            'id': 'VXNlcjox',
+            'id': 'VXNlcjo0Mg==',
             'isAuthor': True,
             'lastName': 'Wolfe',
             'openidUid': 'TheWolf'

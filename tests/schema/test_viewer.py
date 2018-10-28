@@ -1,29 +1,12 @@
 import pytest
 
 from openlobby.core.auth import create_access_token
-from openlobby.core.models import User
-
-from ..utils import call_api
 
 
 pytestmark = pytest.mark.django_db
 
 
-@pytest.fixture(autouse=True)
-def setup():
-    User.objects.create(
-        id=1,
-        is_author=True,
-        username="wolf",
-        openid_uid="TheWolf",
-        first_name="Winston",
-        last_name="Wolfe",
-        email="winston@wolfe.com",
-        extra={"caliber": 45},
-    )
-
-
-def test_unauthenticated(client, snapshot):
+def test_unauthenticated(call_api, snapshot, author_fix):
     query = """
     query {
         viewer {
@@ -31,11 +14,11 @@ def test_unauthenticated(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_authenticated(client, snapshot):
+def test_authenticated(call_api, snapshot, author_fix):
     query = """
     query {
         viewer {
@@ -50,15 +33,15 @@ def test_authenticated(client, snapshot):
         }
     }
     """
-    response = call_api(client, query, username="wolf")
+    response = call_api(query, user=author_fix)
     snapshot.assert_match(response)
 
 
 # integration tests of wrong authentication
 
 
-def test_wrong_header(client, snapshot):
-    token = create_access_token("wolfe")
+def test_wrong_header(client, snapshot, author_fix):
+    token = create_access_token(author_fix.username)
     auth_header = "WRONG {}".format(token)
     res = client.post(
         "/graphql",
@@ -76,8 +59,8 @@ def test_wrong_header(client, snapshot):
     snapshot.assert_match(res.json())
 
 
-def test_wrong_token(client, snapshot):
-    token = create_access_token("wolfe")
+def test_wrong_token(client, snapshot, author_fix):
+    token = create_access_token(author_fix.username)
     auth_header = "Bearer XXX{}".format(token)
     res = client.post(
         "/graphql",

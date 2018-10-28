@@ -1,13 +1,12 @@
 import pytest
 
 from ..dummy import prepare_reports
-from ..utils import call_api
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures("django_es")]
 
 
-def test_all(client, snapshot):
+def test_all(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -48,11 +47,11 @@ def test_all(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_query(client, snapshot):
+def test_query(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -87,11 +86,11 @@ def test_query(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_highlight(client, snapshot):
+def test_highlight(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -126,11 +125,11 @@ def test_highlight(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_first(client, snapshot):
+def test_first(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -152,11 +151,11 @@ def test_first(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_first_after(client, snapshot):
+def test_first_after(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -178,11 +177,11 @@ def test_first_after(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_last(client, snapshot):
+def test_last(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -204,11 +203,11 @@ def test_last(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_last_before(client, snapshot):
+def test_last_before(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -230,5 +229,5 @@ def test_last_before(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)

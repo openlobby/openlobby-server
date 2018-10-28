@@ -1,6 +1,6 @@
 # Open Lobby Server
 
-Open Lobby is register of lobby meetings. It's being developed for and tested 
+Open Lobby is register of lobby contacts. It's being developed for and tested 
 on [Czech Pirate Party](https://www.pirati.cz) but later it may be used by 
 any party, organization, agency, ...
 

@@ -7,8 +7,6 @@ from unittest.mock import patch
 from openlobby.core.models import OpenIdClient, LoginAttempt
 from openlobby.core.openid import register_client
 
-from ..utils import call_api
-
 
 pytestmark = pytest.mark.django_db
 
@@ -29,7 +27,7 @@ def check_authorization_url(authorization_url, oid_client, state, snapshot):
     snapshot.assert_match(json.loads(qs["claims"][0]))
 
 
-def test_login__known_openid_client(issuer, client, snapshot):
+def test_login__known_openid_client(issuer, call_api, snapshot):
     oc = register_client(issuer)
     oid_client = OpenIdClient.objects.create(
         name="Test",
@@ -53,7 +51,7 @@ def test_login__known_openid_client(issuer, client, snapshot):
     with patch(
         "openlobby.core.api.mutations.discover_issuer", return_value=issuer
     ) as mock:
-        response = call_api(client, query)
+        response = call_api(query)
         mock.assert_called_once_with(openid_uid)
 
     assert "errors" not in response
@@ -66,7 +64,7 @@ def test_login__known_openid_client(issuer, client, snapshot):
     check_authorization_url(authorization_url, oid_client, la.state, snapshot)
 
 
-def test_login__new_openid_client(issuer, client, snapshot):
+def test_login__new_openid_client(issuer, call_api, snapshot):
     app_redirect_uri = "http://i.am.pirate"
     openid_uid = "wolf@openid.provider"
     query = """
@@ -82,7 +80,7 @@ def test_login__new_openid_client(issuer, client, snapshot):
     with patch(
         "openlobby.core.api.mutations.discover_issuer", return_value=issuer
     ) as mock:
-        response = call_api(client, query)
+        response = call_api(query)
         mock.assert_called_once_with(openid_uid)
 
     assert "errors" not in response

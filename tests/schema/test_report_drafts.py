@@ -1,13 +1,14 @@
 import pytest
 
+from openlobby.core.models import User
+
 from ..dummy import prepare_reports
-from ..utils import call_api
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures("django_es")]
 
 
-def test_unauthenticated(client, snapshot):
+def test_unauthenticated(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -16,11 +17,11 @@ def test_unauthenticated(client, snapshot):
         }
     }
     """
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_authenticated(client, snapshot):
+def test_authenticated(call_api, snapshot):
     prepare_reports()
     query = """
     query {
@@ -39,5 +40,5 @@ def test_authenticated(client, snapshot):
         }
     }
     """
-    response = call_api(client, query, username="wolf")
+    response = call_api(query, user=User.objects.get(username="wolf"))
     snapshot.assert_match(response)

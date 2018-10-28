@@ -32,9 +32,9 @@ snapshots['test_full_report 1'] = {
         'createReport': {
             'report': {
                 'author': {
-                    'extra': '{"movies": 1}',
+                    'extra': '{"caliber": 45}',
                     'firstName': 'Winston',
-                    'id': 'QXV0aG9yOjE=',
+                    'id': 'QXV0aG9yOjQy',
                     'lastName': 'Wolfe',
                     'totalReports': 1
                 },
@@ -60,9 +60,9 @@ snapshots['test_is_draft 1'] = {
         'createReport': {
             'report': {
                 'author': {
-                    'extra': '{"movies": 1}',
+                    'extra': '{"caliber": 45}',
                     'firstName': 'Winston',
-                    'id': 'QXV0aG9yOjE=',
+                    'id': 'QXV0aG9yOjQy',
                     'lastName': 'Wolfe',
                     'totalReports': 0
                 },

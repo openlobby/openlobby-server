@@ -57,7 +57,9 @@ def author_fix(author_factory):
         username="wolfe",
         first_name="Winston",
         last_name="Wolfe",
-        extra={"movies": 1},
+        extra={"caliber": 45},
+        email="winston@wolfe.com",
+        openid_uid="TheWolf",
     )
 
 

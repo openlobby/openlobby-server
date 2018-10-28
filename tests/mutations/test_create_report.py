@@ -4,8 +4,7 @@ import re
 
 from openlobby.core.models import Report
 
-from ..dummy import prepare_author
-from ..utils import call_api, strip_value
+from ..utils import strip_value
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures("django_es")]
@@ -40,22 +39,17 @@ mutation createReport ($input: CreateReportInput!) {
 """
 
 
-@pytest.fixture(autouse=True)
-def setup():
-    prepare_author()
-
-
-def test_unauthorized(client, snapshot):
+def test_unauthorized(call_api, snapshot):
     input = {
         "title": "Short Story",
         "body": "I told you!",
         "date": arrow.utcnow().isoformat(),
     }
-    response = call_api(client, query, input)
+    response = call_api(query, input)
     snapshot.assert_match(response)
 
 
-def test_full_report(client, snapshot):
+def test_full_report(call_api, snapshot, author_fix):
     date = arrow.get(2018, 1, 1)
     title = "Free Tesla"
     body = "I visited Tesla factory and talked with Elon Musk."
@@ -73,7 +67,7 @@ def test_full_report(client, snapshot):
         "date": date.isoformat(),
     }
 
-    response = call_api(client, query, input, "wolf")
+    response = call_api(query, input, author_fix)
 
     published = strip_value(response, "data", "createReport", "report", "published")
     edited = strip_value(response, "data", "createReport", "report", "edited")
@@ -84,7 +78,7 @@ def test_full_report(client, snapshot):
     snapshot.assert_match(response)
 
     report = Report.objects.get()
-    assert report.author_id == 1
+    assert report.author_id == author_fix.id
     assert report.date == date.datetime
     assert report.published == arrow.get(published).datetime
     assert report.edited == arrow.get(edited).datetime
@@ -98,7 +92,7 @@ def test_full_report(client, snapshot):
     assert report.is_draft is False
 
 
-def test_input_sanitization(client):
+def test_input_sanitization(call_api, author_fix):
     input = {
         "title": "<s>No</s> tags",
         "body": 'some <a href="http://foo">link</a> <br>in body',
@@ -109,7 +103,7 @@ def test_input_sanitization(client):
         "date": arrow.utcnow().isoformat(),
     }
 
-    call_api(client, query, input, "wolf")
+    call_api(query, input, author_fix)
 
     report = Report.objects.get()
     assert report.title == "No tags"
@@ -120,7 +114,7 @@ def test_input_sanitization(client):
     assert report.other_participants == "you!"
 
 
-def test_is_draft(client, snapshot):
+def test_is_draft(call_api, snapshot, author_fix):
     date = arrow.get(2018, 1, 3)
     title = "Visited by old friend"
     body = "Niel deGrasse Tyson just visited me..."
@@ -139,7 +133,7 @@ def test_is_draft(client, snapshot):
         "isDraft": True,
     }
 
-    response = call_api(client, query, input, "wolf")
+    response = call_api(query, input, author_fix)
 
     published = strip_value(response, "data", "createReport", "report", "published")
     edited = strip_value(response, "data", "createReport", "report", "edited")
@@ -150,7 +144,7 @@ def test_is_draft(client, snapshot):
     snapshot.assert_match(response)
 
     report = Report.objects.get()
-    assert report.author_id == 1
+    assert report.author_id == author_fix.id
     assert report.date == date.datetime
     assert report.published == arrow.get(published).datetime
     assert report.edited == arrow.get(edited).datetime

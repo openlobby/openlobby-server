@@ -2,6 +2,7 @@ __pycache__/
 dist/
 *.py[cod]
 .env
+.venv
 .cache/
 *.egg-info/
 .coverage

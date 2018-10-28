@@ -4,13 +4,12 @@ from graphql_relay import to_global_id
 from openlobby.core.models import OpenIdClient, User
 
 from ..dummy import prepare_reports
-from ..utils import call_api
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures("django_es")]
 
 
-def test_login_shortcut(client, snapshot):
+def test_login_shortcut(call_api, snapshot):
     OpenIdClient.objects.create(id=10, name="foo", issuer="foo", is_shortcut=True)
     query = """
     query {{
@@ -24,11 +23,11 @@ def test_login_shortcut(client, snapshot):
     """.format(
         id=to_global_id("LoginShortcut", 10)
     )
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_author(client, snapshot):
+def test_author(call_api, snapshot):
     prepare_reports()
     query = """
     query {{
@@ -46,11 +45,11 @@ def test_author(client, snapshot):
     """.format(
         id=to_global_id("Author", 1)
     )
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_author__returns_only_if_is_author(client, snapshot):
+def test_author__returns_only_if_is_author(call_api, snapshot):
     User.objects.create(id=7, is_author=False)
     query = """
     query {{
@@ -63,11 +62,11 @@ def test_author__returns_only_if_is_author(client, snapshot):
     """.format(
         id=to_global_id("Author", 7)
     )
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_report(client, snapshot):
+def test_report(call_api, snapshot):
     prepare_reports()
     query = """
     query {{
@@ -99,11 +98,11 @@ def test_report(client, snapshot):
     """.format(
         id=to_global_id("Report", 1)
     )
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_report__is_draft(client, snapshot):
+def test_report__is_draft(call_api, snapshot):
     prepare_reports()
     query = """
     query {{
@@ -118,11 +117,11 @@ def test_report__is_draft(client, snapshot):
     """.format(
         id=to_global_id("Report", 4)
     )
-    response = call_api(client, query, username="wolf")
+    response = call_api(query, user=User.objects.get(username="wolf"))
     snapshot.assert_match(response)
 
 
-def test_report__is_draft__unauthorized_viewer(client, snapshot):
+def test_report__is_draft__unauthorized_viewer(call_api, snapshot):
     prepare_reports()
     query = """
     query {{
@@ -137,11 +136,11 @@ def test_report__is_draft__unauthorized_viewer(client, snapshot):
     """.format(
         id=to_global_id("Report", 4)
     )
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_report__is_draft__viewer_is_not_author(client, snapshot):
+def test_report__is_draft__viewer_is_not_author(call_api, snapshot):
     prepare_reports()
     query = """
     query {{
@@ -156,11 +155,11 @@ def test_report__is_draft__viewer_is_not_author(client, snapshot):
     """.format(
         id=to_global_id("Report", 4)
     )
-    response = call_api(client, query, username="spongebob")
+    response = call_api(query, user=User.objects.get(username="sponge"))
     snapshot.assert_match(response)
 
 
-def test_report__without_revisions(client, snapshot):
+def test_report__without_revisions(call_api, snapshot):
     prepare_reports()
     query = """
     query {{
@@ -178,11 +177,11 @@ def test_report__without_revisions(client, snapshot):
     """.format(
         id=to_global_id("Report", 3)
     )
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_report__with_revisions(client, snapshot):
+def test_report__with_revisions(call_api, snapshot):
     prepare_reports()
     query = """
     query {{
@@ -221,11 +220,11 @@ def test_report__with_revisions(client, snapshot):
     """.format(
         id=to_global_id("Report", 2)
     )
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_user__unauthorized(client, snapshot):
+def test_user__unauthorized(call_api, snapshot):
     User.objects.create(
         id=8,
         username="albert",
@@ -251,11 +250,11 @@ def test_user__unauthorized(client, snapshot):
     """.format(
         id=to_global_id("User", 8)
     )
-    response = call_api(client, query)
+    response = call_api(query)
     snapshot.assert_match(response)
 
 
-def test_user__not_a_viewer(client, snapshot):
+def test_user__not_a_viewer(call_api, snapshot):
     User.objects.create(
         id=8,
         username="albert",
@@ -264,7 +263,7 @@ def test_user__not_a_viewer(client, snapshot):
         last_name="Einstein",
         extra={"e": "mc2"},
     )
-    User.objects.create(
+    user = User.objects.create(
         id=2,
         username="isaac",
         openid_uid="isaac@newton.id",
@@ -289,12 +288,12 @@ def test_user__not_a_viewer(client, snapshot):
     """.format(
         id=to_global_id("User", 8)
     )
-    response = call_api(client, query, username="isaac")
+    response = call_api(query, user=user)
     snapshot.assert_match(response)
 
 
-def test_user(client, snapshot):
-    User.objects.create(
+def test_user(call_api, snapshot):
+    user = User.objects.create(
         id=8,
         username="albert",
         openid_uid="albert@einstein.id",
@@ -319,5 +318,5 @@ def test_user(client, snapshot):
     """.format(
         id=to_global_id("User", 8)
     )
-    response = call_api(client, query, username="albert")
+    response = call_api(query, user=user)
     snapshot.assert_match(response)
