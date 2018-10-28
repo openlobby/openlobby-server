@@ -4,7 +4,7 @@ import re
 
 from openlobby.core.models import Report
 
-from ..utils import strip_value
+from ..utils import strip_value, dates_to_iso
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.usefixtures("django_es")]
@@ -49,6 +49,7 @@ def test_unauthorized(call_api, snapshot):
     snapshot.assert_match(response)
 
 
+@pytest.mark.freeze_time("2018-01-01T01:02:03")
 def test_full_report(call_api, snapshot, author_fix):
     date = arrow.get(2018, 1, 1)
     title = "Free Tesla"
@@ -69,27 +70,14 @@ def test_full_report(call_api, snapshot, author_fix):
 
     response = call_api(query, input, author_fix)
 
-    published = strip_value(response, "data", "createReport", "report", "published")
-    edited = strip_value(response, "data", "createReport", "report", "edited")
-
     id = strip_value(response, "data", "createReport", "report", "id")
     assert re.match(r"\w+", id)
-
     snapshot.assert_match(response)
 
-    report = Report.objects.get()
-    assert report.author_id == author_fix.id
-    assert report.date == date.datetime
-    assert report.published == arrow.get(published).datetime
-    assert report.edited == arrow.get(edited).datetime
-    assert report.title == title
-    assert report.body == body
-    assert report.received_benefit == received_benefit
-    assert report.provided_benefit == provided_benefit
-    assert report.our_participants == our_participants
-    assert report.other_participants == other_participants
-    assert report.extra is None
-    assert report.is_draft is False
+    assert Report.objects.count() == 1
+    report = Report.objects.all().values()[0]
+    id = strip_value(report, "id")
+    snapshot.assert_match(dates_to_iso(report))
 
 
 def test_input_sanitization(call_api, author_fix):
@@ -114,6 +102,7 @@ def test_input_sanitization(call_api, author_fix):
     assert report.other_participants == "you!"
 
 
+@pytest.mark.freeze_time("2018-01-04T00:07:07")
 def test_is_draft(call_api, snapshot, author_fix):
     date = arrow.get(2018, 1, 3)
     title = "Visited by old friend"
@@ -135,24 +124,11 @@ def test_is_draft(call_api, snapshot, author_fix):
 
     response = call_api(query, input, author_fix)
 
-    published = strip_value(response, "data", "createReport", "report", "published")
-    edited = strip_value(response, "data", "createReport", "report", "edited")
-
     id = strip_value(response, "data", "createReport", "report", "id")
     assert re.match(r"\w+", id)
-
     snapshot.assert_match(response)
 
-    report = Report.objects.get()
-    assert report.author_id == author_fix.id
-    assert report.date == date.datetime
-    assert report.published == arrow.get(published).datetime
-    assert report.edited == arrow.get(edited).datetime
-    assert report.title == title
-    assert report.body == body
-    assert report.received_benefit == received_benefit
-    assert report.provided_benefit == provided_benefit
-    assert report.our_participants == our_participants
-    assert report.other_participants == other_participants
-    assert report.extra is None
-    assert report.is_draft is True
+    assert Report.objects.count() == 1
+    report = Report.objects.all().values()[0]
+    id = strip_value(report, "id")
+    snapshot.assert_match(dates_to_iso(report))

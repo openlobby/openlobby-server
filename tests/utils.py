@@ -1,7 +1,4 @@
 from datetime import datetime
-import json
-
-from openlobby.core.auth import create_access_token
 
 
 def strip_value(data, *path):
