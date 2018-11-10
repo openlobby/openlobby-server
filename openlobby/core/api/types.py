@@ -171,7 +171,7 @@ class Author(graphene.ObjectType):
 
     def resolve_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
-        response = search.reports_by_author(self.id, paginator)
+        response = search.search_reports(paginator, author_id=self.id)
         total = response.hits.total
         page_info = paginator.get_page_info(total)
 

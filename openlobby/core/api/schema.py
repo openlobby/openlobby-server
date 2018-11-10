@@ -87,7 +87,7 @@ class Query:
         query = kwargs.get("query", "")
         query = extract_text(query)
         params = {"highlight": kwargs.get("highlight")}
-        response = search.query_reports(query, paginator, **params)
+        response = search.search_reports(paginator, query=query, **params)
         total = response.hits.total
         page_info = paginator.get_page_info(total)
 
