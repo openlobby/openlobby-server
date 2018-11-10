@@ -15,6 +15,12 @@ class UserSort(Enum):
     TOTAL_REPORTS = "total_reports"
 
 
+class ReportSort(Enum):
+    DATE = "date"
+    PUBLISHED = "published"
+    RELEVANCE = "relevance"
+
+
 class CustomUserManager(UserManager):
     def with_total_reports(self):
         return self.get_queryset().annotate(

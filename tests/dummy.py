@@ -56,7 +56,7 @@ reports = [
     },
     {
         "id": 3,
-        "date": arrow.get(2018, 1, 5).datetime,
+        "date": arrow.get(2018, 1, 2).datetime,
         "published": arrow.get(2018, 1, 6).datetime,
         "edited": arrow.get(2018, 1, 6, 7).datetime,
         "title": "The Return of the King",

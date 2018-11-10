@@ -1,4 +1,5 @@
 from .documents import ReportDoc
+from .models import ReportSort
 
 
 HIGHLIGHT_PARAMS = {
@@ -8,7 +9,15 @@ HIGHLIGHT_PARAMS = {
 }
 
 
-def search_reports(paginator, *, query=None, highlight=False, author_id=None):
+def search_reports(
+    paginator,
+    *,
+    query=None,
+    highlight=False,
+    author_id=None,
+    sort=ReportSort.PUBLISHED,
+    reversed=False,
+):
     fields = [
         "title",
         "body",
@@ -31,7 +40,12 @@ def search_reports(paginator, *, query=None, highlight=False, author_id=None):
     if highlight:
         s = s.highlight(*fields, **HIGHLIGHT_PARAMS)
 
-    s = s.sort("-published")
+    if sort == ReportSort.PUBLISHED:
+        s = s.sort("published" if reversed else "-published")
+    elif sort == ReportSort.DATE:
+        s = s.sort("date" if reversed else "-date")
+    elif sort == ReportSort.RELEVANCE:
+        s = s.sort({"_score": {"order": "asc" if reversed else "desc"}}, "-published")
 
     s = s[paginator.slice_from : paginator.slice_to]
     return s.execute()

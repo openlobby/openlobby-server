@@ -6,10 +6,11 @@ from .paginator import Paginator
 from .sanitizers import extract_text
 from .. import search
 from ..models import OpenIdClient
-from ..models import User, Report, UserSort
+from ..models import User, Report, UserSort, ReportSort
 
 
 UserSortEnum = graphene.Enum.from_enum(UserSort)
+ReportSortEnum = graphene.Enum.from_enum(ReportSort)
 
 
 class AuthorsConnection(relay.Connection):
@@ -50,6 +51,10 @@ class Query:
         description="Fulltext search in Reports. Returns first 10 nodes if pagination is not specified.",
         query=graphene.String(description="Text to search for."),
         highlight=graphene.Boolean(default_value=False, description=highlight_help),
+        sort=ReportSortEnum(),
+        reversed=graphene.Boolean(
+            default_value=False, description="Reverse order of sort."
+        ),
     )
     viewer = graphene.Field(types.User, description="Active user viewing API.")
     login_shortcuts = graphene.List(
@@ -84,10 +89,20 @@ class Query:
 
     def resolve_search_reports(self, info, **kwargs):
         paginator = Paginator(**kwargs)
+
         query = kwargs.get("query", "")
         query = extract_text(query)
-        params = {"highlight": kwargs.get("highlight")}
+
+        params = {
+            "highlight": kwargs.get("highlight"),
+            "reversed": kwargs.get("reversed"),
+        }
+
+        if "sort" in kwargs:
+            params["sort"] = ReportSort(kwargs["sort"])
+
         response = search.search_reports(paginator, query=query, **params)
+
         total = response.hits.total
         page_info = paginator.get_page_info(total)
 

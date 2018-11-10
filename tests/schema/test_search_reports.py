@@ -1,4 +1,5 @@
 import pytest
+from graphql_relay import from_global_id
 
 from ..dummy import prepare_reports
 
@@ -231,3 +232,37 @@ def test_last_before(call_api, snapshot):
     """
     response = call_api(query)
     snapshot.assert_match(response)
+
+
+@pytest.mark.parametrize(
+    "params, expected_ids",
+    [
+        ("sort: PUBLISHED", [3, 2, 1]),
+        ("sort: PUBLISHED, reversed: true", [1, 2, 3]),
+        ("sort: DATE", [2, 3, 1]),
+        ("sort: DATE, reversed: true", [1, 3, 2]),
+        ("sort: RELEVANCE", [3, 2, 1]),
+        ("sort: RELEVANCE, reversed: true", [3, 2, 1]),
+        ('query: "ring", sort: RELEVANCE', [1, 3]),
+        ('query: "ring", sort: RELEVANCE, reversed: true', [3, 1]),
+    ],
+)
+def test_sort(params, expected_ids, call_api, snapshot):
+    prepare_reports()
+    query = f"""
+    query {{
+        searchReports ({params}) {{
+            totalCount
+            edges {{
+                cursor
+                node {{
+                    id
+                }}
+            }}
+        }}
+    }}
+    """
+    response = call_api(query)
+    ids = [edge["node"]["id"] for edge in response["data"]["searchReports"]["edges"]]
+    ids = [int(id) for type, id in map(from_global_id, ids)]
+    assert ids == expected_ids

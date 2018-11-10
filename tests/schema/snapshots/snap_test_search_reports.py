@@ -23,7 +23,7 @@ snapshots['test_all 1'] = {
                             'totalReports': 2
                         },
                         'body': 'Aragorn is the King. And we have lost the Ring.',
-                        'date': '2018-01-05 00:00:00+00:00',
+                        'date': '2018-01-02 00:00:00+00:00',
                         'edited': '2018-01-06 07:00:00+00:00',
                         'extra': None,
                         'hasRevisions': False,
@@ -153,7 +153,7 @@ snapshots['test_highlight 1'] = {
                             'totalReports': 2
                         },
                         'body': 'Aragorn is the King. And we have lost the <mark>Ring</mark>.',
-                        'date': '2018-01-05 00:00:00+00:00',
+                        'date': '2018-01-02 00:00:00+00:00',
                         'edited': '2018-01-06 07:00:00+00:00',
                         'extra': None,
                         'hasRevisions': False,
