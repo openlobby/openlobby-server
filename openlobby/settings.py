@@ -86,7 +86,34 @@ ELASTICSEARCH_DSL = {
     "default": {"hosts": os.environ.get("ELASTICSEARCH_DSN", "http://localhost:9200")}
 }
 
-ELASTICSEARCH_DSL_INDEX_SETTINGS = {"number_of_shards": 1, "number_of_replicas": 0}
+ELASTICSEARCH_DSL_INDEX_SETTINGS = {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+        "filter": {
+            "czech_stop": {"type": "stop", "stopwords": "_czech_"},
+            "czech_stemmer": {"type": "stemmer", "language": "czech"},
+            "cs_CZ": {"type": "hunspell", "locale": "cs_CZ", "dedup": True},
+            "czech_synonym": {
+                "type": "synonym",
+                "synonyms_path": "analysis/cs_CZ/synonym.txt",
+            },
+        },
+        "analyzer": {
+            "czech": {
+                "tokenizer": "standard",
+                "filter": [
+                    "icu_folding",
+                    "lowercase",
+                    "czech_synonym",
+                    "czech_stop",
+                    "czech_stemmer",
+                    "cs_CZ",
+                ],
+            }
+        },
+    },
+}
 
 # Password validation
 
