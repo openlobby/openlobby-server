@@ -9,7 +9,7 @@ aniso8601==3.0.2          # via graphene
 arrow==0.12.1
 asn1crypto==0.24.0        # via cryptography
 beaker==1.10.0            # via oic
-bleach==3.0.2
+bleach==3.1.1
 certifi==2018.10.15       # via requests
 cffi==1.11.5              # via cryptography
 chardet==3.0.4            # via requests
