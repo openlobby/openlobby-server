@@ -4,22 +4,54 @@
 #
 #    pip-compile --output-file test-requirements.txt test-requirements.in
 #
-atomicwrites==1.2.1       # via pytest
-attrs==18.2.0             # via pytest
-factory-boy==2.11.1       # via pytest-factoryboy
-faker==0.9.2              # via factory-boy
-freezegun==0.3.11         # via pytest-freezegun
-inflection==0.3.1         # via pytest-factoryboy
-more-itertools==4.3.0     # via pytest
-pluggy==0.8.0             # via pytest
-py==1.7.0                 # via pytest
+atomicwrites==1.2.1
+    # via pytest
+attrs==18.2.0
+    # via pytest
+factory-boy==2.11.1
+    # via pytest-factoryboy
+faker==0.9.2
+    # via factory-boy
+freezegun==0.3.11
+    # via pytest-freezegun
+inflection==0.3.1
+    # via pytest-factoryboy
+more-itertools==4.3.0
+    # via pytest
+pluggy==0.8.0
+    # via pytest
+py==1.10.0
+    # via pytest
 pytest-django==3.4.3
+    # via -r test-requirements.in
 pytest-env==0.6.2
+    # via -r test-requirements.in
 pytest-factoryboy==2.0.1
+    # via -r test-requirements.in
 pytest-freezegun==0.2.0
+    # via -r test-requirements.in
 pytest==3.9.1
-python-dateutil==2.7.3    # via faker, freezegun
-six==1.11.0               # via faker, freezegun, more-itertools, pytest, python-dateutil, snapshottest
+    # via
+    #   -r test-requirements.in
+    #   pytest-django
+    #   pytest-env
+    #   pytest-factoryboy
+    #   pytest-freezegun
+python-dateutil==2.7.3
+    # via
+    #   faker
+    #   freezegun
+six==1.11.0
+    # via
+    #   faker
+    #   freezegun
+    #   more-itertools
+    #   pytest
+    #   python-dateutil
+    #   snapshottest
 snapshottest==0.5.0
-termcolor==1.1.0          # via snapshottest
-text-unidecode==1.2       # via faker
+    # via -r test-requirements.in
+termcolor==1.1.0
+    # via snapshottest
+text-unidecode==1.2
+    # via faker
